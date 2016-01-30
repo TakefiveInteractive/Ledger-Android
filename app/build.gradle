@@ -17,10 +17,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    /* The following option is optional, caused by Butter Knife
+
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
+
+     */
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
+
+    // Dagger (Dependency Injection):
+    //  (the dagger-compiler is said to be optional)
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    compile 'com.squareup.dagger:dagger-compiler:1.2.2'
+
+    // Butter Knife (View and Listener bindings)
+    compile 'com.jakewharton:butterknife:7.0.1'
+
+    // Nine old androids (basic animations)
+    // compile 'com.nineoldandroids:library:2.4.0+'
 }
