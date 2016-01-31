@@ -1,15 +1,20 @@
 package com.takefive.ledger;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.app.Activity;
+import android.provider.CallLog;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
 import android.transition.Scene;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.Display;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
@@ -19,12 +24,21 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.squareup.picasso.Picasso;
+
+import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class WelcomeActivity extends Activity {
+public class WelcomeActivity extends AppCompatActivity {
 
     @Bind(R.id.backgroundImage)
     ImageView mBgImg;
@@ -34,6 +48,8 @@ public class WelcomeActivity extends Activity {
 
     @Bind(R.id.nameTag)
     TextView mNameTag;
+
+    CallbackManager mFBCallbackManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +74,35 @@ public class WelcomeActivity extends Activity {
         };
 
         for(ViewPropertyAnimator x : animators) x.start();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        mFBCallbackManager = CallbackManager.Factory.create();
+        LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                Snackbar.make(findViewById(android.R.id.content), "Hello, Sir " + loginResult.getAccessToken().getUserId(), Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onCancel() {
+                ;
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Snackbar.make(findViewById(android.R.id.content), "Failed to contact Facebook.", Snackbar.LENGTH_SHORT).show();
+            }
+        });
     }
 
+    @OnClick(R.id.login)
+    public void login() {
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mFBCallbackManager.onActivityResult(requestCode, resultCode, data);
+    }
 }

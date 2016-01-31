@@ -52,4 +52,10 @@ dependencies {
 
     // boostrap buttons and controls for android
     compile 'com.beardedhen:androidbootstrap:2.0.1'
+
+    // appcompat
+    compile "com.android.support:appcompat-v7:23.0.+"
+
+    // For snackbar:
+    compile 'com.android.support:design:23.+'
 }
