@@ -1,5 +1,6 @@
 package com.takefive.ledger;
 
+import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
@@ -13,6 +14,7 @@ import android.transition.Scene;
 import android.transition.TransitionInflater;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Display;
 import android.view.KeyEvent;
 import android.view.View;
@@ -28,11 +30,17 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Arrays;
+import java.util.Iterator;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -80,7 +88,26 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Snackbar.make(findViewById(android.R.id.content), "Hello, Sir " + loginResult.getAccessToken().getUserId(), Snackbar.LENGTH_SHORT).show();
+                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                        try {
+                            intent.putExtra("username", object.getString("name"));
+                            startActivity(intent);
+                        } catch (JSONException e) {
+                            Iterator<String> keys = object.keys();
+                            while(keys.hasNext())
+                                Log.d("object properties", keys.next());
+                            e.printStackTrace();
+                            Snackbar.make(findViewById(android.R.id.content), "Failed to contact Facebook.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                Bundle params = new Bundle();
+                params.putString("fields", "name");
+                request.setParameters(params);
+                request.executeAsync();
             }
 
             @Override
