@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;
@@ -29,7 +30,7 @@ public class WelcomeActivity extends Activity {
     ImageView mBgImg;
 
     @Bind(R.id.login)
-    Button mLogin;
+    BootstrapButton mLogin;
 
     @Bind(R.id.nameTag)
     TextView mNameTag;

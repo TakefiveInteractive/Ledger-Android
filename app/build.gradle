@@ -49,4 +49,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
 
     compile 'com.facebook.android:facebook-android-sdk:4.+'
+
+    // boostrap buttons and controls for android
+    compile 'com.beardedhen:androidbootstrap:2.0.1'
 }
