@@ -1,9 +1,23 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        debug {
+            keyAlias 'androiddebugkey'
+
+            // Load the debug keystore SHARED by our group.
+            // The location of that key must be defined as keys.ledgerGroupDebug in local.properties
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+            def keyPath = properties.getProperty('keys.ledgerGroupDebug')
+            def keyPass = properties.getProperty('keys.ledgerGroupDebug.password')
+
+            storeFile file(keyPath)
+            storePassword keyPass
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
-
     defaultConfig {
         applicationId "com.takefive.ledger"
         minSdkVersion 19
@@ -17,7 +31,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     lintOptions {
         // required by Butter Knife
         disable 'InvalidPackage'
@@ -26,36 +39,27 @@ android {
         // required by Butter Knife
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
-
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
-
     // Dagger (Dependency Injection):
     //  (the dagger-compiler is said to be optional)
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'
-
     // Butter Knife (View and Listener bindings)
     compile 'com.jakewharton:butterknife:7.0.1'
-
     // Nine old androids (basic animations)
     // compile 'com.nineoldandroids:library:2.4.0+'
-
     // Image Loading, Caching, automatically resizing for memory optimization
     compile 'com.squareup.picasso:picasso:2.5.2'
-
     compile 'com.facebook.android:facebook-android-sdk:4.+'
-
     // boostrap buttons and controls for android
     compile 'com.beardedhen:androidbootstrap:2.0.1'
-
     // appcompat
-    compile "com.android.support:appcompat-v7:23.0.+"
-
+    compile 'com.android.support:appcompat-v7:23.0.+'
     // For snackbar:
     compile 'com.android.support:design:23.+'
 }
