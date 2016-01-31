@@ -94,7 +94,9 @@ public class WelcomeActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         try {
                             intent.putExtra("username", object.getString("name"));
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                             startActivity(intent);
+                            finish();
                         } catch (JSONException e) {
                             Iterator<String> keys = object.keys();
                             while(keys.hasNext())
