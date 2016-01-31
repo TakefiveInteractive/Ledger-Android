@@ -18,16 +18,15 @@ android {
         }
     }
 
-    /* The following option is optional, caused by Butter Knife
-
     lintOptions {
+        // required by Butter Knife
         disable 'InvalidPackage'
     }
     packagingOptions {
+        // required by Butter Knife
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
 
-     */
 }
 
 dependencies {
@@ -45,4 +44,9 @@ dependencies {
 
     // Nine old androids (basic animations)
     // compile 'com.nineoldandroids:library:2.4.0+'
+
+    // Image Loading, Caching, automatically resizing for memory optimization
+    compile 'com.squareup.picasso:picasso:2.5.2'
+
+    compile 'com.facebook.android:facebook-android-sdk:4.+'
 }
