@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ledger</string>
     <string name="title_activity_welcome">WelcomeActivity</string>
-    <string name="facebook_app_id">1223153397714339</string>
+    <string name="facebook_app_id">498920826950721</string>
     <string name="title_activity_main">MainActivity</string>
 
     <string name="title_section1">Section 1</string>
