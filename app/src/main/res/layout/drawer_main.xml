@@ -4,8 +4,8 @@
     android:layout_width="@dimen/navdrawer_width"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:background="@color/navdrawer_background"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/navdrawer_background">
     <!--app:appInsetForeground="#4000"-->
 
     <LinearLayout

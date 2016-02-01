@@ -20,11 +20,6 @@ import butterknife.ButterKnife;
 public class MainActivity extends AppCompatActivity {
 
     /**
-     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
-     */
-    private NavDrawerFragment mNavigationDrawerFragment;
-
-    /**
      * Used to store the last screen title. For use in {@link #restoreActionBar()}.
      */
     private CharSequence mTitle;
@@ -42,17 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(mToolbar);
 
-        mNavigationDrawerFragment = (NavDrawerFragment)
-                getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
         mUserName.setText(getIntent().getStringExtra("username"));
 
-        /*
-        // Set up the drawer.
-        mNavigationDrawerFragment.setUp(
-                R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-         */
     }
 
 }
