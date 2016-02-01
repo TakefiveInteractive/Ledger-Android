@@ -6,7 +6,6 @@
     android:layout_gravity="start"
     android:fitsSystemWindows="true"
     android:background="@color/navdrawer_background">
-    <!--app:appInsetForeground="#4000"-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,8 +24,8 @@
                 android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
                 android:paddingBottom="@dimen/navdrawer_logo_vertical_padding"
                 android:paddingRight="@dimen/navdrawer_logo_padding_right"
-                android:scaleType="fitEnd"
-                android:background="@color/theme_accent_1_light"/>
+                android:scaleType="center"
+                android:src="@drawable/gradient_background"/>
 
             <ImageView
                 android:id="@+id/profile_cover_image"
