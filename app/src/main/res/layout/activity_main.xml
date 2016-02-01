@@ -19,17 +19,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/theme_accent_1"/>
-        <TextView
+
+        <ListView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="true"
-            android:text="Please swipe right from edge"
-            android:id="@+id/textView2"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:layout_alignParentRight="false"
-            android:textStyle="bold"
-            android:gravity="center_horizontal" />
+            android:layout_height="match_parent"
+            tools:layout="@layout/item_main"/>
 
     </RelativeLayout>
 

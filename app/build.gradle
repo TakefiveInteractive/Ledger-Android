@@ -62,4 +62,7 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.+'
     // For snackbar:
     compile 'com.android.support:design:23.+'
+    // For Cardview:
+    compile 'com.android.support:cardview-v7:21.0.+'
+    compile 'com.android.support:recyclerview-v7:21.0.+'
 }
