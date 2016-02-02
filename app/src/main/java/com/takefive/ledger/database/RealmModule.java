@@ -23,10 +23,13 @@ public class RealmModule {
     @Provides
     @Singleton
     public Realm provideRealm(Context context) {
+        /*
         RealmConfiguration configuration = new RealmConfiguration.Builder(context)
                 .name(context.getString(R.string.realm_filename))
                 .build();
         Realm.setDefaultConfiguration(configuration);
         return Realm.getDefaultInstance();
+        */
+        return Realm.getInstance(context);
     }
 }

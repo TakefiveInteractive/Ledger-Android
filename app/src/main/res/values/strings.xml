@@ -22,4 +22,6 @@
 
     <string name="realm_filename">ledger.realm</string>
 
+    <string name="api_version">v2</string>
+
 </resources>

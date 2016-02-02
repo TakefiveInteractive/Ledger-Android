@@ -9,7 +9,7 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by @tourbillon on 2/1/16.
  */
-public class Photo extends RealmObject {
+public class    Photo extends RealmObject {
     public static int TYPE_GENERAL = 0;
     public static int TYPE_AVATAR = 1;
 

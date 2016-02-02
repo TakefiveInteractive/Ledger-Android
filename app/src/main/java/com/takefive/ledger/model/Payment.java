@@ -1,13 +1,11 @@
 package com.takefive.ledger.model;
 
 import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
 
 /**
- * Created by @tourbillon on 2/1/16.
+ * Created by @tourbillon on 2/2/16.
  */
 public class Payment extends RealmObject {
-    @PrimaryKey
     private String paymentId;
     private double amount;
     private Person fromPerson;

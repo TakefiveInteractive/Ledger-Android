@@ -1,28 +1,13 @@
 package com.takefive.ledger;
 
-import android.app.DownloadManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
-import android.app.Activity;
-import android.provider.CallLog;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.Scene;
-import android.transition.TransitionInflater;
-import android.transition.TransitionManager;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.Display;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -34,8 +19,9 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
-import com.squareup.picasso.Picasso;
-import com.takefive.ledger.account.UserStore;
+import com.takefive.ledger.client.LedgerService;
+import com.takefive.ledger.database.UserStore;
+import com.takefive.ledger.model.Person;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +34,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.Realm;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -64,6 +51,12 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject
     UserStore userStore;
+
+    @Inject
+    Realm realm;
+
+    @Inject
+    LedgerService service;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,13 +87,26 @@ public class WelcomeActivity extends AppCompatActivity {
         mFBCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
-            public void onSuccess(LoginResult loginResult) {
+            public void onSuccess(final LoginResult loginResult) {
+                userStore.setAccessToken(loginResult.getAccessToken().getToken());
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
+                        Log.d("debug", object.toString());
                         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         try {
+                            realm.beginTransaction();
+                            Person result = realm.where(Person.class)
+                                    .equalTo("facebookId", loginResult.getAccessToken().getUserId())
+                                    .findFirst();
+                            if (result == null)
+                                result = realm.createObject(Person.class);
+                            result.setName(object.getString("name"));
+                            result.setFacebookId(loginResult.getAccessToken().getUserId());
+                            realm.commitTransaction();
+                            userStore.setUserId(result.getPersonId());
                             intent.putExtra("username", object.getString("name"));
+
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
                             startActivity(intent);
                             finish();

@@ -12,6 +12,7 @@ import io.realm.annotations.PrimaryKey;
 public class Person extends RealmObject {
     @PrimaryKey
     private String personId;
+    private String name;
     private Photo avatar;
     private String facebookId;
     private RealmList<Bill> bills;
@@ -32,6 +33,14 @@ public class Person extends RealmObject {
 
     public void setPersonId(String personId) {
         this.personId = personId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFacebookId() {
