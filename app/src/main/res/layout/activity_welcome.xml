@@ -52,8 +52,7 @@
             app:buttonMode="regular"
             app:showOutline="true"
             app:roundedCorners="true"
-            android:text="Facebook Quick Login"
-            android:textColor="@android:color/black" />
+            android:text="Facebook Quick Login" />
     </RelativeLayout>
 
 
