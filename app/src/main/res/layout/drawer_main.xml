@@ -27,14 +27,6 @@
                 android:scaleType="center"
                 android:src="@drawable/gradient_background"/>
 
-            <ImageView
-                android:id="@+id/profile_cover_image"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scaleType="centerCrop"
-                android:background="@color/colorPrimary"
-                android:visibility="gone"/>
-
             <RelativeLayout
                 android:id="@+id/chosen_account_content_view"
                 android:layout_width="match_parent"

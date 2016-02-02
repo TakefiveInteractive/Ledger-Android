@@ -14,8 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
 import android.widget.ArrayAdapter;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
@@ -44,6 +46,19 @@ public class MainActivity extends AppCompatActivity {
     TextView mUserName;
     @Bind(R.id.list)
     ListView mList;
+    @Bind(R.id.chosen_account_view)
+    FrameLayout mSideImgLayout;
+    @Bind(R.id.chosen_account_content_view)
+    RelativeLayout mSideImgContent;
+
+    public int getStatusBarHeight() {
+        int result = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = getResources().getDimensionPixelSize(resourceId);
+        }
+        return result;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 new Data(null, 16.12f, "Circle K", "Collected $123"),
                 new Data("mary", 56.22f, "Amazon", "Collected $12.22")
         )));
+
+
+        // Fix drawer location after enabling status bar transparency.
+        ViewGroup.LayoutParams p = mSideImgLayout.getLayoutParams();
+        p.height+=getStatusBarHeight();
+        mSideImgLayout.setLayoutParams(p);
+
+        Helpers.setMargins(mSideImgContent, getStatusBarHeight(), null, null, null);
     }
 
 }
