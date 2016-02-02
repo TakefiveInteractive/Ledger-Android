@@ -14,4 +14,12 @@
     <string name="action_example">Example action</string>
 
     <string name="action_settings">Settings</string>
+
+    <!-- Program internals -->
+    <string name="preferences_file_key">com.takefive.ledger.preferences</string>
+    <string name="preferences_identifier_userid">userid</string>
+    <string name="preferences_identifier_accessToken">accessToken</string>
+
+    <string name="realm_filename">ledger.realm</string>
+
 </resources>

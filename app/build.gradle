@@ -38,6 +38,9 @@ android {
     packagingOptions {
         // required by Butter Knife
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+        // Fix Gradle Bug
+        exclude 'META-INF/maven/com.squareup/javawriter/pom.properties'
+        exclude 'META-INF/maven/com.squareup/javawriter/pom.xml'
     }
 }
 
@@ -45,6 +48,8 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:appcompat-v7:23.1.1'
+    // Realm
+    compile 'io.realm:realm-android:0.87.4'
     // Dagger (Dependency Injection):
     //  (the dagger-compiler is said to be optional)
     compile 'com.squareup.dagger:dagger:1.2.2'
@@ -65,4 +70,6 @@ dependencies {
     // For Cardview:
     compile 'com.android.support:cardview-v7:21.0.+'
     compile 'com.android.support:recyclerview-v7:21.0.+'
+    // Retrofit for API communication
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
 }

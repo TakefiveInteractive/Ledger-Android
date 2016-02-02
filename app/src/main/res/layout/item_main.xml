@@ -97,7 +97,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true">
-                <com.takefive.ledger.com.takefive.ledger.ui.TagButtonBg
+                <com.takefive.ledger.ui.TagButtonBg
                     android:src="@color/theme_accent_1"
                     android:layout_width="50sp"
                     android:layout_height="50sp"/>
