@@ -15,12 +15,15 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.Toolbar
+            android:elevation="5dp"
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/theme_accent_1"/>
 
         <ListView
+            android:id="@+id/list"
+            android:layout_below="@id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/item_main"/>

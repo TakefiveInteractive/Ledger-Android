@@ -13,93 +13,106 @@
         android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        cardview:cardCornerRadius="5dp"
         cardview:cardElevation="4dp"
         cardview:cardPreventCornerOverlap="false">
 
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="@dimen/noticable_padding">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/avatar"
-                android:layout_width="50sp"
-                android:layout_height="50dp"
-                android:layout_alignParentStart="true"
-                android:layout_marginRight="@dimen/general_padding"
-                android:background="@drawable/person_image_empty"
-                android:scaleType="centerCrop" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/noticable_padding">
 
-            <LinearLayout
-                android:id="@+id/lYouPay"
+                <ImageView
+                    android:id="@+id/avatar"
+                    android:layout_width="50sp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginRight="@dimen/general_padding"
+                    android:background="@drawable/person_image_empty"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:id="@+id/lYouPay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="false"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/noticable_padding"
+                    android:layout_toEndOf="@id/avatar"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/payer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
+                        android:textColor="@android:color/black"
+                        android:text="You paid:"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/paidAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@android:color/black"
+                        android:text="$98.42"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/lDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="@dimen/general_padding"
+                    android:layout_toEndOf="@id/lYouPay"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/desc1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
+                        android:text="Sakanaya"
+                        android:textColor="@android:color/black"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
+                        android:textStyle="bold" />
+
+                    <com.beardedhen.androidbootstrap.AwesomeTextView
+                        android:id="@+id/desc2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        bootstrap:bootstrapBrand="primary"
+                        bootstrap:bootstrapText="{fa_credit_card} Collecting $35.42" />
+
+                </LinearLayout>
+            </RelativeLayout>
+
+            <FrameLayout
+                android:id="@+id/detailBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="false"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/noticable_padding"
-                android:layout_toEndOf="@id/avatar"
-                android:orientation="vertical">
-
+                android:layout_alignParentEnd="true">
+                <com.takefive.ledger.com.takefive.ledger.ui.TagButton
+                    android:src="@color/theme_accent_1"
+                    android:layout_width="50sp"
+                    android:layout_height="50sp"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                    android:text="You paid:"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    android:layout_gravity="center"
+                    android:paddingBottom="18sp"
+                    android:textSize="12sp"
+                    android:rotation="45"
+                    android:textColor="@android:color/white"
+                    android:text="Detail" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="$98.42"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-            </LinearLayout>
+            </FrameLayout>
 
-            <LinearLayout
-                android:id="@+id/lDesc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/general_padding"
-                android:layout_toEndOf="@id/lYouPay"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sakanaya"
-                    android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:textStyle="bold" />
-
-                <com.beardedhen.androidbootstrap.AwesomeTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    bootstrap:bootstrapBrand="primary"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    bootstrap:bootstrapText="{fa_wikipedia_w} Collecting $35.42" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/lBtns"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:orientation="vertical">
-
-                <com.beardedhen.androidbootstrap.BootstrapButton
-                    android:id="@+id/details"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Detail"
-                    bootstrap:bootstrapBrand="success"
-                    bootstrap:bootstrapSize="lg"
-                    bootstrap:buttonMode="regular"
-                    bootstrap:roundedCorners="true"
-                    bootstrap:showOutline="true" />
-            </LinearLayout>
 
         </RelativeLayout>
 
