@@ -23,21 +23,21 @@ import android.widget.ImageView;
  * | \||
  * |  \|
  */
-public class TagButton extends ImageView {
-    public TagButton(Context context) {
+public class TagButtonBg extends ImageView {
+    public TagButtonBg(Context context) {
         super(context);
     }
 
-    public TagButton(Context context, AttributeSet attrs) {
+    public TagButtonBg(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TagButton(Context context, AttributeSet attrs, int defStyleAttr) {
+    public TagButtonBg(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TagButton(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+    public TagButtonBg(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
