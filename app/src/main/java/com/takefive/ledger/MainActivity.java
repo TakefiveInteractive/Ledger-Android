@@ -7,9 +7,12 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     TabLayout mTabLayout;
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
+    @Bind(R.id.drawer_layout)
+    DrawerLayout mDrawerLayout;
 
     public int getStatusBarHeight() {
         int result = 0;
@@ -71,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
         // ((MyApplication) getApplication()).inject(this);
 
         setSupportActionBar(mToolbar);
+        mToolbar.setNavigationIcon(R.drawable.ic_drawer);
+        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mDrawerLayout.openDrawer(GravityCompat.START);
+            }
+        });
 
         // Fix drawer location after enabling status bar transparency.
         // Lollipop <=> v21, corresponding with values-v21

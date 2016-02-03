@@ -33,7 +33,8 @@ public class MainBillFrag extends NamedFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root =  inflater.inflate(R.layout.frag_main_bill, container, false);
+        // We must attach to parent, otherwise material elevation won't work
+        View root =  inflater.inflate(R.layout.frag_main_bill, container, true);
         ListView list = ButterKnife.findById(root, R.id.billList);
 
         SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
