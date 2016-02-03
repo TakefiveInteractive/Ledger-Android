@@ -26,7 +26,7 @@ public class LedgerServiceModule {
     @Provides
     public LedgerService provideLedgerService(Context context) {
         return new Retrofit.Builder()
-                .baseUrl("http://127.0.0.1:8080/" + context.getString(R.string.api_version))
+                .baseUrl("http://127.0.0.1:8080/" + context.getString(R.string.api_version) +  "/")
                 .build()
                 .create(LedgerService.class);
     }

@@ -1,6 +1,7 @@
 package com.takefive.ledger;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -87,11 +88,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         // Fix drawer location after enabling status bar transparency.
-        ViewGroup.LayoutParams p = mSideImgLayout.getLayoutParams();
-        p.height+=getStatusBarHeight();
-        mSideImgLayout.setLayoutParams(p);
+        // Lollipop <=> v21, corresponding with values-v21
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewGroup.LayoutParams p = mSideImgLayout.getLayoutParams();
+            p.height += getStatusBarHeight();
+            mSideImgLayout.setLayoutParams(p);
 
-        Helpers.setMargins(mSideImgContent, getStatusBarHeight(), null, null, null);
+            Helpers.setMargins(mSideImgContent, getStatusBarHeight(), null, null, null);
+        }
     }
 
 }
