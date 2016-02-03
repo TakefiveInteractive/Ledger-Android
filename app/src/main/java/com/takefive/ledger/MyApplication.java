@@ -3,10 +3,10 @@ package com.takefive.ledger;
 import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.takefive.ledger.client.LedgerServiceModule;
-import com.takefive.ledger.database.RealmModule;
-
-import java.util.Arrays;
+import com.takefive.ledger.client.BusinessLedgerServiceModule;
+import com.takefive.ledger.database.BusinessRealmModule;
+import com.takefive.ledger.database.BusinessUserStoreModule;
+import com.takefive.ledger.task.BusProvider;
 
 import dagger.ObjectGraph;
 
@@ -21,9 +21,11 @@ public class MyApplication extends Application {
         super.onCreate();
         TypefaceProvider.registerDefaultIconSets();
         this.objectGraph = ObjectGraph.create(
-                new ApplicationContextModule(this),
-                new RealmModule(),
-                new LedgerServiceModule()
+                new ApplicationContextProvider(this),
+                new BusinessUserStoreModule(),
+                new BusinessRealmModule(),
+                new BusinessLedgerServiceModule(),
+                new BusProvider()
         );
     }
 

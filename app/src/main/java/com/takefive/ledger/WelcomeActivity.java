@@ -19,17 +19,22 @@ import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
-import com.takefive.ledger.model.Person;
+import com.takefive.ledger.task.LoginEvent;
+import com.takefive.ledger.task.LoginTask;
+import com.takefive.ledger.task.UpdateUserInfoTask;
+import com.takefive.ledger.task.UserInfoAvailableEvent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.Arrays;
 import java.util.Iterator;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -49,14 +54,19 @@ public class WelcomeActivity extends AppCompatActivity {
 
     CallbackManager mFBCallbackManager;
 
-    @Inject
-    UserStore userStore;
+    @Inject UserStore userStore;
 
-    @Inject
-    Realm realm;
+    @Inject Realm realm;
 
-    @Inject
-    LedgerService service;
+    @Inject LedgerService service;
+
+    @Inject Bus bus;
+
+    @Inject Provider<LoginTask> loginTaskProvider;
+
+    @Inject Provider<UpdateUserInfoTask> userInfoTaskProvider;
+
+    String name;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +74,8 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
         ((MyApplication) getApplication()).inject(this);
+
+        bus.register(this);
 
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
@@ -88,28 +100,13 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                userStore.setAccessToken(loginResult.getAccessToken().getToken());
                 GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {
                         Log.d("debug", object.toString());
-                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                         try {
-                            realm.beginTransaction();
-                            Person result = realm.where(Person.class)
-                                    .equalTo("facebookId", loginResult.getAccessToken().getUserId())
-                                    .findFirst();
-                            if (result == null)
-                                result = realm.createObject(Person.class);
-                            result.setName(object.getString("name"));
-                            result.setFacebookId(loginResult.getAccessToken().getUserId());
-                            realm.commitTransaction();
-                            userStore.setUserId(result.getPersonId());
-                            intent.putExtra("username", object.getString("name"));
-
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-                            startActivity(intent);
-                            finish();
+                            name = object.getString("name");
+                            loginTaskProvider.get().execute(loginResult.getAccessToken().getToken());
                         } catch (JSONException e) {
                             Iterator<String> keys = object.keys();
                             while(keys.hasNext())
@@ -127,7 +124,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onCancel() {
-                ;
+
             }
 
             @Override
@@ -140,6 +137,27 @@ public class WelcomeActivity extends AppCompatActivity {
     @OnClick(R.id.login)
     public void login() {
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+    }
+
+    @Subscribe
+    public void retrieveInfo(LoginEvent event) {
+        if (event.isSuccess())
+            userInfoTaskProvider.get().execute(name);
+        else
+            showInfo("Oops, couldn't connect to server...");
+    }
+
+    @Subscribe
+    public void toMainActivity(UserInfoAvailableEvent event) {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.putExtra("username", name);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        startActivity(intent);
+        finish();
+    }
+
+    public void showInfo(String info) {
+        Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
     @Override

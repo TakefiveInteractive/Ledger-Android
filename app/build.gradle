@@ -72,4 +72,6 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
     // Retrofit for API communication
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
+    // Otto for event bus subscription
+    compile 'com.squareup:otto:1.3.8'
 }

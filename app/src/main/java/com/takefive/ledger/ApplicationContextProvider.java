@@ -10,11 +10,11 @@ import dagger.Provides;
  */
 
 @Module(library = true)
-public class ApplicationContextModule {
+public class ApplicationContextProvider {
 
     private Context context;
 
-    public ApplicationContextModule(Context context) {
+    public ApplicationContextProvider(Context context) {
         this.context = context;
     }
 
