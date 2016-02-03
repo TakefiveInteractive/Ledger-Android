@@ -23,6 +23,9 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
+import com.takefive.ledger.task.FbUserInfo;
+import com.takefive.ledger.task.FbUserInfoTask;
+import com.takefive.ledger.task.InfoAvailableEvent;
 import com.takefive.ledger.task.LoginEvent;
 import com.takefive.ledger.task.LoginTask;
 import com.takefive.ledger.task.UpdateUserInfoTask;
@@ -66,6 +69,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject Provider<UpdateUserInfoTask> userInfoTaskProvider;
 
+    @Inject Provider<FbUserInfoTask> fbUserInfoProvider;
+
     String name;
 
     @Override
@@ -100,26 +105,8 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                GraphRequest request = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
-                    @Override
-                    public void onCompleted(JSONObject object, GraphResponse response) {
-                        Log.d("debug", object.toString());
-                        try {
-                            name = object.getString("name");
-                            loginTaskProvider.get().execute(loginResult.getAccessToken().getToken());
-                        } catch (JSONException e) {
-                            Iterator<String> keys = object.keys();
-                            while(keys.hasNext())
-                                Log.d("object properties", keys.next());
-                            e.printStackTrace();
-                            Snackbar.make(findViewById(android.R.id.content), "Failed to contact Facebook.", Snackbar.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                Bundle params = new Bundle();
-                params.putString("fields", "name");
-                request.setParameters(params);
-                request.executeAsync();
+                loginTaskProvider.get().execute(loginResult.getAccessToken().getToken());
+                fbUserInfoProvider.get().execute(loginResult.getAccessToken());
             }
 
             @Override
@@ -141,6 +128,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Subscribe
     public void retrieveInfo(LoginEvent event) {
+        // TODO: do something here to avoid dependency on FB UserInfo's result (we already have FB token).
         if (event.isSuccess())
             userInfoTaskProvider.get().execute(name);
         else
@@ -154,6 +142,13 @@ public class WelcomeActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         finish();
+    }
+
+
+    // TODO: do something here.
+    @Subscribe
+    public void updateFbUserInfo(InfoAvailableEvent<FbUserInfo> event) {
+        name = event.getUpdate().userName;
     }
 
     public void showInfo(String info) {
