@@ -68,7 +68,6 @@
                     android:layout_alignParentBottom="true"
                     android:paddingBottom="@dimen/navview_header_bottom_padding"
                     android:textSize="@dimen/text_size_medium"
-                    android:textColor="@color/body_text_2_inverse"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:text="Balance: $1.43"
@@ -85,7 +84,6 @@
                     android:layout_toStartOf="@id/expand_account_box_indicator"
                     android:layout_toLeftOf="@id/expand_account_box_indicator"
                     android:textSize="@dimen/text_size_large"
-                    android:textColor="@color/body_text_1_inverse"
                     android:maxLines="1"
                     android:singleLine="true"
                     android:ellipsize="end" />
