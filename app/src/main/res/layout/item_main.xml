@@ -78,21 +78,21 @@
                         android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
                         android:text="Sakanaya"
                         android:textColor="@android:color/black"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:attr/textAppearanceLarge"/>
 
                     <com.beardedhen.androidbootstrap.AwesomeTextView
                         android:id="@+id/desc2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="?android:attr/textAppearanceSmall"
-                        bootstrap:bootstrapBrand="primary"
                         bootstrap:bootstrapText="{fa_credit_card} Collecting $35.42" />
 
                 </LinearLayout>
             </RelativeLayout>
 
+            <!-- The following TAG may be shown as warnings/indicators -->
             <FrameLayout
+                android:visibility="invisible"
                 android:id="@+id/detailBtn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -113,6 +113,13 @@
 
             </FrameLayout>
 
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/general_padding"
+                android:text="12:00 PM"
+                android:layout_alignParentEnd="true"/>
 
         </RelativeLayout>
 

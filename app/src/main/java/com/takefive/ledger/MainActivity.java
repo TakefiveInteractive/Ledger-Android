@@ -18,8 +18,13 @@ import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.takefive.ledger.database.UserStore;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -68,11 +73,17 @@ public class MainActivity extends AppCompatActivity {
         mTitle = getTitle();
         mUserName.setText(getIntent().getStringExtra("username"));
 
-        mList.setAdapter(new SimpleAdapter(this, Arrays.asList(
-                new Data("zak", 12.22f, "Cravings", "Collected $24"),
-                new Data(null, 16.12f, "Circle K", "Collected $123"),
-                new Data("mary", 56.22f, "Amazon", "Collected $12.22")
-        )));
+        SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+
+        try {
+            mList.setAdapter(new SimpleAdapter(this, Arrays.asList(
+                    new Data("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50")),
+                    new Data(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3))),
+                    new Data("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)))
+            )));
+        } catch (ParseException err) {
+            err.printStackTrace();
+        }
 
 
         // Fix drawer location after enabling status bar transparency.
@@ -86,15 +97,17 @@ public class MainActivity extends AppCompatActivity {
 }
 
 class Data {
-    public Data(String a, float b, String c, String d) {
+    public Data(String a, float b, String c, String d, Date e) {
         whoPaid = a;
         paidAmount = b;
         desc1 = c;
         desc2 = d;
+        time = e;
     }
     String whoPaid;
     float paidAmount;
     String desc1, desc2;
+    Date time;
 }
 
 class SimpleAdapter extends ArrayAdapter<Data> {
@@ -117,6 +130,7 @@ class SimpleAdapter extends ArrayAdapter<Data> {
         TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
         TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
         AwesomeTextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
+        TextView time = ButterKnife.findById(convertView, R.id.time);
 
         whoPaid.setText(data.whoPaid == null ? "You paid:" : data.whoPaid + " paid:");
         paidAmount.setText("$" + data.paidAmount);
@@ -124,7 +138,9 @@ class SimpleAdapter extends ArrayAdapter<Data> {
 
         desc2.setBootstrapText(new BootstrapText.Builder(getContext())
                 .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD)
-                .addText(data.desc2).build());
+                .addText(" " + data.desc2).build());
+
+        time.setText(Helpers.shortDate(DateFormat.SHORT, data.time));
 
         return convertView;
     }

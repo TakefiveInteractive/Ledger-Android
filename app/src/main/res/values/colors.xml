@@ -6,6 +6,10 @@
     <color name="transparent">#00000000</color>
     <color name="background">#f5f5f5</color>
 
+
+    <color name="theme_main_accent">#40bbd5</color>
+
+
     <!-- App main palette for io15 version. -->
     <color name="io15_dark_grey">#FF455A64</color>
     <color name="io15_grey">#FF607D8B</color>
