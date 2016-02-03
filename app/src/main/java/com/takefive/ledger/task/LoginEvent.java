@@ -3,7 +3,7 @@ package com.takefive.ledger.task;
 /**
  * Created by @tourbillon on 2/3/16.
  */
-public class LoginEvent implements InfoAvailableEvent<String> {
+public class LoginEvent implements InfoUpdatedEvent<String> {
 
     private String accessToken;
     private boolean success;

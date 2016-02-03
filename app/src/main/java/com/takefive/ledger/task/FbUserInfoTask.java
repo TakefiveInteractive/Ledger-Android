@@ -1,10 +1,7 @@
 package com.takefive.ledger.task;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.util.Log;
 
 import com.facebook.AccessToken;
@@ -27,10 +24,6 @@ public class FbUserInfoTask extends AsyncTask<AccessToken, Void, FbUserInfo> {
     @Inject
     Bus bus;
 
-    // TODO: inject activity
-    @Inject
-    Activity mActivity;
-
     @Override
     protected FbUserInfo doInBackground(AccessToken... params) {
         GraphRequest request = GraphRequest.newMeRequest(params[0], null);
@@ -50,9 +43,10 @@ public class FbUserInfoTask extends AsyncTask<AccessToken, Void, FbUserInfo> {
             while(keys.hasNext())
                 Log.d("object properties", keys.next());
             e.printStackTrace();
-            Snackbar.make(mActivity.findViewById(android.R.id.content), "Failed to contact Facebook.", Snackbar.LENGTH_SHORT).show();
+            bus.post(new TaskFailEvent<>(e, this));
+            return null;
         }
-        return null;
+        return info;
     }
 
     @Override
@@ -61,11 +55,6 @@ public class FbUserInfoTask extends AsyncTask<AccessToken, Void, FbUserInfo> {
             return;
 
         super.onPostExecute(fbUserInfo);
-        bus.post(new InfoAvailableEvent<FbUserInfo>() {
-            @Override
-            public FbUserInfo getUpdate() {
-                return fbUserInfo;
-            }
-        });
+        bus.post(fbUserInfo);
     }
 }

@@ -5,7 +5,6 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,8 +14,6 @@ import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.squareup.otto.Bus;
@@ -25,16 +22,14 @@ import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.task.FbUserInfo;
 import com.takefive.ledger.task.FbUserInfoTask;
-import com.takefive.ledger.task.InfoAvailableEvent;
+import com.takefive.ledger.task.InfoUpdatedEvent;
 import com.takefive.ledger.task.LoginEvent;
 import com.takefive.ledger.task.LoginTask;
+import com.takefive.ledger.task.TaskFailEvent;
 import com.takefive.ledger.task.UpdateUserInfoTask;
-import com.takefive.ledger.task.UserInfoAvailableEvent;
+import com.takefive.ledger.task.UserInfoUpdatedEvent;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import java.util.Arrays;
-import java.util.Iterator;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -105,7 +100,6 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                loginTaskProvider.get().execute(loginResult.getAccessToken().getToken());
                 fbUserInfoProvider.get().execute(loginResult.getAccessToken());
             }
 
@@ -116,7 +110,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
             @Override
             public void onError(FacebookException error) {
-                Snackbar.make(findViewById(android.R.id.content), "Failed to contact Facebook.", Snackbar.LENGTH_SHORT).show();
+                showInfo(R.string.error_contact_facebook);
             }
         });
     }
@@ -128,7 +122,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Subscribe
     public void retrieveInfo(LoginEvent event) {
-        // TODO: do something here to avoid dependency on FB UserInfo's result (we already have FB token).
         if (event.isSuccess())
             userInfoTaskProvider.get().execute(name);
         else
@@ -136,7 +129,7 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     @Subscribe
-    public void toMainActivity(UserInfoAvailableEvent event) {
+    public void toMainActivity(UserInfoUpdatedEvent event) {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("username", name);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
@@ -144,14 +137,22 @@ public class WelcomeActivity extends AppCompatActivity {
         finish();
     }
 
-
-    // TODO: do something here.
     @Subscribe
-    public void updateFbUserInfo(InfoAvailableEvent<FbUserInfo> event) {
-        name = event.getUpdate().userName;
+    public void updateFbUserInfo(FbUserInfo info) {
+        name = info.userName;
+        loginTaskProvider.get().execute(info.accessToken.getToken());
+    }
+
+    @Subscribe
+    public void missFbUserInfo(TaskFailEvent<FbUserInfoTask> event) {
+        showInfo(R.string.error_contact_facebook);
     }
 
     public void showInfo(String info) {
+        Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void showInfo(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 

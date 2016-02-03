@@ -5,11 +5,11 @@ import com.takefive.ledger.model.Person;
 /**
  * Created by @tourbillon on 2/2/16.
  */
-public class UserInfoAvailableEvent implements InfoAvailableEvent<Person> {
+public class UserInfoUpdatedEvent implements InfoUpdatedEvent<Person> {
 
     private Person person;
 
-    public UserInfoAvailableEvent(Person person) {
+    public UserInfoUpdatedEvent(Person person) {
         this.person = person;
     }
 

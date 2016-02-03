@@ -46,17 +46,19 @@ public class UpdateUserInfoTask extends AsyncTask<String, Void, Person> {
             ResponseBody responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody.string());
 
+            String ourUserID = jsonObject.getString("_id");
+
             // Set user ID in preferences
-            userStore.setUserId(jsonObject.getString("_id"));
+            userStore.setUserId(ourUserID);
 
             // Set user details in database
             realm.beginTransaction();
             Person result = realm.where(Person.class)
-                    .equalTo("personId", jsonObject.getString("_id"))
+                    .equalTo("personId", ourUserID)
                     .findFirst();
             if (result == null)
                 result = realm.createObject(Person.class);
-            result.setPersonId(jsonObject.getString("_id"));
+            result.setPersonId(ourUserID);
             result.setName(strings[0]);
             result.setFacebookId(jsonObject.getString("facebookId"));
             result.setCreatedAt(new Date(Integer.parseInt(jsonObject.getString("createdAt").toString()) * 1000));
@@ -81,7 +83,7 @@ public class UpdateUserInfoTask extends AsyncTask<String, Void, Person> {
             return;
 
         super.onPostExecute(person);
-        bus.post(new UserInfoAvailableEvent(person));
+        bus.post(new UserInfoUpdatedEvent(person));
     }
 
 }
