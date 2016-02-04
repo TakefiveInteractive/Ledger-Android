@@ -34,7 +34,6 @@ public class FbUserInfoTask extends AsyncTask<AccessToken, Void, FbUserInfo> {
         JSONObject object = response.getJSONObject();
 
         FbUserInfo info = new FbUserInfo();
-        Log.d("debug", object.toString());
         try {
             info.accessToken = params[0];
             info.userName = object.getString("name");

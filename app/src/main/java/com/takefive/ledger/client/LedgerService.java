@@ -12,7 +12,7 @@ import retrofit2.http.POST;
  */
 public interface LedgerService {
 
-    @POST("login")
+    @POST("auth/login")
     Call<ResponseBody> login(@Body RequestBody body);
 
     @GET("person")
