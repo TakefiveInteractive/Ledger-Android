@@ -61,25 +61,28 @@ public class UpdateUserInfoTask implements ChainEditor {
             Log.d("UpUserInfo", "A"+person);
 
             return person;
-        }).fail(errorHolder -> {
-            // Maybe errorHolder.retry() ?
-
-            if (realm.isInTransaction())
-                realm.cancelTransaction();
-            errorHolder.getCause().printStackTrace();
         }).uiThen((Person newPerson) -> {
-            Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
-            // Set user details in database
-            realm.beginTransaction();
-            Person result = realm.where(Person.class)
-                    .equalTo("personId", newPerson.getPersonId())
-                    .findFirst();
-            if (result != null)
-                result.removeFromRealm();
-            realm.copyToRealm(newPerson);
-            realm.commitTransaction();
-            // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
-            return result;
+            try {
+                Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
+                // Set user details in database
+                realm.beginTransaction();
+                Person result = realm.where(Person.class)
+                        .equalTo("personId", newPerson.getPersonId())
+                        .findFirst();
+                if (result != null)
+                    result.removeFromRealm();
+                realm.copyToRealm(newPerson);
+                realm.commitTransaction();
+                // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
+                return result;
+            } catch(Exception err) {
+                // Maybe errorHolder.retry() ?
+
+                if (realm.isInTransaction())
+                    realm.cancelTransaction();
+                err.printStackTrace();
+                throw err;
+            }
         });
     }
 }
