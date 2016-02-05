@@ -24,6 +24,7 @@ import zyu19.libs.action.chain.config.ChainEditor;
  */
 public class FbUserInfoTask implements ChainEditor {
 
+
     @Override
     public void edit(ActionChain chain) {
         chain.netThen((AccessToken token) -> {

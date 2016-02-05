@@ -29,9 +29,6 @@ public class UpdateUserInfoTask implements ChainEditor {
     UserStore userStore;
 
     @Inject
-    Bus bus;
-
-    @Inject
     Realm realm;
 
     @Inject
