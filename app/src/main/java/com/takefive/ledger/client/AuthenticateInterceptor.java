@@ -29,7 +29,7 @@ public class AuthenticateInterceptor implements Interceptor {
         Request request = chain.request();
         if (!request.url().toString().contains("/login")) {
             request = request.newBuilder()
-                    .addHeader("fbToken", userStore.getMostRecentAccessToken())
+                    .addHeader("bb-token", userStore.getMostRecentAccessToken())
                     .build();
         }
         return chain.proceed(request);

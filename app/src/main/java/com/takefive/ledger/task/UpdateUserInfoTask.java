@@ -42,7 +42,6 @@ public class UpdateUserInfoTask implements ChainEditor {
             Person person = new Person();
             if (response.code() != 200)
                 throw new IOException();
-
             ResponseBody responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody.string());
 
