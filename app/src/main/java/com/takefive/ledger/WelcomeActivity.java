@@ -69,7 +69,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject UpdateUserInfoTask userInfoTask;
 
-    FbUserInfoTask fbUserInfo;
+    FbUserInfoTask fbUserInfo = new FbUserInfoTask();
 
     String name;
 
