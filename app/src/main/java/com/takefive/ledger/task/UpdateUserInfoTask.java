@@ -74,7 +74,7 @@ public class UpdateUserInfoTask implements ChainEditor {
                 realm.copyToRealm(newPerson);
                 realm.commitTransaction();
                 // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
-                return result;
+                return newPerson;
             } catch(Exception err) {
                 // Maybe errorHolder.retry() ?
 

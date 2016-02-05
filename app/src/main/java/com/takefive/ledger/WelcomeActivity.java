@@ -1,5 +1,6 @@
 package com.takefive.ledger;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -64,11 +65,11 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject Bus bus;
 
-    @Inject Provider<LoginTask> loginTaskProvider;
+    @Inject LoginTask loginTask;
 
     @Inject UpdateUserInfoTask userInfoTask;
 
-    @Inject Provider<FbUserInfoTask> fbUserInfoProvider;
+    @Inject FbUserInfoTask fbUserInfo;
 
     String name;
 
@@ -104,7 +105,7 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                fbUserInfoProvider.get().execute(loginResult.getAccessToken());
+                fbContinueLogin(loginResult);
             }
 
             @Override
@@ -124,21 +125,24 @@ public class WelcomeActivity extends AppCompatActivity {
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
     }
 
-    @Subscribe
-    public void retrieveInfo(LoginEvent event) {
-        if (event.isSuccess()) {
-            new ActionChain(Helpers.getThreadPolicy(this, Executors.newFixedThreadPool(2)))
-            .uiThen(obj -> name)
-            .fail(errorHolder -> showInfo("Oops cannot connect to server."))
-            .use(userInfoTask)
-            .uiThen((Person name) -> {
-                toMainActivity(new UserInfoUpdatedEvent(name));
-                return null;
-            })
-            .start(null);
-        }
-        else
-            showInfo("Oops, couldn't connect to server...");
+    public void fbContinueLogin(final LoginResult loginResult) {
+        new ActionChain(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2)))
+        .netThen(obj -> loginResult.getAccessToken())
+        .fail(errorHolder -> showInfo(R.string.error_contact_facebook))
+        .use(fbUserInfo)
+        .fail(errorHolder -> showInfo("Oops cannot connect to server."))
+        .netThen((FbUserInfo info) -> {
+            name = info.userName;
+            return info.accessToken.getToken();
+        })
+        .use(loginTask)
+        .netThen(obj -> name)
+        .use(userInfoTask)
+        .uiThen((Person name) -> {
+            toMainActivity(new UserInfoUpdatedEvent(name));
+            return null;
+        })
+        .start(null);
     }
 
     @Subscribe
@@ -148,17 +152,6 @@ public class WelcomeActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         finish();
-    }
-
-    @Subscribe
-    public void updateFbUserInfo(FbUserInfo info) {
-        name = info.userName;
-        loginTaskProvider.get().execute(info.accessToken.getToken());
-    }
-
-    @Subscribe
-    public void missFbUserInfo(TaskFailEvent<FbUserInfoTask> event) {
-        showInfo(R.string.error_contact_facebook);
     }
 
     public void showInfo(String info) {
