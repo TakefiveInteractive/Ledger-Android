@@ -1,6 +1,8 @@
 package com.takefive.ledger;
 
+import android.app.Activity;
 import android.content.Context;
+import android.os.StrictMode;
 import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +13,14 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+
+import zyu19.libs.action.chain.config.ThreadChanger;
+import zyu19.libs.action.chain.config.ThreadPolicy;
 
 /**
  * Created by zyu on 1/30/16.
@@ -46,5 +52,9 @@ public class Helpers {
         } else {
             return DateFormat.getDateInstance(LongMedShort, locale).format(d);
         }
+    }
+
+    public static ThreadPolicy getThreadPolicy(Activity activity, ExecutorService multiThreadConfig) {
+        return new ThreadPolicy(runnable -> activity.runOnUiThread(runnable), multiThreadConfig);
     }
 }

@@ -20,6 +20,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.task.FbUserInfo;
 import com.takefive.ledger.task.FbUserInfoTask;
 import com.takefive.ledger.task.InfoUpdatedEvent;
@@ -30,6 +31,8 @@ import com.takefive.ledger.task.UpdateUserInfoTask;
 import com.takefive.ledger.task.UserInfoUpdatedEvent;
 
 import java.util.Arrays;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -38,6 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import zyu19.libs.action.chain.ActionChain;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -62,7 +66,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject Provider<LoginTask> loginTaskProvider;
 
-    @Inject Provider<UpdateUserInfoTask> userInfoTaskProvider;
+    @Inject UpdateUserInfoTask userInfoTask;
 
     @Inject Provider<FbUserInfoTask> fbUserInfoProvider;
 
@@ -122,8 +126,17 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Subscribe
     public void retrieveInfo(LoginEvent event) {
-        if (event.isSuccess())
-            userInfoTaskProvider.get().execute(name);
+        if (event.isSuccess()) {
+            new ActionChain(Helpers.getThreadPolicy(this, Executors.newFixedThreadPool(2)))
+            .uiThen(obj -> name)
+            .fail(errorHolder -> showInfo("Oops cannot connect to server."))
+            .use(userInfoTask)
+            .uiThen((Person name) -> {
+                toMainActivity(new UserInfoUpdatedEvent(name));
+                return null;
+            })
+            .start(null);
+        }
         else
             showInfo("Oops, couldn't connect to server...");
     }

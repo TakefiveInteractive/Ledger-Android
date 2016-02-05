@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     signingConfigs {
@@ -42,6 +43,12 @@ android {
         exclude 'META-INF/maven/com.squareup/javawriter/pom.properties'
         exclude 'META-INF/maven/com.squareup/javawriter/pom.xml'
     }
+
+    // IDE support for retrolambda on AS
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -74,4 +81,6 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
     // Otto for event bus subscription
     compile 'com.squareup:otto:1.3.8'
+
+    compile 'com.github.C4Phone:SmartActionChain:v0.3'
 }

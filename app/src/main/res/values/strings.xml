@@ -19,7 +19,7 @@
 
     <string name="realm_filename">ledger.realm</string>
 
-    <string name="base_url">http://127.0.0.1:8080/</string>
+    <string name="base_url">http://10.20.9.203:8888/</string>
     <string name="api_version">v2</string>
 
     <string name="error_contact_facebook">Failed to contact Facebook.</string>

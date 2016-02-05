@@ -18,6 +18,7 @@ import javax.inject.Inject;
 
 import io.realm.Realm;
 import okhttp3.ResponseBody;
+import zyu19.libs.action.chain.config.PureAction;
 
 /**
  * Created by @tourbillon on 2/2/16.
@@ -39,6 +40,8 @@ public class LoginTask extends AsyncTask<String, Void, String> {
             // Login to service
             JSONRequestBody query = new JSONRequestBody(new JSONObject().put("fbToken", strings[0]));
             ResponseBody responseBody = service.login(query).execute().body();
+            if(responseBody == null)
+                return null;
             return new JSONObject(responseBody.string()).getString("accessToken");
         } catch (JSONException e) {
             e.printStackTrace();

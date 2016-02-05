@@ -1,13 +1,12 @@
 package com.takefive.ledger.task;
 
-import android.os.AsyncTask;
+import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -18,11 +17,13 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChain;
+import zyu19.libs.action.chain.config.ChainEditor;
 
 /**
  * Created by @tourbillon on 2/2/16.
  */
-public class UpdateUserInfoTask extends AsyncTask<String, Void, Person> {
+public class UpdateUserInfoTask implements ChainEditor {
 
     @Inject
     UserStore userStore;
@@ -37,11 +38,12 @@ public class UpdateUserInfoTask extends AsyncTask<String, Void, Person> {
     LedgerService service;
 
     @Override
-    protected Person doInBackground(String... strings) {
-        try {
+    public void edit(ActionChain chain) {
+        chain.netThen((String userName) -> {
             Response<ResponseBody> response = service.getCurrentPerson().execute();
+            Person person = new Person();
             if (response.code() != 200)
-                return null;
+                throw new IOException();
 
             ResponseBody responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody.string());
@@ -51,39 +53,33 @@ public class UpdateUserInfoTask extends AsyncTask<String, Void, Person> {
             // Set user ID in preferences
             userStore.setUserId(ourUserID);
 
+            person.setName(userName);
+            person.setFacebookId(jsonObject.getString("facebookId"));
+            person.setCreatedAt(new Date(Integer.parseInt(jsonObject.getString("createdAt").toString()) * 1000));
+            person.setPersonId(ourUserID);
+
+            Log.d("UpUserInfo", "A"+person);
+
+            return person;
+        }).fail(errorHolder -> {
+            // Maybe errorHolder.retry() ?
+
+            if (realm.isInTransaction())
+                realm.cancelTransaction();
+            errorHolder.getCause().printStackTrace();
+        }).uiThen((Person newPerson) -> {
+            Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
             // Set user details in database
             realm.beginTransaction();
             Person result = realm.where(Person.class)
-                    .equalTo("personId", ourUserID)
+                    .equalTo("personId", newPerson.getPersonId())
                     .findFirst();
-            if (result == null)
-                result = realm.createObject(Person.class);
-            result.setPersonId(ourUserID);
-            result.setName(strings[0]);
-            result.setFacebookId(jsonObject.getString("facebookId"));
-            result.setCreatedAt(new Date(Integer.parseInt(jsonObject.getString("createdAt").toString()) * 1000));
+            if (result != null)
+                result.removeFromRealm();
+            realm.copyToRealm(newPerson);
             realm.commitTransaction();
+            // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
             return result;
-        } catch (IOException e) {
-            if (realm.isInTransaction())
-                realm.cancelTransaction();
-            e.printStackTrace();
-            return null;
-        } catch (JSONException e) {
-            if (realm.isInTransaction())
-                realm.cancelTransaction();
-            e.printStackTrace();
-            return null;
-        }
+        });
     }
-
-    @Override
-    protected void onPostExecute(Person person) {
-        if (person == null)
-            return;
-
-        super.onPostExecute(person);
-        bus.post(new UserInfoUpdatedEvent(person));
-    }
-
 }
