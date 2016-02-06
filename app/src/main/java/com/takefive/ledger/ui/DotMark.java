@@ -60,6 +60,7 @@ public class DotMark extends ImageView {
         path.addArc(rect, 0, 360);
 
         Drawable src = getDrawable();
+        paint.reset();
         paint.setStyle(Paint.Style.FILL);
         if(src instanceof ColorDrawable)
             paint.setColor(((ColorDrawable)src).getColor());
