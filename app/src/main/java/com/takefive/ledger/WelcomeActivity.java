@@ -1,6 +1,5 @@
 package com.takefive.ledger;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -24,19 +23,14 @@ import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.task.FbUserInfo;
 import com.takefive.ledger.task.FbUserInfoTask;
-import com.takefive.ledger.task.InfoUpdatedEvent;
-import com.takefive.ledger.task.LoginEvent;
 import com.takefive.ledger.task.LoginTask;
-import com.takefive.ledger.task.TaskFailEvent;
 import com.takefive.ledger.task.UpdateUserInfoTask;
 import com.takefive.ledger.task.UserInfoUpdatedEvent;
 
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,7 +63,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject UpdateUserInfoTask userInfoTask;
 
-    FbUserInfoTask fbUserInfo = new FbUserInfoTask();
+    FbUserInfoTask fbUserInfoTask = new FbUserInfoTask();
 
     String name;
 
@@ -129,7 +123,7 @@ public class WelcomeActivity extends AppCompatActivity {
         new ActionChain(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2)))
         .netThen(obj -> loginResult.getAccessToken())
         .fail(errorHolder -> showInfo(R.string.error_contact_facebook))
-        .use(fbUserInfo)
+        .use(fbUserInfoTask)
         .fail(errorHolder -> showInfo("Oops cannot connect to server."))
         .netThen((FbUserInfo info) -> {
             name = info.userName;

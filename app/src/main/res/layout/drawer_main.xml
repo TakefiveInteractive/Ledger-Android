@@ -1,117 +1,175 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/navdrawer"
     android:layout_width="@dimen/navdrawer_width"
     android:layout_height="match_parent"
     android:layout_gravity="start"
-    android:fitsSystemWindows="true"
-    android:background="@color/navdrawer_background">
+    android:background="@color/navdrawer_background"
+    android:fitsSystemWindows="true">
 
-    <LinearLayout
+    <FrameLayout
+        android:id="@+id/chosen_account_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="@dimen/navdrawer_chosen_account_height"
+        android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="true">
 
-        <FrameLayout
-            android:id="@+id/chosen_account_view"
+        <ImageView
+            android:id="@+id/profile_cover_image_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/navdrawer_chosen_account_height">
+            android:layout_height="match_parent"
+            android:paddingBottom="@dimen/navdrawer_logo_vertical_padding"
+            android:paddingRight="@dimen/navdrawer_logo_padding_right"
+            android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
+            android:scaleType="center"
+            android:src="@drawable/gradient_background" />
+
+        <RelativeLayout
+            android:id="@+id/chosen_account_content_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/keyline_1"
+            android:paddingRight="@dimen/keyline_1"
+            android:paddingTop="@dimen/keyline_1">
 
             <ImageView
-                android:id="@+id/profile_cover_image_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
-                android:paddingBottom="@dimen/navdrawer_logo_vertical_padding"
-                android:paddingRight="@dimen/navdrawer_logo_padding_right"
+                android:id="@+id/profile_image"
+                android:layout_width="@dimen/navdrawer_profile_image_size"
+                android:layout_height="@dimen/navdrawer_profile_image_size"
+                android:scaleType="centerCrop"
+                android:src="@drawable/person_image_empty" />
+            <!--app:maskDrawable="@drawable/circle_mask"-->
+
+            <ImageView
+                android:id="@+id/expand_account_box_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginLeft="@dimen/navview_start_padding"
+                android:layout_marginStart="@dimen/navview_start_padding"
+                android:paddingBottom="@dimen/navview_header_bottom_padding"
                 android:scaleType="center"
-                android:src="@drawable/gradient_background"/>
+                android:src="@drawable/ic_navview_accounts_expand"
+                android:visibility="gone" />
 
-            <RelativeLayout
-                android:id="@+id/chosen_account_content_view"
+            <TextView
+                android:id="@+id/profile_balance_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="@dimen/keyline_1"
-                android:paddingRight="@dimen/keyline_1"
-                android:paddingTop="@dimen/keyline_1">
+                android:layout_alignLeft="@id/profile_image"
+                android:layout_alignParentBottom="true"
+                android:layout_alignStart="@id/profile_image"
+                android:layout_toLeftOf="@id/expand_account_box_indicator"
+                android:layout_toStartOf="@id/expand_account_box_indicator"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/navview_header_bottom_padding"
+                android:singleLine="true"
+                android:text="Balance: $1.43"
+                android:textSize="@dimen/text_size_medium" />
 
-                <ImageView
-                    android:id="@+id/profile_image"
-                    android:layout_width="@dimen/navdrawer_profile_image_size"
-                    android:layout_height="@dimen/navdrawer_profile_image_size"
-                    android:src="@drawable/person_image_empty"
-                    android:scaleType="centerCrop"/>
-                    <!--app:maskDrawable="@drawable/circle_mask"-->
-
-                <ImageView
-                    android:id="@+id/expand_account_box_indicator"
-                    android:layout_height="wrap_content"
-                    android:layout_width="wrap_content"
-                    android:visibility="gone"
-                    android:layout_marginStart="@dimen/navview_start_padding"
-                    android:layout_marginLeft="@dimen/navview_start_padding"
-                    android:paddingBottom="@dimen/navview_header_bottom_padding"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentBottom="true"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_navview_accounts_expand" />
-
-                <TextView
-                    android:id="@+id/profile_balance_text"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_alignStart="@id/profile_image"
-                    android:layout_alignLeft="@id/profile_image"
-                    android:layout_toStartOf="@id/expand_account_box_indicator"
-                    android:layout_toLeftOf="@id/expand_account_box_indicator"
-                    android:layout_alignParentBottom="true"
-                    android:paddingBottom="@dimen/navview_header_bottom_padding"
-                    android:textSize="@dimen/text_size_medium"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:text="Balance: $1.43"
-                    android:ellipsize="end" />
-
-                <TextView
-                    android:id="@+id/profile_name_text"
-                    android:text="Username"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_above="@id/profile_balance_text"
-                    android:layout_alignStart="@id/profile_image"
-                    android:layout_alignLeft="@id/profile_image"
-                    android:layout_toStartOf="@id/expand_account_box_indicator"
-                    android:layout_toLeftOf="@id/expand_account_box_indicator"
-                    android:textSize="@dimen/text_size_large"
-                    android:maxLines="1"
-                    android:singleLine="true"
-                    android:ellipsize="end" />
-
-            </RelativeLayout>
-
-        </FrameLayout>
-
-        <FrameLayout android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <!-- Account items -->
-            <LinearLayout
-                android:id="@+id/account_list"
+            <TextView
+                android:id="@+id/profile_name_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/navview_account_list_top_padding"
-                android:orientation="vertical"
-                android:visibility="invisible" />
+                android:layout_above="@id/profile_balance_text"
+                android:layout_alignLeft="@id/profile_image"
+                android:layout_alignStart="@id/profile_image"
+                android:layout_toLeftOf="@id/expand_account_box_indicator"
+                android:layout_toStartOf="@id/expand_account_box_indicator"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:text="Username"
+                android:textSize="@dimen/text_size_large" />
 
-            <!-- Drawer items -->
-            <LinearLayout
-                android:id="@+id/navdrawer_items_list"
-                android:layout_width="match_parent"
+        </RelativeLayout>
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"></RadioGroup>
+
+    </FrameLayout>
+
+    <!-- This was how we display two "tabs" in drawer (selected using RadioGroup?)
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/account_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/navview_account_list_top_padding"
+            android:orientation="vertical"
+            android:visibility="invisible" />
+        <LinearLayout
+            android:id="@+id/navdrawer_items_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/navview_menu_item_top_bottom_padding"
+            android:layout_marginTop="@dimen/navview_menu_item_top_bottom_padding"
+            android:orientation="vertical" />
+    </FrameLayout>
+    -->
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/bottomBtnLayout"
+        android:layout_below="@+id/chosen_account_view"></ListView>
+
+    <LinearLayout
+        android:id="@+id/bottomBtnLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/noticable_padding">
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/navview_menu_item_top_bottom_padding"
-                android:layout_marginBottom="@dimen/navview_menu_item_top_bottom_padding"
-                android:orientation="vertical" />
-        </FrameLayout>
+                android:layout_marginEnd="@dimen/general_padding"
+                app:fontAwesomeIcon="fa_sign_out"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            android:padding="@dimen/noticable_padding">
+            <com.beardedhen.androidbootstrap.AwesomeTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/general_padding"
+                app:fontAwesomeIcon="fa_gear"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@android:color/black" />
+        </LinearLayout>
     </LinearLayout>
-    </ScrollView>
+</RelativeLayout>
