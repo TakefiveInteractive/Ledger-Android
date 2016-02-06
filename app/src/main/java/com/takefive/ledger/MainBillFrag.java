@@ -86,16 +86,17 @@ class SimpleAdapter extends ArrayAdapter<Data> {
         TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
         TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
         TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
-        AwesomeTextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
+        TextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
+        AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
         TextView time = ButterKnife.findById(convertView, R.id.time);
 
         whoPaid.setText(data.whoPaid == null ? "You paid:" : data.whoPaid + " paid:");
         paidAmount.setText("$" + data.paidAmount);
         desc1.setText(data.desc1);
 
-        desc2.setBootstrapText(new BootstrapText.Builder(getContext())
-                .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD)
-                .addText(" " + data.desc2).build());
+        desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
+                .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
+        desc2.setText(" " + data.desc2);
 
         time.setText(Helpers.shortDate(DateFormat.SHORT, data.time));
 

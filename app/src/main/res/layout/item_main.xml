@@ -84,12 +84,25 @@
                         android:textColor="@android:color/black"
                         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-                    <com.beardedhen.androidbootstrap.AwesomeTextView
-                        android:id="@+id/desc2"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        bootstrap:bootstrapText="{fa_credit_card} Collecting $35.42" />
+                        android:orientation="horizontal"
+                        android:layout_gravity="center_horizontal">
+                        <com.beardedhen.androidbootstrap.AwesomeTextView
+                            android:id="@+id/desc2icon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            bootstrap:bootstrapText="{fa_credit_card}" />
+
+                        <TextView
+                            android:id="@+id/desc2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:text=" Collecting $35.42" />
+                    </LinearLayout>
 
                 </LinearLayout>
             </RelativeLayout>
