@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <ListView
     android:id="@+id/billList"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:layout="@layout/item_main"/>
-</LinearLayout>
+    tools:layout="@layout/item_main"
+        android:layout_alignParentStart="false" />
+
+    <ImageView
+        android:src="@android:color/black"
+        android:alpha="0.15"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <android.support.v7.widget.CardView
+        app:cardElevation="@dimen/bill_detail_popup_elevation"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:gravity="center"
+            android:textColor="@android:color/black"
+            android:text="Under Construction."/>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

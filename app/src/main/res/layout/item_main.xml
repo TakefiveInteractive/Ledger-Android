@@ -17,7 +17,7 @@
         android:focusable="true"
         android:clickable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        cardview:cardElevation="4dp"
+        cardview:cardElevation="@dimen/card_elevation"
         cardview:cardPreventCornerOverlap="false">
 
         <RelativeLayout
