@@ -6,6 +6,7 @@ import com.squareup.otto.Bus;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
+import com.takefive.ledger.model.Photo;
 import com.takefive.ledger.util.DateTimeConverter;
 
 import org.json.JSONObject;
@@ -50,7 +51,11 @@ public class UpdateUserInfoTask implements ChainEditor {
             // Set user ID in preferences
             userStore.setUserId(ourUserID);
 
+            Photo photo = new Photo();
+            photo.setPhotoUrl(jsonObject.getString("avatarUrl"));
+            photo.setType(Photo.TYPE_AVATAR);
             person.setName(userName);
+            person.setAvatar(photo);
             person.setFacebookId(jsonObject.getString("facebookId"));
             person.setCreatedAt(DateTimeConverter.toDate(jsonObject.getString("createdAt")));
             person.setPersonId(ourUserID);

@@ -1,5 +1,6 @@
 package com.takefive.ledger;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -99,6 +100,11 @@ class SimpleAdapter extends ArrayAdapter<Data> {
         desc2.setText(" " + data.desc2);
 
         time.setText(Helpers.shortDate(DateFormat.SHORT, data.time));
+
+        convertView.setOnClickListener((View view) -> {
+            Intent intent = new Intent(view.getContext(), BillDetailActivity.class);
+            view.getContext().startActivity(intent);
+        });
 
         return convertView;
     }

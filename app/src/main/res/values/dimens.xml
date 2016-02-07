@@ -221,4 +221,8 @@
     <dimen name="welcome_content_width">@dimen/match_parent</dimen>
     <dimen name="welcome_title_size">20sp</dimen>
 
+    <!-- Bill Details Activity -->
+    <dimen name="bill_icon_width">60dp</dimen>
+    <dimen name="bill_icon_height">30dp</dimen>
+
 </resources>

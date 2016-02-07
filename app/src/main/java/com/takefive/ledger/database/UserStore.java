@@ -19,6 +19,4 @@ public interface UserStore {
     String getMostRecentUserId();
 
     String getMostRecentAccessToken();
-
-    Person getCurrentUser();
 }
