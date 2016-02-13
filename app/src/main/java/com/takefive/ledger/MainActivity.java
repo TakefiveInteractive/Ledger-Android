@@ -110,7 +110,8 @@ public class MainActivity extends AppCompatActivity {
         currentUser = realm.where(Person.class)
                 .equalTo("personId", userStore.getMostRecentUserId())
                 .findFirst();
-        mUserName.setText(currentUser.getName());
+        if(currentUser != null)
+            mUserName.setText(currentUser.getName());
     }
 
     @Override

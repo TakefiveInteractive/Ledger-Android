@@ -231,11 +231,6 @@ class SimpleAdapter extends ArrayAdapter<Data> {
 
         time.setText(Helpers.shortDate(DateFormat.SHORT, data.time));
 
-        convertView.setOnClickListener((View view) -> {
-            Intent intent = new Intent(view.getContext(), BillDetailActivity.class);
-            view.getContext().startActivity(intent);
-        });
-
         return convertView;
     }
 }
