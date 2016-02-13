@@ -3,6 +3,7 @@ package com.takefive.ledger.database;
 import android.content.Context;
 
 import com.takefive.ledger.ApplicationContextProvider;
+import com.takefive.ledger.MainActivity;
 import com.takefive.ledger.WelcomeActivity;
 
 import dagger.Module;
@@ -16,7 +17,7 @@ import io.realm.Realm;
 @Module(
         complete = false,
         library = true,
-        injects = {WelcomeActivity.class}
+        injects = {WelcomeActivity.class, MainActivity.class}
 )
 public class BusinessUserStoreModule {
 

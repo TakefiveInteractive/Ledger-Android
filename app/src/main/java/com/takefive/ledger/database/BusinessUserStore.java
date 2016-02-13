@@ -7,6 +7,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.model.Person;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import dagger.Module;
 import io.realm.Realm;
@@ -16,16 +17,15 @@ import io.realm.Realm;
  */
 
 public class BusinessUserStore implements UserStore {
+
     private Context context;
     private SharedPreferences preferences;
-    private Realm realm;
 
     @Inject
-    public BusinessUserStore(Context context, Realm realm) {
+    public BusinessUserStore(Context context) {
         this.context = context;
         this.preferences = context.getSharedPreferences(
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
-        this.realm = realm;
     }
 
     @Override
@@ -50,10 +50,5 @@ public class BusinessUserStore implements UserStore {
     @Override
     public String getMostRecentAccessToken() {
         return preferences.getString(context.getString(R.string.preferences_identifier_accessToken), "");
-    }
-
-    @Override
-    public Person getCurrentUser() {
-        return realm.where(Person.class).equalTo("personId", getMostRecentUserId()).findFirst();
     }
 }

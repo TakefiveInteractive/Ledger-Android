@@ -26,6 +26,7 @@ import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.takefive.ledger.database.UserStore;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.NamedFragment;
 
 import java.text.DateFormat;
@@ -41,6 +42,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -59,6 +61,14 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
+    @Inject
+    Realm realm;
+
+    @Inject
+    UserStore userStore;
+
+    private Person currentUser;
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -73,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        // ((MyApplication) getApplication()).inject(this);
+        ((MyApplication) getApplication()).inject(this);
 
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -95,7 +105,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setupTabs();
-        mUserName.setText(getIntent().getStringExtra("username"));
+
+        // Retrieve current user
+        currentUser = realm.where(Person.class)
+                .equalTo("personId", userStore.getMostRecentUserId())
+                .findFirst();
+        mUserName.setText(currentUser.getName());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 
     void setupTabs() {

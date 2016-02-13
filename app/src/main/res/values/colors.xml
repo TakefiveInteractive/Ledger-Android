@@ -41,5 +41,8 @@
 
     <color name="navdrawer_background">@android:color/white</color>
 
+    <color name="section_title">#40bbd5</color>
+    <color name="vertical_divider">#E3E3E3</color>
+
 
 </resources>

@@ -23,5 +23,8 @@
     <string name="api_version">v2</string>
 
     <string name="error_contact_facebook">Failed to contact Facebook.</string>
+    <string name="title_activity_bill_detail">BillDetailActivity</string>
+
+    <string name="hello_world">Hello world!</string>
 
 </resources>
