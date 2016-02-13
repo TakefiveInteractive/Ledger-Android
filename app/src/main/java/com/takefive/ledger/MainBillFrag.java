@@ -81,6 +81,8 @@ public class MainBillFrag extends NamedFragment {
     private void initTransparentPopup() {
         mShadow.setClickable(false);
         mShadow.setFocusable(false);
+        mPopup.setClickable(false);
+        mPopup.setFocusable(false);
         //mPopup.setVisibility(View.GONE);
         mShadow.setAlpha(0);
         mPopup.setAlpha(0);
@@ -111,6 +113,8 @@ public class MainBillFrag extends NamedFragment {
                     public void onAnimationEnd(Animator animation) {
                         mShadow.setClickable(false);
                         mShadow.setFocusable(false);
+                        mPopup.setClickable(false);
+                        mPopup.setFocusable(false);
                     }
 
                     @Override
@@ -162,6 +166,8 @@ public class MainBillFrag extends NamedFragment {
                     public void onAnimationEnd(Animator animation) {
                         mShadow.setClickable(true);
                         mShadow.setFocusable(true);
+                        mPopup.setClickable(true);
+                        mPopup.setFocusable(true);
                     }
 
                     @Override
