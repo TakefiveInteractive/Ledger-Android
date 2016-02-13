@@ -1,51 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:divider="@drawable/divider"
         android:orientation="vertical"
         android:paddingTop="@dimen/noticable_padding"
-        android:divider="@drawable/divider"
         android:showDividers="middle">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Details"
-            android:textSize="20sp"
-            android:textColor="@color/section_title"
-            android:gravity="center"
+            android:layout_marginBottom="@dimen/noticable_padding"
             android:layout_marginLeft="@dimen/noticable_padding"
             android:layout_marginRight="@dimen/noticable_padding"
-            android:layout_marginBottom="@dimen/noticable_padding"/>
+            android:gravity="center"
+            android:text="Details"
+            android:textColor="@color/section_title"
+            android:textSize="20sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
             android:layout_marginLeft="@dimen/noticable_padding"
-            android:layout_marginRight="@dimen/noticable_padding">
+            android:layout_marginRight="@dimen/noticable_padding"
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/noticable_padding"
                 android:paddingBottom="@dimen/noticable_padding"
-                android:gravity="center">
+                android:paddingTop="@dimen/noticable_padding">
 
                 <ImageView
                     android:id="@+id/billDescriptionIcon"
                     android:layout_width="60dp"
                     android:layout_height="30dp"
-                    android:scaleType="centerInside"
                     android:layout_marginRight="10dp"
-                    android:src="@drawable/ic_comment_black_36dp"/>
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_comment_black_36dp" />
 
                 <TextView
                     android:id="@+id/billDescription"
@@ -59,16 +59,16 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/noticable_padding"
                 android:paddingBottom="@dimen/noticable_padding"
-                android:gravity="center">
+                android:paddingTop="@dimen/noticable_padding">
 
                 <ImageView
                     android:layout_width="@dimen/bill_icon_width"
                     android:layout_height="@dimen/bill_icon_height"
-                    android:scaleType="centerInside"
                     android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_alarm_black_36dp" />
 
                 <TextView
@@ -76,31 +76,42 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="11:59 pm\nJan 6th, 2016"
-                    android:textSize="15sp"/>
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
                 android:orientation="horizontal"
-                android:paddingTop="@dimen/noticable_padding"
                 android:paddingBottom="@dimen/noticable_padding"
-                android:gravity="center">
+                android:paddingTop="@dimen/noticable_padding">
 
                 <ImageView
                     android:layout_width="@dimen/bill_icon_width"
                     android:layout_height="@dimen/bill_icon_height"
-                    android:scaleType="centerInside"
                     android:layout_marginRight="10dp"
+                    android:scaleType="centerInside"
                     android:src="@drawable/money_icon" />
 
-                <TextView
-                    android:id="@+id/billTime"
+                <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Amount:\n$25.52"
-                    android:textSize="15sp"/>
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Amount:"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/billAmount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="$25.52"
+                        android:textSize="20sp" />
+                </LinearLayout>
 
             </LinearLayout>
 

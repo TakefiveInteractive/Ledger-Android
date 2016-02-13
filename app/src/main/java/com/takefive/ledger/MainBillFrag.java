@@ -23,6 +23,8 @@ import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.takefive.ledger.ui.NamedFragment;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -59,9 +61,9 @@ public class MainBillFrag extends NamedFragment {
         try {
             SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
             mList.setAdapter(new SimpleAdapter(getContext(), Arrays.asList(
-                    new Data("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50")),
-                    new Data(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3))),
-                    new Data("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)))
+                    new Data("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."),
+                    new Data(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3)), "Water water water"),
+                    new Data("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)), "We bought some xxx phone with xxx sim card")
             )));
         } catch (ParseException err) {
             err.printStackTrace();
@@ -69,12 +71,28 @@ public class MainBillFrag extends NamedFragment {
 
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             if(bPopupShown) return;
-            //Object data = mList.getItemAtPosition(position);
+            updatePopup((Data)mList.getItemAtPosition(position));
             showPopup();
         });
 
         return root;
     }
+
+    //----- Popup: Update content
+    @Bind(R.id.billDescription)
+    TextView mBillDesc;
+    @Bind(R.id.billAmount)
+    TextView mBillAmount;
+    @Bind(R.id.billTime)
+    TextView mBillTime;
+
+    void updatePopup(Data data) {
+        mBillDesc.setText(data.detailDesc);
+        mBillAmount.setText("S" + data.paidAmount);
+        mBillTime.setText(Helpers.longDate(DateFormat.MEDIUM, data.time));
+    }
+
+    //----- Popup: Animation
 
     boolean bPopupShown = false;
 
@@ -191,16 +209,17 @@ public class MainBillFrag extends NamedFragment {
 }
 
 class Data {
-    public Data(String a, float b, String c, String d, Date e) {
+    public Data(String a, float b, String c, String d, Date e, String _detailDesc) {
         whoPaid = a;
         paidAmount = b;
         desc1 = c;
         desc2 = d;
         time = e;
+        detailDesc = _detailDesc;
     }
     String whoPaid;
     float paidAmount;
-    String desc1, desc2;
+    String desc1, desc2, detailDesc;
     Date time;
 }
 

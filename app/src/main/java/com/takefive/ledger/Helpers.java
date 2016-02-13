@@ -31,13 +31,13 @@ public class Helpers {
     public static void setMargins(View v, Integer t, Integer b, Integer l, Integer r) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            if(l != null)
+            if (l != null)
                 p.leftMargin = l;
-            if(t != null)
+            if (t != null)
                 p.topMargin = t;
-            if(r != null)
+            if (r != null)
                 p.rightMargin = r;
-            if(b != null)
+            if (b != null)
                 p.bottomMargin = b;
             v.requestLayout();
         }
@@ -52,6 +52,12 @@ public class Helpers {
         } else {
             return DateFormat.getDateInstance(LongMedShort, locale).format(d);
         }
+    }
+
+    public static String longDate(int LongMedShort, Date d) {
+        Locale locale = Locale.getDefault();
+        return DateFormat.getTimeInstance(LongMedShort, locale).format(d) +
+                "\n" + DateFormat.getDateInstance(LongMedShort, locale).format(d);
     }
 
     public static ThreadPolicy getThreadPolicy(Activity activity, ExecutorService multiThreadConfig) {
