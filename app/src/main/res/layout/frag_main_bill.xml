@@ -12,11 +12,14 @@
         android:layout_alignParentStart="false" />
 
     <ImageView
-        android:src="@android:color/black"
-        android:alpha="0.15"
+        android:id="@+id/shadow"
+        android:src="#000"
+        android:alpha="@dimen/alpha_fgshade_with_popup"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
     <android.support.v7.widget.CardView
+        android:id="@+id/popupCard"
         app:cardElevation="@dimen/bill_detail_popup_elevation"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"

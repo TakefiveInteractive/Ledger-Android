@@ -1,12 +1,17 @@
 package com.takefive.ledger;
 
-import android.support.v4.app.Fragment;
+import android.animation.Animator;
 import android.content.Context;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.CardView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -24,22 +29,34 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by zyu on 2/3/16.
  */
 public class MainBillFrag extends NamedFragment {
+
+    @Bind(R.id.billList)
+    ListView mList;
+    @Bind(R.id.shadow)
+    View mShadow;
+    @Bind(R.id.popupCard)
+    CardView mPopup;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root =  inflater.inflate(R.layout.frag_main_bill, container, false);
-        ListView list = ButterKnife.findById(root, R.id.billList);
+        View root = inflater.inflate(R.layout.frag_main_bill, container, false);
+        ButterKnife.bind(this, root);
 
-        SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+        initTransparentPopup();
 
         try {
-            list.setAdapter(new SimpleAdapter(getContext(), Arrays.asList(
+            SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+            mList.setAdapter(new SimpleAdapter(getContext(), Arrays.asList(
                     new Data("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50")),
                     new Data(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3))),
                     new Data("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)))
@@ -48,8 +65,120 @@ public class MainBillFrag extends NamedFragment {
             err.printStackTrace();
         }
 
+        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            if(bPopupShown) return;
+            //Object data = mList.getItemAtPosition(position);
+            showPopup();
+        });
 
         return root;
+    }
+
+    boolean bPopupShown = false;
+
+    private void initTransparentPopup() {
+        mShadow.setClickable(false);
+        mShadow.setFocusable(false);
+        //mPopup.setVisibility(View.GONE);
+        mShadow.setAlpha(0);
+        mPopup.setAlpha(0);
+        bPopupShown = false;
+    }
+
+    @OnClick(R.id.shadow)
+    void clickShadow() {
+        hidePopup();
+    }
+
+    private void hidePopup() {
+        if(!bPopupShown) return;
+        int popupHeight = mPopup.getHeight();
+
+        Point screenSize = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
+
+        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[] {
+                mShadow.animate().alpha(0)
+                        .setDuration(666).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mShadow.setClickable(false);
+                        mShadow.setFocusable(false);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }),
+                mPopup.animate().alpha(0.5f).translationYBy(popupHeight)
+                        .setDuration(666)
+        };
+        for(ViewPropertyAnimator animator : animators)
+            animator.start();
+        mShadow.setClickable(false);
+        bPopupShown = false;
+    }
+
+    // showPopup relies on mPopup to report actual height, so
+    //     we must set its content values before showPopup()
+    private void showPopup() {
+        if(bPopupShown) return;
+        int popupHeight = mPopup.getHeight();
+
+        initTransparentPopup();
+        Point screenSize = new Point();
+        getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
+        mPopup.setTranslationY(popupHeight);
+        mShadow.setVisibility(View.VISIBLE);
+        mPopup.setVisibility(View.VISIBLE);
+        mPopup.setAlpha(0.5f);
+
+        TypedValue outValue = new TypedValue();
+        getResources().getValue(R.dimen.alpha_fgshade_with_popup, outValue, true);
+        float alpha_fgshade_with_popup = outValue.getFloat();
+
+        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[] {
+                mShadow.animate().alpha(alpha_fgshade_with_popup)
+                .setDuration(666).setListener(new Animator.AnimatorListener() {
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        mShadow.setClickable(true);
+                        mShadow.setFocusable(true);
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+
+                    }
+                }),
+                mPopup.animate().alpha(1).translationYBy(-popupHeight)
+                .setDuration(666)
+        };
+        for(ViewPropertyAnimator animator : animators)
+            animator.start();
+
+        bPopupShown = true;
     }
 }
 
