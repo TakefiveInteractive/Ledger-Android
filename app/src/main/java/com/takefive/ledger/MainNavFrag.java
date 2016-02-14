@@ -1,6 +1,8 @@
 package com.takefive.ledger;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
@@ -16,7 +19,9 @@ import android.widget.TextView;
 
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
+import com.takefive.ledger.ui.DotMark;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -36,7 +41,9 @@ public class MainNavFrag extends Fragment {
     @Bind(R.id.chosen_account_content_view)
     RelativeLayout mSideImgContent;
     @Bind(R.id.boardList)
-    ListView mBoardList;
+    ListView mList;
+    ArrayList<MainNavData> mListData = new ArrayList<>();
+    MainNavAdapter mListAdapter;
 
     @Inject
     Realm realm;
@@ -70,13 +77,32 @@ public class MainNavFrag extends Fragment {
         if(currentUser != null)
             mUserName.setText(currentUser.getName());
 
+        // init list
+        mListAdapter = new MainNavAdapter(getContext(), mListData);
+        mList.setAdapter(mListAdapter);
+        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {});
+
+        // add data
+        for(int i = 0; i < 20; i++)
+            mListData.add(new MainNavData(Color.GREEN, "[Generated name] Board " + i));
+        mListAdapter.notifyDataSetChanged();
+
         return root;
     }
 }
 
-class MainNavAdapter extends ArrayAdapter<MainBillData> {
+class MainNavData {
+    public MainNavData(int c, String n) {
+        dotColor = c;
+        name = n;
+    }
+    public int dotColor;
+    public String name;
+}
 
-    public MainNavAdapter(Context context, List<MainBillData> objects) {
+class MainNavAdapter extends ArrayAdapter<MainNavData> {
+
+    public MainNavAdapter(Context context, List<MainNavData> objects) {
         super(context, R.layout.item_board_list, objects);
     }
 
@@ -85,6 +111,12 @@ class MainNavAdapter extends ArrayAdapter<MainBillData> {
         if(convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
+        MainNavData data = getItem(position);
+        TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
+        DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
+
+        dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
+        boardName.setText(data.name);
         return convertView;
     }
 }

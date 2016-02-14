@@ -119,8 +119,6 @@
         android:id="@+id/boardList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/noticable_padding"
-        android:paddingBottom="@dimen/noticable_padding"
         android:layout_above="@+id/bottomBtnLayout"
         android:layout_below="@+id/chosen_account_view"
         tools:listitem="@layout/item_board_list"/>
