@@ -1,5 +1,6 @@
 package com.takefive.ledger;
 
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -67,5 +71,20 @@ public class MainNavFrag extends Fragment {
             mUserName.setText(currentUser.getName());
 
         return root;
+    }
+}
+
+class MainNavAdapter extends ArrayAdapter<MainBillData> {
+
+    public MainNavAdapter(Context context, List<MainBillData> objects) {
+        super(context, R.layout.item_board_list, objects);
+    }
+
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        if(convertView == null)
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
+
+        return convertView;
     }
 }

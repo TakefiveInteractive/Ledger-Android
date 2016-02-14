@@ -25,6 +25,7 @@ import com.takefive.ledger.ui.NamedFragment;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +42,8 @@ public class MainBillFrag extends NamedFragment {
 
     @Bind(R.id.billList)
     ListView mList;
+    ArrayList<MainBillData> mListData = new ArrayList<>();
+    ArrayAdapter mListAdapter;
     @Bind(R.id.shadow)
     View mShadow;
     @Bind(R.id.popupCard)
@@ -57,22 +60,25 @@ public class MainBillFrag extends NamedFragment {
 
         initTransparentPopup();
 
+        // init list
+        mListAdapter = new MainBillAdapter(getContext(), mListData);
+        mList.setAdapter(mListAdapter);
+        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            if (bPopupShown) return;
+            updatePopup((MainBillData) mList.getItemAtPosition(position));
+            showPopup();
+        });
+
+        // Add data.
         try {
             SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
-            mList.setAdapter(new SimpleAdapter(getContext(), Arrays.asList(
-                    new Data("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."),
-                    new Data(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3)), "Water water water"),
-                    new Data("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)), "We bought some xxx phone with xxx sim card")
-            )));
+            mListData.add(new MainBillData("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."));
+            mListData.add(new MainBillData(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3)), "Water water water"));
+            mListData.add(new MainBillData("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)), "We bought some xxx phone with xxx sim card"));
+            mListAdapter.notifyDataSetChanged();
         } catch (ParseException err) {
             err.printStackTrace();
         }
-
-        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            if(bPopupShown) return;
-            updatePopup((Data)mList.getItemAtPosition(position));
-            showPopup();
-        });
 
         return root;
     }
@@ -93,7 +99,7 @@ public class MainBillFrag extends NamedFragment {
     @Bind(R.id.billTime)
     TextView mBillTime;
 
-    void updatePopup(Data data) {
+    void updatePopup(MainBillData data) {
         mBillDesc.setText(data.detailDesc);
         mBillAmount.setText("S" + data.paidAmount);
         mBillTime.setText(Helpers.longDate(DateFormat.MEDIUM, data.time));
@@ -216,8 +222,8 @@ public class MainBillFrag extends NamedFragment {
     }
 }
 
-class Data {
-    public Data(String a, float b, String c, String d, Date e, String _detailDesc) {
+class MainBillData {
+    public MainBillData(String a, float b, String c, String d, Date e, String _detailDesc) {
         whoPaid = a;
         paidAmount = b;
         desc1 = c;
@@ -231,12 +237,9 @@ class Data {
     Date time;
 }
 
-class SimpleAdapter extends ArrayAdapter<Data> {
-    public SimpleAdapter(Context context) {
-        super(context, R.layout.item_bill_list);
-    }
+class MainBillAdapter extends ArrayAdapter<MainBillData> {
 
-    public SimpleAdapter(Context context, List<Data> objects) {
+    public MainBillAdapter(Context context, List<MainBillData> objects) {
         super(context, R.layout.item_bill_list, objects);
     }
 
@@ -245,7 +248,7 @@ class SimpleAdapter extends ArrayAdapter<Data> {
         if(convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
-        Data data = getItem(position);
+        MainBillData data = getItem(position);
 
         TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
         TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
