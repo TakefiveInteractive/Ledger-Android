@@ -8,6 +8,6 @@ public class TestViews extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.item_main);
+        setContentView(R.layout.item_bill_list);
     }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -13,16 +13,39 @@
         android:paddingTop="@dimen/noticable_padding"
         android:showDividers="middle">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/noticable_padding"
-            android:layout_marginLeft="@dimen/noticable_padding"
-            android:layout_marginRight="@dimen/noticable_padding"
-            android:gravity="center"
-            android:text="Details"
-            android:textColor="@color/section_title"
-            android:textSize="20sp" />
+            android:paddingLeft="@dimen/noticable_padding"
+            android:paddingBottom="@dimen/noticable_padding"
+            android:paddingRight="@dimen/noticable_padding">
+
+            <TextView
+                android:id="@+id/Header"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Details"
+                android:textColor="@color/section_title"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:gravity="end"
+                android:layout_alignTop="@id/Header"
+                android:layout_alignBottom="@id/Header"
+                android:layout_alignParentEnd="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                    android:id="@+id/closePopup"
+                    android:src="@android:drawable/ic_notification_clear_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    bootstrap:hasBorder="false"
+                    android:layout_alignParentEnd="true" />
+            </LinearLayout>
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -96,9 +119,10 @@
                     android:src="@drawable/money_icon" />
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

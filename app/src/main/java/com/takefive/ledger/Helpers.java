@@ -2,6 +2,7 @@ package com.takefive.ledger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.StrictMode;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -62,5 +63,14 @@ public class Helpers {
 
     public static ThreadPolicy getThreadPolicy(Activity activity, ExecutorService multiThreadConfig) {
         return new ThreadPolicy(runnable -> activity.runOnUiThread(runnable), multiThreadConfig);
+    }
+
+    public static int getStatusBarHeight(Resources resources) {
+        int result = 0;
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

@@ -48,12 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
-    @Bind(R.id.profile_name_text)
-    TextView mUserName;
-    @Bind(R.id.chosen_account_view)
-    FrameLayout mSideImgLayout;
-    @Bind(R.id.chosen_account_content_view)
-    RelativeLayout mSideImgContent;
     @Bind(R.id.tabLayout)
     TabLayout mTabLayout;
     @Bind(R.id.viewPager)
@@ -63,20 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Inject
     Realm realm;
-
-    @Inject
-    UserStore userStore;
-
-    private Person currentUser;
-
-    public int getStatusBarHeight() {
-        int result = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            result = getResources().getDimensionPixelSize(resourceId);
-        }
-        return result;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,24 +74,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Fix drawer location after enabling status bar transparency.
-        // Lollipop <=> v21, corresponding with values-v21
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            ViewGroup.LayoutParams p = mSideImgLayout.getLayoutParams();
-            p.height += getStatusBarHeight();
-            mSideImgLayout.setLayoutParams(p);
-
-            Helpers.setMargins(mSideImgContent, getStatusBarHeight(), null, null, null);
-        }
 
         setupTabs();
-
-        // Retrieve current user
-        currentUser = realm.where(Person.class)
-                .equalTo("personId", userStore.getMostRecentUserId())
-                .findFirst();
-        if(currentUser != null)
-            mUserName.setText(currentUser.getName());
     }
 
     @Override

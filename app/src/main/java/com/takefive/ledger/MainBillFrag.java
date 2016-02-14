@@ -1,8 +1,6 @@
 package com.takefive.ledger;
 
 import android.animation.Animator;
-import android.content.Intent;
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -19,11 +17,10 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
+import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.takefive.ledger.ui.NamedFragment;
-
-import org.w3c.dom.Text;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,6 +45,8 @@ public class MainBillFrag extends NamedFragment {
     View mShadow;
     @Bind(R.id.popupCard)
     CardView mPopup;
+    @Bind(R.id.closePopup)
+    BootstrapCircleThumbnail mClosePopup;
 
 
     @Nullable
@@ -78,6 +77,14 @@ public class MainBillFrag extends NamedFragment {
         return root;
     }
 
+    @OnClick(R.id.shadow)
+    void clickShadow() {
+        hidePopup();
+    }
+
+    @OnClick(R.id.closePopup)
+    void clickClosePopup() {hidePopup();}
+
     //----- Popup: Update content
     @Bind(R.id.billDescription)
     TextView mBillDesc;
@@ -101,15 +108,12 @@ public class MainBillFrag extends NamedFragment {
         mShadow.setFocusable(false);
         mPopup.setClickable(false);
         mPopup.setFocusable(false);
+        mClosePopup.setClickable(false);
+        mClosePopup.setFocusable(false);
         //mPopup.setVisibility(View.GONE);
         mShadow.setAlpha(0);
         mPopup.setAlpha(0);
         bPopupShown = false;
-    }
-
-    @OnClick(R.id.shadow)
-    void clickShadow() {
-        hidePopup();
     }
 
     private void hidePopup() {
@@ -133,6 +137,8 @@ public class MainBillFrag extends NamedFragment {
                         mShadow.setFocusable(false);
                         mPopup.setClickable(false);
                         mPopup.setFocusable(false);
+                        mClosePopup.setClickable(false);
+                        mClosePopup.setFocusable(false);
                     }
 
                     @Override
@@ -186,6 +192,8 @@ public class MainBillFrag extends NamedFragment {
                         mShadow.setFocusable(true);
                         mPopup.setClickable(true);
                         mPopup.setFocusable(true);
+                        mClosePopup.setClickable(true);
+                        mClosePopup.setFocusable(true);
                     }
 
                     @Override
@@ -225,17 +233,17 @@ class Data {
 
 class SimpleAdapter extends ArrayAdapter<Data> {
     public SimpleAdapter(Context context) {
-        super(context, R.layout.item_main);
+        super(context, R.layout.item_bill_list);
     }
 
     public SimpleAdapter(Context context, List<Data> objects) {
-        super(context, R.layout.item_main, objects);
+        super(context, R.layout.item_bill_list, objects);
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if(convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_main, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
         Data data = getItem(position);
 
