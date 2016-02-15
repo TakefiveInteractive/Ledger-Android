@@ -16,7 +16,7 @@
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/appBar"
-            android:elevation="5dp"
+            android:elevation="@dimen/toolbar_elevation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
             <android.support.v7.widget.Toolbar
@@ -46,6 +46,10 @@
 
     <!-- The drawer is given a fixed width in dp and extends the full height of
          the container. -->
-    <include layout="@layout/drawer_main"/>
+    <fragment android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:name="com.takefive.ledger.MainNavFrag"
+        android:layout_gravity="start"
+        tools:layout="@layout/drawer_main" />
 
 </android.support.v4.widget.DrawerLayout>

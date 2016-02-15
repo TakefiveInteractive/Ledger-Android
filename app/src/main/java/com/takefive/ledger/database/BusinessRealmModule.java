@@ -3,6 +3,8 @@ package com.takefive.ledger.database;
 import android.content.Context;
 
 import com.takefive.ledger.ApplicationContextProvider;
+import com.takefive.ledger.MainActivity;
+import com.takefive.ledger.MainNavFrag;
 import com.takefive.ledger.R;
 import com.takefive.ledger.WelcomeActivity;
 
@@ -20,7 +22,7 @@ import io.realm.RealmConfiguration;
 @Module(
         complete = false,
         library = true,
-        injects = {WelcomeActivity.class}
+        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class}
 )
 public class BusinessRealmModule {
 

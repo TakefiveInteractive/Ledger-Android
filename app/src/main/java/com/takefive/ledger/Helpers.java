@@ -2,6 +2,7 @@ package com.takefive.ledger;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.StrictMode;
 import android.text.format.DateUtils;
 import android.view.View;
@@ -31,13 +32,13 @@ public class Helpers {
     public static void setMargins(View v, Integer t, Integer b, Integer l, Integer r) {
         if (v.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
             ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-            if(l != null)
+            if (l != null)
                 p.leftMargin = l;
-            if(t != null)
+            if (t != null)
                 p.topMargin = t;
-            if(r != null)
+            if (r != null)
                 p.rightMargin = r;
-            if(b != null)
+            if (b != null)
                 p.bottomMargin = b;
             v.requestLayout();
         }
@@ -54,7 +55,22 @@ public class Helpers {
         }
     }
 
+    public static String longDate(int LongMedShort, Date d) {
+        Locale locale = Locale.getDefault();
+        return DateFormat.getTimeInstance(LongMedShort, locale).format(d) +
+                "\n" + DateFormat.getDateInstance(LongMedShort, locale).format(d);
+    }
+
     public static ThreadPolicy getThreadPolicy(Activity activity, ExecutorService multiThreadConfig) {
         return new ThreadPolicy(runnable -> activity.runOnUiThread(runnable), multiThreadConfig);
+    }
+
+    public static int getStatusBarHeight(Resources resources) {
+        int result = 0;
+        int resourceId = resources.getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId);
+        }
+        return result;
     }
 }

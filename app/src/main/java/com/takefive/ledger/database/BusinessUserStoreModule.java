@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.takefive.ledger.ApplicationContextProvider;
 import com.takefive.ledger.MainActivity;
+import com.takefive.ledger.MainNavFrag;
 import com.takefive.ledger.WelcomeActivity;
 
 import dagger.Module;
@@ -17,7 +18,7 @@ import io.realm.Realm;
 @Module(
         complete = false,
         library = true,
-        injects = {WelcomeActivity.class, MainActivity.class}
+        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class}
 )
 public class BusinessUserStoreModule {
 

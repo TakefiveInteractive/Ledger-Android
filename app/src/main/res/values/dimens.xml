@@ -8,6 +8,11 @@
     <dimen name="noticable_padding">13dp</dimen>
 
     <dimen name="textview_bootstrap_vert_padding">3sp</dimen>
+    
+    <!-- ELEVATIONS -->
+    <dimen name="toolbar_elevation">40dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+    <dimen name="bill_detail_popup_elevation">20dp</dimen>
 
     <!-- Per the design guidelines, navigation drawers should be between 240dp and 320dp:
          https://developer.android.com/design/patterns/navigation-drawer.html -->
@@ -179,7 +184,6 @@
     <dimen name="fab_press_translation_z">6dp</dimen>
     <dimen name="headerbar_elevation">4dp</dimen>
     <dimen name="session_detail_max_header_elevation">@dimen/headerbar_elevation</dimen>
-    <dimen name="card_elevation">2dp</dimen>
 
     <dimen name="stream_card_corner_radius">0dp</dimen>
     <dimen name="card_corner_radius">2dp</dimen>

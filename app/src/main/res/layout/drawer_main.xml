@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/navdrawer_width"
     android:layout_height="match_parent"
-    android:layout_gravity="start"
     android:background="@color/navdrawer_background"
     android:fitsSystemWindows="true">
 
@@ -117,10 +116,12 @@
     -->
 
     <ListView
+        android:id="@+id/boardList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/bottomBtnLayout"
-        android:layout_below="@+id/chosen_account_view"></ListView>
+        android:layout_below="@+id/chosen_account_view"
+        tools:listitem="@layout/item_board_list"/>
 
     <LinearLayout
         android:id="@+id/bottomBtnLayout"
