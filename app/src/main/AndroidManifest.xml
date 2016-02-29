@@ -38,11 +38,6 @@
         <activity
             android:name=".TestViews"
             android:label="@string/app_name" />
-        <activity
-            android:name=".BillDetailActivity"
-            android:theme="@style/MyTheme"
-            android:label="@string/title_activity_bill_detail" >
-        </activity>
     </application>
 
 </manifest>

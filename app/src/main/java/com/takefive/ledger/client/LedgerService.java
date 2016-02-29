@@ -17,4 +17,7 @@ public interface LedgerService {
 
     @GET("person")
     Call<ResponseBody> getCurrentPerson();
+
+    @POST("board")
+    Call<ResponseBody> createBoard();
 }
