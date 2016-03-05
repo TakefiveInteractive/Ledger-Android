@@ -1,5 +1,6 @@
 package com.takefive.ledger;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -28,6 +30,7 @@ import com.takefive.ledger.task.UpdateUserInfoTask;
 import com.takefive.ledger.task.UserInfoUpdatedEvent;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
@@ -37,6 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
 import zyu19.libs.action.chain.ActionChain;
+import zyu19.libs.action.chain.ActionChainFactory;
+import zyu19.libs.action.chain.config.ThreadPolicy;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -51,19 +56,27 @@ public class WelcomeActivity extends AppCompatActivity {
 
     CallbackManager mFBCallbackManager;
 
-    @Inject UserStore userStore;
+    @Inject
+    UserStore userStore;
 
-    @Inject Realm realm;
+    @Inject
+    Realm realm;
 
-    @Inject LedgerService service;
+    @Inject
+    LedgerService service;
 
-    @Inject Bus bus;
+    @Inject
+    Bus bus;
 
-    @Inject LoginTask loginTask;
+    @Inject
+    LoginTask loginTask;
 
-    @Inject UpdateUserInfoTask userInfoTask;
+    @Inject
+    UpdateUserInfoTask userInfoTask;
 
     FbUserInfoTask fbUserInfoTask = new FbUserInfoTask();
+
+    ActionChainFactory chainFactory = new ActionChainFactory(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2)));
 
     String name;
 
@@ -79,7 +92,7 @@ public class WelcomeActivity extends AppCompatActivity {
         Point screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-        Helpers.setMargins(mNameTag, screenSize.y/3, null, null, null);
+        Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
         Helpers.setMargins(mLogin, null, -getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin), null, null);
         ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
                 mLogin.animate()
@@ -92,7 +105,7 @@ public class WelcomeActivity extends AppCompatActivity {
                         .setDuration(1000)
         };
 
-        for(ViewPropertyAnimator x : animators) x.start();
+        for (ViewPropertyAnimator x : animators) x.start();
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFBCallbackManager = CallbackManager.Factory.create();
@@ -120,23 +133,25 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     public void fbContinueLogin(final LoginResult loginResult) {
-        new ActionChain(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2)))
-        .netThen(obj -> loginResult.getAccessToken())
-        .fail(errorHolder -> showInfo(R.string.error_contact_facebook))
-        .use(fbUserInfoTask)
-        .fail(errorHolder -> showInfo("Oops cannot connect to server."))
-        .netThen((FbUserInfo info) -> {
+        new ActionChain(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2))
+        ).fail(errorHolder -> {
+            showInfo(R.string.error_contact_facebook);
+            errorHolder.getCause().printStackTrace();
+        }).netThen(obj -> {
+            AccessToken token = loginResult.getAccessToken();
+            return chainFactory.get(fbUserInfoTask, token).start();
+        }).fail(errorHolder -> {
+            showInfo("Oops cannot connect to server.");
+            errorHolder.getCause().printStackTrace();
+        }).netThen((FbUserInfo info) -> {
             name = info.userName;
-            return info.accessToken.getToken();
-        })
-        .use(loginTask)
-        .netThen(obj -> name)
-        .use(userInfoTask)
-        .uiThen((Person name) -> {
+            return chainFactory.get(loginTask, info.accessToken.getToken()).start();
+        }).netThen(obj -> {
+            return chainFactory.get(userInfoTask, name).start();
+        }).uiThen((Person name) -> {
             toMainActivity(new UserInfoUpdatedEvent(name));
             return null;
-        })
-        .start(null);
+        }).start(null);
     }
 
     @Subscribe

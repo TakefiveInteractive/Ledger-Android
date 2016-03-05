@@ -17,16 +17,15 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.config.ChainEditor;
+import zyu19.libs.action.chain.config.NiceConsumer;
 
 /**
  * Created by zyu on 2/3/16.
  */
-public class FbUserInfoTask implements ChainEditor {
-
+public class FbUserInfoTask implements NiceConsumer<ActionChain> {
 
     @Override
-    public void edit(ActionChain chain) {
+    public void consume(ActionChain chain) {
         chain.netThen((AccessToken token) -> {
             GraphRequest request = GraphRequest.newMeRequest(token, null);
             Bundle config = new Bundle();

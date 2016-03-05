@@ -20,12 +20,12 @@ import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.config.ChainEditor;
+import zyu19.libs.action.chain.config.NiceConsumer;
 
 /**
  * Created by @tourbillon on 2/2/16.
  */
-public class UpdateUserInfoTask implements ChainEditor {
+public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
 
     @Inject
     UserStore userStore;
@@ -37,7 +37,7 @@ public class UpdateUserInfoTask implements ChainEditor {
     LedgerService service;
 
     @Override
-    public void edit(ActionChain chain) {
+    public void consume(ActionChain chain) {
         chain.netThen((String userName) -> {
             Response<ResponseBody> response = service.getCurrentPerson().execute();
             Person person = new Person();

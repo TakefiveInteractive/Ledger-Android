@@ -19,13 +19,13 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import okhttp3.ResponseBody;
 import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.config.ChainEditor;
+import zyu19.libs.action.chain.config.NiceConsumer;
 import zyu19.libs.action.chain.config.PureAction;
 
 /**
  * Created by @tourbillon on 2/2/16.
  */
-public class LoginTask implements ChainEditor {
+public class LoginTask implements NiceConsumer<ActionChain> {
 
     @Inject
     LedgerService service;
@@ -34,7 +34,7 @@ public class LoginTask implements ChainEditor {
     UserStore userStore;
 
     @Override
-    public void edit(ActionChain chain) {
+    public void consume(ActionChain chain) {
         chain.netThen((String fbToken) -> {
             JSONRequestBody query = new JSONRequestBody(new JSONObject().put("fbToken", fbToken));
             ResponseBody responseBody = service.login(query).execute().body();
