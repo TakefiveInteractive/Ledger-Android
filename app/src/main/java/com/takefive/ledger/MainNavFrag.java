@@ -85,13 +85,11 @@ public class MainNavFrag extends Fragment {
         // Retrieve current user
         // TODO: provide a way to refresh
         chainFactory.get(fail -> fail.getCause().printStackTrace()
-        ).netThen(() -> {
-            return realmAccess.process(realm -> {
-                return realm.where(Person.class)
-                        .equalTo("personId", userStore.getMostRecentUserId())
-                        .findFirst().getName();
-            });
-        }).uiConsume((String name) -> {
+        ).netThen(() -> realmAccess.process(realm -> {
+            return realm.where(Person.class)
+                    .equalTo("personId", userStore.getMostRecentUserId())
+                    .findFirst().getName();
+        })).uiConsume((String name) -> {
             mUserName.setText(name);
         }).start();
 

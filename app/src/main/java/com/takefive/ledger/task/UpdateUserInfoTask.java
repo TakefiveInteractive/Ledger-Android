@@ -62,33 +62,31 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
             person.setCreatedAt(DateTimeConverter.toDate(jsonObject.getString("createdAt")));
             person.setPersonId(ourUserID);
 
-            Log.d("UpUserInfo", "A"+person);
+            Log.d("UpUserInfo", "A" + person);
 
             return person;
-        }).netThen((Person newPerson) -> {
-            return realmAccess.process(realm -> {
-                try {
-                    Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
-                    // Set user details in database
-                    realm.beginTransaction();
-                    Person result = realm.where(Person.class)
-                            .equalTo("personId", newPerson.getPersonId())
-                            .findFirst();
-                    if (result != null)
-                        result.removeFromRealm();
-                    realm.copyToRealm(newPerson);
-                    realm.commitTransaction();
-                    // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
-                    return newPerson;
-                } catch (Exception err) {
-                    // Maybe errorHolder.retry() ?
+        }).netThen((Person newPerson) -> realmAccess.process(realm -> {
+            try {
+                Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
+                // Set user details in database
+                realm.beginTransaction();
+                Person result = realm.where(Person.class)
+                        .equalTo("personId", newPerson.getPersonId())
+                        .findFirst();
+                if (result != null)
+                    result.removeFromRealm();
+                realm.copyToRealm(newPerson);
+                realm.commitTransaction();
+                // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
+                return newPerson;
+            } catch (Exception err) {
+                // Maybe errorHolder.retry() ?
 
-                    if (realm.isInTransaction())
-                        realm.cancelTransaction();
-                    err.printStackTrace();
-                    throw err;
-                }
-            });
-        });
+                if (realm.isInTransaction())
+                    realm.cancelTransaction();
+                err.printStackTrace();
+                throw err;
+            }
+        }));
     }
 }
