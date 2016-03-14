@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,7 +53,7 @@ public class MainNavFrag extends Fragment {
     MainNavAdapter mListAdapter;
 
     @Inject
-    Realm realm;
+    Provider<Realm> realm;
 
     @Inject
     UserStore userStore;
@@ -63,8 +64,6 @@ public class MainNavFrag extends Fragment {
     @Inject
     ActionChainFactory chainFactory;
 
-    private Person currentUser;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,7 +73,7 @@ public class MainNavFrag extends Fragment {
 
         // Fix drawer location after enabling status bar transparency.
         // Lollipop <=> v21, corresponding with values-v21
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ViewGroup.LayoutParams p = mSideImgLayout.getLayoutParams();
             p.height += Helpers.getStatusBarHeight(getResources());
             mSideImgLayout.setLayoutParams(p);
@@ -83,11 +82,16 @@ public class MainNavFrag extends Fragment {
         }
 
         // Retrieve current user
-        currentUser = realm.where(Person.class)
-                .equalTo("personId", userStore.getMostRecentUserId())
-                .findFirst();
-        if(currentUser != null)
-            mUserName.setText(currentUser.getName());
+        chainFactory.get(
+        ).netThen(() -> {
+            Realm realm = this.realm.get();
+            return realm.where(Person.class)
+                    .equalTo("personId", userStore.getMostRecentUserId())
+                    .findFirst();
+        }).uiConsume((Person currentUser) -> {
+            if (currentUser != null)
+                mUserName.setText(currentUser.getName());
+        });
 
         // init list
         mListAdapter = new MainNavAdapter(getContext(), mListData);
@@ -99,22 +103,20 @@ public class MainNavFrag extends Fragment {
         chainFactory.get(errorHolder -> {
             showInfo("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
-        }).netThen(obj -> {
+        }).netConsume(obj -> {
             Response<GotBoard> resp = service.getMyBoards().execute();
-            if(!resp.isSuccessful()) {
+            if (!resp.isSuccessful()) {
                 String msg = resp.errorBody().string();
                 resp.errorBody().close();
                 throw new IOException(msg);
             }
-            return resp.body();
-        }).uiConsume((GotBoard resp) -> {
-            mListAdapter.addAll(resp.boards);
+            mListData.addAll(resp.body().boards);
+        }).uiConsume(obj -> {
             mListAdapter.notifyDataSetChanged();
         }).start();
 
         return root;
     }
-
 
 
     public void showInfo(String info) {
@@ -134,7 +136,7 @@ class MainNavAdapter extends ArrayAdapter<GotBoard.Entry> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null)
+        if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
         GotBoard.Entry data = getItem(position);

@@ -39,10 +39,12 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import zyu19.libs.action.chain.ActionChainFactory;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -56,7 +58,10 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
 
     @Inject
-    Realm realm;
+    ActionChainFactory chainFactory;
+
+    @Inject
+    Provider<Realm> realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        realm.close();
+        chainFactory.get(
+        ).netConsume(obj -> realm.get().close());
     }
 
     void setupTabs() {

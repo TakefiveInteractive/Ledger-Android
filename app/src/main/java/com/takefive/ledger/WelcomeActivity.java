@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,9 +59,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
     @Inject
     UserStore userStore;
-
-    @Inject
-    Realm realm;
 
     @Inject
     LedgerService service;

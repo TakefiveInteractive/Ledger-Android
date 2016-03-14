@@ -9,11 +9,12 @@
         <item name="android:textColorPrimary">@android:color/white</item>
     </style>
 
+
     <style name="MainTheme" parent="MyTheme">
-        <item name="android:navigationBarColor">#fff</item>
+        <!-- <item name="android:navigationBarColor">#fff</item> -->
     </style>
     <style name="WelcomeTheme" parent="MyTheme">
-        <item name="android:navigationBarColor">#000</item>
+        <!-- <item name="android:navigationBarColor">#000</item> -->
     </style>
 
     <style name="Theme.AppCompat.Translucent">

@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Date;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import io.realm.Realm;
 import okhttp3.ResponseBody;
@@ -31,7 +32,7 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
     UserStore userStore;
 
     @Inject
-    Realm realm;
+    Provider<Realm> realm;
 
     @Inject
     LedgerService service;
@@ -42,7 +43,7 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
             Response<ResponseBody> response = service.getCurrentPerson().execute();
             Person person = new Person();
             if (response.code() != 200)
-                throw new IOException();
+                throw new IOException(response.message());
             ResponseBody responseBody = response.body();
             JSONObject jsonObject = new JSONObject(responseBody.string());
 
@@ -63,7 +64,8 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
             Log.d("UpUserInfo", "A"+person);
 
             return person;
-        }).uiThen((Person newPerson) -> {
+        }).netThen((Person newPerson) -> {
+            Realm realm = this.realm.get();
             try {
                 Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
                 // Set user details in database
@@ -77,7 +79,7 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
                 realm.commitTransaction();
                 // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
                 return newPerson;
-            } catch(Exception err) {
+            } catch (Exception err) {
                 // Maybe errorHolder.retry() ?
 
                 if (realm.isInTransaction())
