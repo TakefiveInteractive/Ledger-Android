@@ -59,6 +59,11 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout mDrawerLayout;
 
     @Inject
+    MainBillFrag billFrag;
+
+    MainBalanceFrag balanceFrag = new MainBalanceFrag();
+
+    @Inject
     ActionChainFactory chainFactory;
 
     @Override
@@ -88,8 +93,8 @@ public class MainActivity extends AppCompatActivity {
 
     void setupTabs() {
         StaticPagerAdapter adapter = new StaticPagerAdapter(this,
-                new MainBillFrag().setTitle(getString(R.string.title_main_bill)),
-                new MainBalanceFrag().setTitle(getString(R.string.title_main_balance)));
+                billFrag.setTitle(getString(R.string.title_main_bill)),
+                balanceFrag.setTitle(getString(R.string.title_main_balance)));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
     }
