@@ -24,6 +24,7 @@ import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.DotMark;
+import com.takefive.ledger.ui.MyFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -97,6 +98,7 @@ public class MainNavFrag extends Fragment {
         mListAdapter = new MainNavAdapter(getContext(), mListData);
         mList.setAdapter(mListAdapter);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            onClickItem(position);
         });
 
         // add data
@@ -118,6 +120,14 @@ public class MainNavFrag extends Fragment {
         return root;
     }
 
+    void onClickItem(int pos) {
+        getActivity().getIntent().putExtra("CurrentBoardId", mListAdapter.getItem(pos)._id);
+
+        for(Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
+            if(fragment instanceof MainBillFrag)
+                ((MainBillFrag) fragment).onUpdate();
+        }
+    }
 
     public void showInfo(String info) {
         Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
@@ -126,26 +136,28 @@ public class MainNavFrag extends Fragment {
     public void showInfo(int info) {
         Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
-}
 
-class MainNavAdapter extends ArrayAdapter<DidGetBoard.Entry> {
+    class MainNavAdapter extends ArrayAdapter<DidGetBoard.Entry> {
 
-    public MainNavAdapter(Context context, List<DidGetBoard.Entry> objects) {
-        super(context, R.layout.item_board_list, objects);
-    }
+        public MainNavAdapter(Context context, List<DidGetBoard.Entry> objects) {
+            super(context, R.layout.item_board_list, objects);
+        }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if (convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
-        DidGetBoard.Entry data = getItem(position);
-        TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
-        DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
+            DidGetBoard.Entry data = getItem(position);
+            TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
+            DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
 
-        //dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
-        dotMark.setImageDrawable(new ColorDrawable(Color.BLUE));
-        boardName.setText(data.name);
-        return convertView;
+            //dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
+            dotMark.setImageDrawable(new ColorDrawable(Color.BLUE));
+            boardName.setText(data.name);
+
+            convertView.setOnClickListener(v -> onClickItem(position));
+            return convertView;
+        }
     }
 }

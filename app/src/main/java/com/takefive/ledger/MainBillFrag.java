@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.CardView;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -20,29 +21,38 @@ import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
+import com.takefive.ledger.client.LedgerService;
+import com.takefive.ledger.client.raw.DidGetBillById;
+import com.takefive.ledger.client.raw.DidGetBoard;
+import com.takefive.ledger.client.raw.DidGetBoardById;
+import com.takefive.ledger.ui.MyFragment;
 import com.takefive.ledger.ui.NamedFragment;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
  * Created by zyu on 2/3/16.
  */
-public class MainBillFrag extends NamedFragment {
+public class MainBillFrag extends MyFragment {
 
     @Bind(R.id.billList)
     ListView mList;
-    ArrayList<MainBillData> mListData = new ArrayList<>();
+    ArrayList<DidGetBillById> mListData = new ArrayList<>();
     ArrayAdapter mListAdapter;
     @Bind(R.id.shadow)
     View mShadow;
@@ -50,6 +60,12 @@ public class MainBillFrag extends NamedFragment {
     CardView mPopup;
     @Bind(R.id.closePopup)
     BootstrapCircleThumbnail mClosePopup;
+
+    @Inject
+    ActionChainFactory chainFactory;
+
+    @Inject
+    LedgerService service;
 
 
     @Nullable
@@ -65,35 +81,45 @@ public class MainBillFrag extends NamedFragment {
         mList.setAdapter(mListAdapter);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             if (bPopupShown) return;
-            updatePopup((MainBillData) mList.getItemAtPosition(position));
+            updatePopup((DidGetBillById) mList.getItemAtPosition(position));
             showPopup();
         });
 
-        // Retrieve current user
-        // TODO: provide a way to refresh
-        chainFactory.get(
-        ).netThen(() -> {
-            Realm realm = this.realm.get();
-            return realm.where(Person.class)
-                    .equalTo("personId", userStore.getMostRecentUserId())
-                    .findFirst();
-        }).uiConsume((Person currentUser) -> {
-            if (currentUser != null)
-                mUserName.setText(currentUser.getName());
-        });
 
-        // Add data.
-        try {
-            SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
-            mListData.add(new MainBillData("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."));
-            mListData.add(new MainBillData(null, 16.12f, "Circle K", "Collected $123", new Date(new Date().getTime() - TimeUnit.DAYS.toMillis(3)), "Water water water"));
-            mListData.add(new MainBillData("mary", 56.22f, "Amazon", "Collected $12.22", new Date(new Date().getTime() - TimeUnit.HOURS.toMillis(1)), "We bought some xxx phone with xxx sim card"));
-            mListAdapter.notifyDataSetChanged();
-        } catch (ParseException err) {
-            err.printStackTrace();
-        }
+        // SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+        // mListData.add(new DidGetBillById("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."));
+        // mListAdapter.notifyDataSetChanged();
 
         return root;
+    }
+
+    @Override
+    public void onUpdate() {
+        // Add data.
+        chainFactory.get(errorHolder -> {
+            showInfo("Cannot get boards: " + errorHolder.getCause().toString());
+            errorHolder.getCause().printStackTrace();
+        }).uiThen(() -> getActivity().getIntent().getStringExtra("CurrentBoardId")
+        ).netConsume((String boardId) -> {
+            Response<DidGetBoardById> resp = service.getBoardById(boardId).execute();
+            if (!resp.isSuccessful()) {
+                String msg = resp.errorBody().string();
+                resp.errorBody().close();
+                throw new IOException(msg);
+            }
+            mListData.clear();
+            mListData.addAll(resp.body().bills);
+        }).uiConsume(obj -> {
+            mListAdapter.notifyDataSetChanged();
+        }).start();
+    }
+
+    public void showInfo(String info) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void showInfo(int info) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
     @OnClick(R.id.shadow)
@@ -112,10 +138,14 @@ public class MainBillFrag extends NamedFragment {
     @Bind(R.id.billTime)
     TextView mBillTime;
 
-    void updatePopup(MainBillData data) {
-        mBillDesc.setText(data.detailDesc);
-        mBillAmount.setText("S" + data.paidAmount);
-        mBillTime.setText(Helpers.longDate(DateFormat.MEDIUM, data.time));
+    void updatePopup(DidGetBillById data) {
+        mBillDesc.setText(data.description);
+        mBillAmount.setText("S" + data.getTotalAmount());
+        try {
+            mBillTime.setText(Helpers.longDate(DateFormat.MEDIUM, data.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     //----- Popup: Animation
@@ -235,24 +265,9 @@ public class MainBillFrag extends NamedFragment {
     }
 }
 
-class MainBillData {
-    public MainBillData(String a, float b, String c, String d, Date e, String _detailDesc) {
-        whoPaid = a;
-        paidAmount = b;
-        desc1 = c;
-        desc2 = d;
-        time = e;
-        detailDesc = _detailDesc;
-    }
-    String whoPaid;
-    float paidAmount;
-    String desc1, desc2, detailDesc;
-    Date time;
-}
+class MainBillAdapter extends ArrayAdapter<DidGetBillById> {
 
-class MainBillAdapter extends ArrayAdapter<MainBillData> {
-
-    public MainBillAdapter(Context context, List<MainBillData> objects) {
+    public MainBillAdapter(Context context, List<DidGetBillById> objects) {
         super(context, R.layout.item_bill_list, objects);
     }
 
@@ -261,7 +276,7 @@ class MainBillAdapter extends ArrayAdapter<MainBillData> {
         if(convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
-        MainBillData data = getItem(position);
+        DidGetBillById data = getItem(position);
 
         TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
         TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
@@ -270,15 +285,19 @@ class MainBillAdapter extends ArrayAdapter<MainBillData> {
         AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
         TextView time = ButterKnife.findById(convertView, R.id.time);
 
-        whoPaid.setText(data.whoPaid == null ? "You paid:" : data.whoPaid + " paid:");
-        paidAmount.setText("$" + data.paidAmount);
-        desc1.setText(data.desc1);
+        whoPaid.setText(data.recipient == null ? "You paid:" : data.recipient + " paid:");
+        paidAmount.setText("$" + data.getTotalAmount());
+        desc1.setText(data.title);
 
         desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
                 .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-        desc2.setText(" " + data.desc2);
+        desc2.setText(" " + data.description);
 
-        time.setText(Helpers.shortDate(DateFormat.SHORT, data.time));
+        try {
+            time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         return convertView;
     }

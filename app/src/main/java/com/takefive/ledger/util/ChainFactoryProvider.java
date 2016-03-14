@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.takefive.ledger.MainActivity;
+import com.takefive.ledger.MainBillFrag;
 import com.takefive.ledger.MainNavFrag;
 import com.takefive.ledger.WelcomeActivity;
 
@@ -23,7 +24,7 @@ import zyu19.libs.action.chain.config.ThreadPolicy;
 @Module(
         complete = false,
         library = true,
-        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class}
+        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class, MainBillFrag.class}
 )
 public class ChainFactoryProvider {
     @Provides

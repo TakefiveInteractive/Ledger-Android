@@ -1,5 +1,8 @@
 package com.takefive.ledger.client.raw;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Singleton;
@@ -20,4 +23,17 @@ public class DidGetBillById {
     public boolean isPaid;
     public String creator;
     public boolean isDeleted;
+
+    public Date getTime() throws ParseException {
+        SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+        return dater.parse(time);
+    }
+
+    public double getTotalAmount() {
+        double sum = 0;
+        for(DidGetAmount amount : amounts) {
+            sum += amount.balance;
+        }
+        return sum;
+    }
 }

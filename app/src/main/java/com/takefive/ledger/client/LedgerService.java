@@ -26,6 +26,6 @@ public interface LedgerService {
     Call<DidGetBoard> getMyBoards();
 
     @GET("board/{id}")
-    Call<DidGetBoardById> getUser(@Path("id") String id);
+    Call<DidGetBoardById> getBoardById(@Path("id") String id);
 
 }

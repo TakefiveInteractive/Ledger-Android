@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void setupTabs() {
-        StaticPagerAdapter adapter = new StaticPagerAdapter(getSupportFragmentManager(),
+        StaticPagerAdapter adapter = new StaticPagerAdapter(this,
                 new MainBillFrag().setTitle(getString(R.string.title_main_bill)),
                 new MainBalanceFrag().setTitle(getString(R.string.title_main_balance)));
         mViewPager.setAdapter(adapter);
@@ -98,8 +98,17 @@ public class MainActivity extends AppCompatActivity {
 class StaticPagerAdapter extends FragmentPagerAdapter {
     NamedFragment[] mFragments;
 
-    public StaticPagerAdapter(FragmentManager fm, NamedFragment... fragments) {
-        super(fm);
+    public static String getBundleNameFor(NamedFragment fragment) {
+        return getBundleNameFor(fragment.getTitle());
+    }
+
+    public static String getBundleNameFor(String fragmentTitle) {
+        return "NamedFragment_" + fragmentTitle;
+    }
+
+    public StaticPagerAdapter(AppCompatActivity context, NamedFragment... fragments) {
+        super(context.getSupportFragmentManager());
+        FragmentManager fm = context.getSupportFragmentManager();
         mFragments = fragments;
     }
 
