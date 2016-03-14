@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.squareup.otto.Bus;
 import com.takefive.ledger.client.LedgerService;
+import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.model.Photo;
@@ -32,7 +33,7 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
     UserStore userStore;
 
     @Inject
-    Provider<Realm> realm;
+    RealmAccess realmAccess;
 
     @Inject
     LedgerService service;
@@ -65,28 +66,29 @@ public class UpdateUserInfoTask implements NiceConsumer<ActionChain> {
 
             return person;
         }).netThen((Person newPerson) -> {
-            Realm realm = this.realm.get();
-            try {
-                Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
-                // Set user details in database
-                realm.beginTransaction();
-                Person result = realm.where(Person.class)
-                        .equalTo("personId", newPerson.getPersonId())
-                        .findFirst();
-                if (result != null)
-                    result.removeFromRealm();
-                realm.copyToRealm(newPerson);
-                realm.commitTransaction();
-                // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
-                return newPerson;
-            } catch (Exception err) {
-                // Maybe errorHolder.retry() ?
+            return realmAccess.process(realm -> {
+                try {
+                    Log.d("UpUserInfo", newPerson == null ? "null" : newPerson.toString());
+                    // Set user details in database
+                    realm.beginTransaction();
+                    Person result = realm.where(Person.class)
+                            .equalTo("personId", newPerson.getPersonId())
+                            .findFirst();
+                    if (result != null)
+                        result.removeFromRealm();
+                    realm.copyToRealm(newPerson);
+                    realm.commitTransaction();
+                    // MAYBE NOT NEEDED: bus.post(new UserInfoUpdatedEvent(result));
+                    return newPerson;
+                } catch (Exception err) {
+                    // Maybe errorHolder.retry() ?
 
-                if (realm.isInTransaction())
-                    realm.cancelTransaction();
-                err.printStackTrace();
-                throw err;
-            }
+                    if (realm.isInTransaction())
+                        realm.cancelTransaction();
+                    err.printStackTrace();
+                    throw err;
+                }
+            });
         });
     }
 }

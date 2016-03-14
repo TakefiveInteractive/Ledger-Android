@@ -2,13 +2,8 @@ package com.takefive.ledger.client;
 
 import android.content.Context;
 
-import com.takefive.ledger.ApplicationContextProvider;
 import com.takefive.ledger.R;
 import com.takefive.ledger.WelcomeActivity;
-import com.takefive.ledger.database.BusinessRealmModule;
-import com.takefive.ledger.database.BusinessUserStore;
-import com.takefive.ledger.database.BusinessUserStoreModule;
-import com.takefive.ledger.database.UserStore;
 
 import dagger.Module;
 import dagger.Provides;

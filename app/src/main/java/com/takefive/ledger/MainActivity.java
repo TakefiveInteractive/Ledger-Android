@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
+import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.NamedFragment;
@@ -60,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
     @Inject
     ActionChainFactory chainFactory;
 
-    @Inject
-    Provider<Realm> realm;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,8 +84,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        chainFactory.get(
-        ).netConsume(obj -> realm.get().close());
     }
 
     void setupTabs() {

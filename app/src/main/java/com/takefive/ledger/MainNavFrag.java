@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.takefive.ledger.client.raw.DidGetBoard;
 import com.takefive.ledger.client.LedgerService;
+import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.DotMark;
@@ -53,7 +54,7 @@ public class MainNavFrag extends Fragment {
     MainNavAdapter mListAdapter;
 
     @Inject
-    Provider<Realm> realm;
+    RealmAccess realmAccess;
 
     @Inject
     UserStore userStore;
@@ -82,16 +83,16 @@ public class MainNavFrag extends Fragment {
         }
 
         // Retrieve current user
-        chainFactory.get(
+        chainFactory.get(fail -> fail.getCause().printStackTrace()
         ).netThen(() -> {
-            Realm realm = this.realm.get();
-            return realm.where(Person.class)
-                    .equalTo("personId", userStore.getMostRecentUserId())
-                    .findFirst();
-        }).uiConsume((Person currentUser) -> {
-            if (currentUser != null)
-                mUserName.setText(currentUser.getName());
-        });
+            return realmAccess.process(realm -> {
+                return realm.where(Person.class)
+                        .equalTo("personId", userStore.getMostRecentUserId())
+                        .findFirst().getName();
+            });
+        }).uiConsume((String name) -> {
+            mUserName.setText(name);
+        }).start();
 
         // init list
         mListAdapter = new MainNavAdapter(getContext(), mListData);

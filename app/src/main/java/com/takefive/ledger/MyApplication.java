@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.takefive.ledger.client.BusinessLedgerServiceModule;
-import com.takefive.ledger.database.BusinessRealmModule;
 import com.takefive.ledger.database.BusinessUserStoreModule;
 import com.takefive.ledger.task.BusProvider;
 import com.takefive.ledger.util.ChainFactoryProvider;
@@ -24,7 +23,6 @@ public class MyApplication extends Application {
         this.objectGraph = ObjectGraph.create(
                 new ApplicationContextProvider(this),
                 new BusinessUserStoreModule(),
-                new BusinessRealmModule(),
                 new BusinessLedgerServiceModule(),
                 new BusProvider(),
                 new ChainFactoryProvider()
