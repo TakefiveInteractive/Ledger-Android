@@ -18,7 +18,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.takefive.ledger.client.GotBoard;
+import com.takefive.ledger.client.raw.DidGetBoard;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
@@ -49,7 +49,7 @@ public class MainNavFrag extends Fragment {
     RelativeLayout mSideImgContent;
     @Bind(R.id.boardList)
     ListView mList;
-    ArrayList<GotBoard.Entry> mListData = new ArrayList<>();
+    ArrayList<DidGetBoard.Entry> mListData = new ArrayList<>();
     MainNavAdapter mListAdapter;
 
     @Inject
@@ -104,7 +104,7 @@ public class MainNavFrag extends Fragment {
             showInfo("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
         }).netConsume(obj -> {
-            Response<GotBoard> resp = service.getMyBoards().execute();
+            Response<DidGetBoard> resp = service.getMyBoards().execute();
             if (!resp.isSuccessful()) {
                 String msg = resp.errorBody().string();
                 resp.errorBody().close();
@@ -128,9 +128,9 @@ public class MainNavFrag extends Fragment {
     }
 }
 
-class MainNavAdapter extends ArrayAdapter<GotBoard.Entry> {
+class MainNavAdapter extends ArrayAdapter<DidGetBoard.Entry> {
 
-    public MainNavAdapter(Context context, List<GotBoard.Entry> objects) {
+    public MainNavAdapter(Context context, List<DidGetBoard.Entry> objects) {
         super(context, R.layout.item_board_list, objects);
     }
 
@@ -139,7 +139,7 @@ class MainNavAdapter extends ArrayAdapter<GotBoard.Entry> {
         if (convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
-        GotBoard.Entry data = getItem(position);
+        DidGetBoard.Entry data = getItem(position);
         TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
         DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
 

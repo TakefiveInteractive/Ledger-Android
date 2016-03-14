@@ -1,11 +1,11 @@
-package com.takefive.ledger.client;
+package com.takefive.ledger.client.raw;
 
 import java.util.List;
 
 /**
  * Created by zyu on 3/13/16.
  */
-public class GotBoard {
+public class DidGetBoard {
     public static class Entry {
         Entry(String a, String b) {
             _id = a;
