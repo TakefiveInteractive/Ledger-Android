@@ -6,6 +6,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,10 +18,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.takefive.ledger.client.GotBoard;
+import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.DotMark;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +33,8 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.realm.Realm;
+import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
  * Created by zyu on 2/13/16.
@@ -42,7 +48,7 @@ public class MainNavFrag extends Fragment {
     RelativeLayout mSideImgContent;
     @Bind(R.id.boardList)
     ListView mList;
-    ArrayList<MainNavData> mListData = new ArrayList<>();
+    ArrayList<GotBoard.Entry> mListData = new ArrayList<>();
     MainNavAdapter mListAdapter;
 
     @Inject
@@ -50,6 +56,12 @@ public class MainNavFrag extends Fragment {
 
     @Inject
     UserStore userStore;
+
+    @Inject
+    LedgerService service;
+
+    @Inject
+    ActionChainFactory chainFactory;
 
     private Person currentUser;
 
@@ -80,29 +92,43 @@ public class MainNavFrag extends Fragment {
         // init list
         mListAdapter = new MainNavAdapter(getContext(), mListData);
         mList.setAdapter(mListAdapter);
-        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {});
+        mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+        });
 
         // add data
-        for(int i = 0; i < 20; i++)
-            mListData.add(new MainNavData(Color.GREEN, "[Generated name] Board " + i));
-        mListAdapter.notifyDataSetChanged();
+        chainFactory.get(errorHolder -> {
+            showInfo("Cannot get boards: " + errorHolder.getCause().toString());
+            errorHolder.getCause().printStackTrace();
+        }).netThen(obj -> {
+            Response<GotBoard> resp = service.getMyBoards().execute();
+            if(!resp.isSuccessful()) {
+                String msg = resp.errorBody().string();
+                resp.errorBody().close();
+                throw new IOException(msg);
+            }
+            return resp.body();
+        }).uiConsume((GotBoard resp) -> {
+            mListAdapter.addAll(resp.boards);
+            mListAdapter.notifyDataSetChanged();
+        }).start();
 
         return root;
     }
-}
 
-class MainNavData {
-    public MainNavData(int c, String n) {
-        dotColor = c;
-        name = n;
+
+
+    public void showInfo(String info) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
-    public int dotColor;
-    public String name;
+
+    public void showInfo(int info) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+    }
 }
 
-class MainNavAdapter extends ArrayAdapter<MainNavData> {
+class MainNavAdapter extends ArrayAdapter<GotBoard.Entry> {
 
-    public MainNavAdapter(Context context, List<MainNavData> objects) {
+    public MainNavAdapter(Context context, List<GotBoard.Entry> objects) {
         super(context, R.layout.item_board_list, objects);
     }
 
@@ -111,11 +137,12 @@ class MainNavAdapter extends ArrayAdapter<MainNavData> {
         if(convertView == null)
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
-        MainNavData data = getItem(position);
+        GotBoard.Entry data = getItem(position);
         TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
         DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
 
-        dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
+        //dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
+        dotMark.setImageDrawable(new ColorDrawable(Color.BLUE));
         boardName.setText(data.name);
         return convertView;
     }

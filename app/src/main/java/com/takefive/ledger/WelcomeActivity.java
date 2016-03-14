@@ -76,7 +76,8 @@ public class WelcomeActivity extends AppCompatActivity {
 
     FbUserInfoTask fbUserInfoTask = new FbUserInfoTask();
 
-    ActionChainFactory chainFactory = new ActionChainFactory(Helpers.getThreadPolicy(WelcomeActivity.this, Executors.newFixedThreadPool(2)));
+    @Inject
+    ActionChainFactory chainFactory;
 
     String name;
 

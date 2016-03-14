@@ -1,5 +1,7 @@
 package com.takefive.ledger.client;
 
+import java.util.List;
+
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -18,6 +20,6 @@ public interface LedgerService {
     @GET("person")
     Call<ResponseBody> getCurrentPerson();
 
-    @POST("board")
-    Call<ResponseBody> createBoard();
+    @GET("board")
+    Call<GotBoard> getMyBoards();
 }

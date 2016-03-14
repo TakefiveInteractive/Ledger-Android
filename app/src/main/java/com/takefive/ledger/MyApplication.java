@@ -7,6 +7,7 @@ import com.takefive.ledger.client.BusinessLedgerServiceModule;
 import com.takefive.ledger.database.BusinessRealmModule;
 import com.takefive.ledger.database.BusinessUserStoreModule;
 import com.takefive.ledger.task.BusProvider;
+import com.takefive.ledger.util.ChainFactoryProvider;
 
 import dagger.ObjectGraph;
 
@@ -25,7 +26,8 @@ public class MyApplication extends Application {
                 new BusinessUserStoreModule(),
                 new BusinessRealmModule(),
                 new BusinessLedgerServiceModule(),
-                new BusProvider()
+                new BusProvider(),
+                new ChainFactoryProvider()
         );
     }
 
