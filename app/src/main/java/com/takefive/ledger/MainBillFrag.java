@@ -69,6 +69,19 @@ public class MainBillFrag extends NamedFragment {
             showPopup();
         });
 
+        // Retrieve current user
+        // TODO: provide a way to refresh
+        chainFactory.get(
+        ).netThen(() -> {
+            Realm realm = this.realm.get();
+            return realm.where(Person.class)
+                    .equalTo("personId", userStore.getMostRecentUserId())
+                    .findFirst();
+        }).uiConsume((Person currentUser) -> {
+            if (currentUser != null)
+                mUserName.setText(currentUser.getName());
+        });
+
         // Add data.
         try {
             SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");

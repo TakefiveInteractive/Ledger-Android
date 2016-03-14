@@ -83,6 +83,7 @@ public class MainNavFrag extends Fragment {
         }
 
         // Retrieve current user
+        // TODO: provide a way to refresh
         chainFactory.get(fail -> fail.getCause().printStackTrace()
         ).netThen(() -> {
             return realmAccess.process(realm -> {
