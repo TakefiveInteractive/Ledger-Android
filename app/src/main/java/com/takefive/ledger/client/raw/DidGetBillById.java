@@ -25,7 +25,7 @@ public class DidGetBillById {
     public boolean isDeleted;
 
     public Date getTime() throws ParseException {
-        SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
+        SimpleDateFormat dater = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
         return dater.parse(time);
     }
 

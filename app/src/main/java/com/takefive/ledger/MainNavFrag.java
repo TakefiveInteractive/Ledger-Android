@@ -121,7 +121,7 @@ public class MainNavFrag extends Fragment {
     }
 
     void onClickItem(int pos) {
-        getActivity().getIntent().putExtra("CurrentBoardId", mListAdapter.getItem(pos)._id);
+        getActivity().getIntent().putExtra("CurrentBoardId", mListAdapter.getItem(pos).id);
 
         for(Fragment fragment : getActivity().getSupportFragmentManager().getFragments()) {
             if(fragment instanceof MainBillFrag)

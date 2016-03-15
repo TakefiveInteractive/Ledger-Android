@@ -8,10 +8,10 @@ import java.util.List;
 public class DidGetBoard {
     public static class Entry {
         Entry(String a, String b) {
-            _id = a;
+            id = a;
             name = b;
         }
-        public String _id;
+        public String id;
         public String name;
     }
 
