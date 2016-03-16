@@ -15,6 +15,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import zyu19.libs.action.chain.ActionChainFactory;
+import zyu19.libs.action.chain.TActionChainFactory;
 import zyu19.libs.action.chain.config.ThreadPolicy;
 
 /**
@@ -31,6 +32,15 @@ public class ChainFactoryProvider {
     @Singleton
     public ActionChainFactory provide() {
         return new ActionChainFactory(new ThreadPolicy(runnable ->
+                new Handler(Looper.getMainLooper()).post(runnable),
+                Executors.newFixedThreadPool(2)
+        ));
+    }
+
+    @Provides
+    @Singleton
+    public TActionChainFactory provideTypeSafe() {
+        return new TActionChainFactory(new ThreadPolicy(runnable ->
                 new Handler(Looper.getMainLooper()).post(runnable),
                 Executors.newFixedThreadPool(2)
         ));
