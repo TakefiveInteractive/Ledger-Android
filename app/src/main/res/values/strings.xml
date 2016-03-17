@@ -16,6 +16,7 @@
     <string name="preferences_file_key">com.takefive.ledger.preferences</string>
     <string name="preferences_identifier_userid">userid</string>
     <string name="preferences_identifier_accessToken">accessToken</string>
+    <string name="preferences_identifier_fbToken">fbToken</string>
 
     <string name="realm_filename">ledger.realm</string>
 

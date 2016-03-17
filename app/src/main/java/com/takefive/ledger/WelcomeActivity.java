@@ -1,6 +1,5 @@
 package com.takefive.ledger;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -21,28 +20,24 @@ import com.facebook.login.LoginResult;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 import com.takefive.ledger.client.LedgerService;
+import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
-import com.takefive.ledger.model.Person;
+import com.takefive.ledger.database.model.Person;
 import com.takefive.ledger.task.FbUserInfo;
 import com.takefive.ledger.task.FbUserInfoTask;
 import com.takefive.ledger.task.LoginTask;
 import com.takefive.ledger.task.UpdateUserInfoTask;
-import com.takefive.ledger.task.UserInfoUpdatedEvent;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import io.realm.Realm;
 import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ActionChainFactory;
-import zyu19.libs.action.chain.config.ThreadPolicy;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -67,6 +62,9 @@ public class WelcomeActivity extends AppCompatActivity {
     Bus bus;
 
     @Inject
+    RealmAccess realmAccess;
+
+    @Inject
     LoginTask loginTask;
 
     @Inject
@@ -88,24 +86,6 @@ public class WelcomeActivity extends AppCompatActivity {
 
         bus.register(this);
 
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
-
-        Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
-        Helpers.setMargins(mLogin, null, -getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin), null, null);
-        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
-                mLogin.animate()
-                        .translationYBy(-getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin))
-                        .alpha(1)
-                        .setDuration(1000),
-                mNameTag.animate()
-                        .translationYBy(screenSize.y / 5 - screenSize.y / 3)
-                        .alpha(1)
-                        .setDuration(1000)
-        };
-
-        for (ViewPropertyAnimator x : animators) x.start();
-
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFBCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
@@ -124,6 +104,33 @@ public class WelcomeActivity extends AppCompatActivity {
                 showInfo(R.string.error_contact_facebook);
             }
         });
+
+        chainFactory.get(err -> {
+            err.getCause().printStackTrace();
+            showInfo(err.toString());
+        }).netThen(realmAccess.process(realm -> {
+            ;
+        }))
+    }
+
+    void showAnim(boolean showBtn) {
+        Point screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+
+        Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
+        Helpers.setMargins(mLogin, null, -getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin), null, null);
+        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
+                mLogin.animate()
+                        .translationYBy(-getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin))
+                        .alpha(showBtn ? 1 : 0)
+                        .setDuration(1000),
+                mNameTag.animate()
+                        .translationYBy(screenSize.y / 5 - screenSize.y / 3)
+                        .alpha(1)
+                        .setDuration(1000)
+        };
+
+        for (ViewPropertyAnimator x : animators) x.start();
     }
 
     @OnClick(R.id.login)
@@ -138,7 +145,12 @@ public class WelcomeActivity extends AppCompatActivity {
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
             AccessToken token = loginResult.getAccessToken();
-            return chainFactory.get(fbUserInfoTask, token).start();
+            return ActionChain.all(
+                    chainFactory.get(fbUserInfoTask, token).start(),
+                    chainFactory.get().netThen(realmAccess.process(realm -> {
+                        realm.
+                    }))
+            );
         }).fail(errorHolder -> {
             showInfo("Oops cannot connect to server.");
             errorHolder.getCause().printStackTrace();
@@ -148,13 +160,13 @@ public class WelcomeActivity extends AppCompatActivity {
         }).netThen(obj -> {
             return chainFactory.get(userInfoTask, name).start();
         }).uiThen((Person name) -> {
-            toMainActivity(new UserInfoUpdatedEvent(name));
+            toMainActivity();
             return null;
         }).start(null);
     }
 
     @Subscribe
-    public void toMainActivity(UserInfoUpdatedEvent event) {
+    public void toMainActivity() {
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("username", name);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);

@@ -1,7 +1,7 @@
 package com.takefive.ledger.client;
 
-import com.takefive.ledger.client.raw.DidGetBoard;
-import com.takefive.ledger.client.raw.DidGetBoardById;
+import com.takefive.ledger.model.MyBoards;
+import com.takefive.ledger.model.Board;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -23,9 +23,9 @@ public interface LedgerService {
     Call<ResponseBody> getCurrentPerson();
 
     @GET("board")
-    Call<DidGetBoard> getMyBoards();
+    Call<MyBoards> getMyBoards();
 
     @GET("board/{id}")
-    Call<DidGetBoardById> getBoardById(@Path("id") String id);
+    Call<Board> getBoardById(@Path("id") String id);
 
 }

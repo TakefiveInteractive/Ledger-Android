@@ -1,27 +1,10 @@
 package com.takefive.ledger.model;
 
-import io.realm.RealmObject;
-
 /**
- * Created by @tourbillon on 2/1/16.
+ * These are the actual Models. RealmObjects are meant to be DAOs.
+ * Created by zyu on 3/13/16.
  */
-public class Amount extends RealmObject {
-    private Person person;
-    private double balance;
-
-    public Person getPerson() {
-        return person;
-    }
-
-    public void setPerson(Person person) {
-        this.person = person;
-    }
-
-    public double getBalance() {
-        return balance;
-    }
-
-    public void setBalance(double balance) {
-        this.balance = balance;
-    }
+public class Amount {
+    public String person;
+    public double balance;
 }

@@ -18,24 +18,21 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.takefive.ledger.client.raw.DidGetBoard;
+import com.takefive.ledger.model.MyBoards;
 import com.takefive.ledger.client.LedgerService;
 import com.takefive.ledger.database.RealmAccess;
 import com.takefive.ledger.database.UserStore;
-import com.takefive.ledger.model.Person;
+import com.takefive.ledger.database.model.Person;
 import com.takefive.ledger.ui.DotMark;
-import com.takefive.ledger.ui.MyFragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChainFactory;
 
@@ -51,7 +48,7 @@ public class MainNavFrag extends Fragment {
     RelativeLayout mSideImgContent;
     @Bind(R.id.boardList)
     ListView mList;
-    ArrayList<DidGetBoard.Entry> mListData = new ArrayList<>();
+    ArrayList<MyBoards.Entry> mListData = new ArrayList<>();
     MainNavAdapter mListAdapter;
 
     @Inject
@@ -106,7 +103,7 @@ public class MainNavFrag extends Fragment {
             showInfo("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
         }).netConsume(obj -> {
-            Response<DidGetBoard> resp = service.getMyBoards().execute();
+            Response<MyBoards> resp = service.getMyBoards().execute();
             if (!resp.isSuccessful()) {
                 String msg = resp.errorBody().string();
                 resp.errorBody().close();
@@ -137,9 +134,9 @@ public class MainNavFrag extends Fragment {
         Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
-    class MainNavAdapter extends ArrayAdapter<DidGetBoard.Entry> {
+    class MainNavAdapter extends ArrayAdapter<MyBoards.Entry> {
 
-        public MainNavAdapter(Context context, List<DidGetBoard.Entry> objects) {
+        public MainNavAdapter(Context context, List<MyBoards.Entry> objects) {
             super(context, R.layout.item_board_list, objects);
         }
 
@@ -148,7 +145,7 @@ public class MainNavFrag extends Fragment {
             if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
-            DidGetBoard.Entry data = getItem(position);
+            MyBoards.Entry data = getItem(position);
             TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
             DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
 

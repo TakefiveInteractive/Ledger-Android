@@ -1,7 +1,5 @@
 package com.takefive.ledger;
 
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -12,39 +10,14 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.FrameLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.AwesomeTextView;
-import com.beardedhen.androidbootstrap.BootstrapText;
-import com.beardedhen.androidbootstrap.font.FontAwesome;
-import com.takefive.ledger.database.RealmAccess;
-import com.takefive.ledger.database.UserStore;
-import com.takefive.ledger.model.Person;
 import com.takefive.ledger.ui.NamedFragment;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
-import javax.inject.Provider;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import io.realm.Realm;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 public class MainActivity extends AppCompatActivity {

@@ -22,20 +22,15 @@ import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.takefive.ledger.client.LedgerService;
-import com.takefive.ledger.client.raw.DidGetBillById;
-import com.takefive.ledger.client.raw.DidGetBoard;
-import com.takefive.ledger.client.raw.DidGetBoardById;
+import com.takefive.ledger.model.Bill;
+import com.takefive.ledger.model.Board;
 import com.takefive.ledger.ui.MyFragment;
-import com.takefive.ledger.ui.NamedFragment;
 
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -52,7 +47,7 @@ public class MainBillFrag extends MyFragment {
 
     @Bind(R.id.billList)
     ListView mList;
-    ArrayList<DidGetBillById> mListData = new ArrayList<>();
+    ArrayList<Bill> mListData = new ArrayList<>();
     ArrayAdapter mListAdapter;
     @Bind(R.id.shadow)
     View mShadow;
@@ -81,13 +76,13 @@ public class MainBillFrag extends MyFragment {
         mList.setAdapter(mListAdapter);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             if (bPopupShown) return;
-            updatePopup((DidGetBillById) mList.getItemAtPosition(position));
+            updatePopup((Bill) mList.getItemAtPosition(position));
             showPopup();
         });
 
 
         // SimpleDateFormat dater = new SimpleDateFormat("dd/MM/yy HH:mm");
-        // mListData.add(new DidGetBillById("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."));
+        // mListData.add(new Bill("zak", 12.22f, "Cravings", "Collected $24", dater.parse("02/12/15 12:50"), "A had orange chicken, B ordered fried rice."));
         // mListAdapter.notifyDataSetChanged();
 
         return root;
@@ -101,7 +96,7 @@ public class MainBillFrag extends MyFragment {
             errorHolder.getCause().printStackTrace();
         }).uiThen(() -> getActivity().getIntent().getStringExtra("CurrentBoardId")
         ).netConsume((String boardId) -> {
-            Response<DidGetBoardById> resp = service.getBoardById(boardId).execute();
+            Response<Board> resp = service.getBoardById(boardId).execute();
             if (!resp.isSuccessful()) {
                 String msg = resp.errorBody().string();
                 resp.errorBody().close();
@@ -138,7 +133,7 @@ public class MainBillFrag extends MyFragment {
     @Bind(R.id.billTime)
     TextView mBillTime;
 
-    void updatePopup(DidGetBillById data) {
+    void updatePopup(Bill data) {
         mBillDesc.setText(data.description);
         mBillAmount.setText("S" + data.getTotalAmount());
         try {
@@ -263,42 +258,43 @@ public class MainBillFrag extends MyFragment {
 
         bPopupShown = true;
     }
-}
 
-class MainBillAdapter extends ArrayAdapter<DidGetBillById> {
+    class MainBillAdapter extends ArrayAdapter<Bill> {
 
-    public MainBillAdapter(Context context, List<DidGetBillById> objects) {
-        super(context, R.layout.item_bill_list, objects);
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null)
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
-
-        DidGetBillById data = getItem(position);
-
-        TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
-        TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
-        TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
-        TextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
-        AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
-        TextView time = ButterKnife.findById(convertView, R.id.time);
-
-        whoPaid.setText(data.recipient == null ? "You paid:" : data.recipient + " paid:");
-        paidAmount.setText("$" + data.getTotalAmount());
-        desc1.setText(data.title);
-
-        desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
-                .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-        desc2.setText(" " + data.description);
-
-        try {
-            time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
-        } catch (ParseException e) {
-            e.printStackTrace();
+        public MainBillAdapter(Context context, List<Bill> objects) {
+            super(context, R.layout.item_bill_list, objects);
         }
 
-        return convertView;
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            if(convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
+
+            Bill data = getItem(position);
+
+            TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
+            TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
+            TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
+            TextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
+            AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
+            TextView time = ButterKnife.findById(convertView, R.id.time);
+
+            // TODO: use userid here rather than user name
+            whoPaid.setText(data.recipient.equals(getActivity().getIntent().getStringExtra("username")) ? "You paid:" : data.recipient + " paid:");
+            paidAmount.setText("$" + data.getTotalAmount());
+            desc1.setText(data.title);
+
+            desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
+                    .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
+            desc2.setText(" " + data.description);
+
+            try {
+                time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            return convertView;
+        }
     }
 }
