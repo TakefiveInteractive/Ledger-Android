@@ -11,7 +11,7 @@ import io.realm.annotations.PrimaryKey;
  * Modified by Zhongzhi Yu @c4phone on 3/17/16 to become DAO and to unify Model classes.
  * This is a complex DAO where setting some field will also change RAW Models.
  * Possible usage: updating the fields could immidiately update db, after which, calling getRaw() will result in
- *  an object to send to LedgerService
+ *  an object to send to LedgerService.updateBoard()
  */
 public class Person extends RealmObject {
     @PrimaryKey
@@ -19,7 +19,7 @@ public class Person extends RealmObject {
     private RealmList<Bill> bills;
     private RealmList<Board> boards;
     private long createdAt;
-    private Person person;
+    private com.takefive.ledger.model.Person person;
 
     public String getId() {
         return personId;
@@ -37,7 +37,7 @@ public class Person extends RealmObject {
         return createdAt;
     }
 
-    public Person getRaw() {
+    public com.takefive.ledger.model.Person getRaw() {
         return person;
     }
 
@@ -53,7 +53,7 @@ public class Person extends RealmObject {
         this.boards = boards;
     }
 
-    public void setFromRaw(Person person) {
+    public void setFromRaw(com.takefive.ledger.model.Person person) {
         this.person = person;
     }
 }
