@@ -23,6 +23,9 @@ public interface LedgerService {
     @GET("person")
     Call<RawPerson> getCurrentPerson();
 
+    @GET("person/{id}")
+    Call<RawPerson> getPerson(@Path("id") String id);
+
     @GET("board")
     Call<RawMyBoards> getMyBoards();
 

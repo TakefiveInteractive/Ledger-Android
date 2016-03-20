@@ -3,6 +3,7 @@ package com.takefive.ledger.presenter;
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
+import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
@@ -14,6 +15,8 @@ import javax.inject.Inject;
 
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChainFactory;
+import zyu19.libs.action.chain.config.Consumer;
+import zyu19.libs.action.chain.config.PureAction;
 
 /**
  * Created by zyu on 3/19/16.
@@ -80,5 +83,21 @@ public class MainPresenter implements IPresenter<IMainView> {
         chainFactory.get(fail -> fail.getCause().printStackTrace()
         ).netThen(tasks::getAndSyncMyUserInfo
         ).uiConsume(view::showMyUserInfo).start();
+    }
+
+    /**
+     * load and SYNC userInfo (Person and RawPerson)
+     * @param userId the user id you want to query about
+     * @param callback it will be called on UI thread
+     */
+    public void loadUserInfo(String userId, Consumer<RawPerson> callback) {
+        chainFactory.get(fail -> fail.getCause().printStackTrace()
+        ).netThen(() -> {
+            Response<RawPerson> response = service.getPerson(userId).execute();
+            if(!response.isSuccessful())
+                throw new IOException(response.errorBody().string());
+            tasks.syncUserInfo(response.body());
+            return response.body();
+        }).uiConsume(callback).start();
     }
 }

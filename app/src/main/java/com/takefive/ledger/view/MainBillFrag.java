@@ -87,7 +87,9 @@ public class MainBillFrag extends NamedFragment {
     }
 
     @OnClick(R.id.closePopup)
-    void clickClosePopup() {hidePopup();}
+    void clickClosePopup() {
+        hidePopup();
+    }
 
     //----- Popup: Update content
     @Bind(R.id.billDescription)
@@ -125,13 +127,13 @@ public class MainBillFrag extends NamedFragment {
     }
 
     private void hidePopup() {
-        if(!bPopupShown) return;
+        if (!bPopupShown) return;
         int popupHeight = mPopup.getHeight();
 
         Point screenSize = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(screenSize);
 
-        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[] {
+        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
                 mShadow.animate().alpha(0)
                         .setDuration(666).setListener(new Animator.AnimatorListener() {
                     @Override
@@ -162,7 +164,7 @@ public class MainBillFrag extends NamedFragment {
                 mPopup.animate().alpha(0.5f).translationYBy(popupHeight)
                         .setDuration(666)
         };
-        for(ViewPropertyAnimator animator : animators)
+        for (ViewPropertyAnimator animator : animators)
             animator.start();
         mShadow.setClickable(false);
         bPopupShown = false;
@@ -171,7 +173,7 @@ public class MainBillFrag extends NamedFragment {
     // showPopup relies on mPopup to report actual height, so
     //     we must set its content values before showPopup()
     private void showPopup() {
-        if(bPopupShown) return;
+        if (bPopupShown) return;
         int popupHeight = mPopup.getHeight();
 
         initTransparentPopup();
@@ -186,9 +188,9 @@ public class MainBillFrag extends NamedFragment {
         getResources().getValue(R.dimen.alpha_fgshade_with_popup, outValue, true);
         float alpha_fgshade_with_popup = outValue.getFloat();
 
-        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[] {
+        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
                 mShadow.animate().alpha(alpha_fgshade_with_popup)
-                .setDuration(666).setListener(new Animator.AnimatorListener() {
+                        .setDuration(666).setListener(new Animator.AnimatorListener() {
                     @Override
                     public void onAnimationStart(Animator animation) {
 
@@ -215,9 +217,9 @@ public class MainBillFrag extends NamedFragment {
                     }
                 }),
                 mPopup.animate().alpha(1).translationYBy(-popupHeight)
-                .setDuration(666)
+                        .setDuration(666)
         };
-        for(ViewPropertyAnimator animator : animators)
+        for (ViewPropertyAnimator animator : animators)
             animator.start();
 
         bPopupShown = true;
@@ -231,7 +233,7 @@ public class MainBillFrag extends NamedFragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if(convertView == null)
+            if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
             RawBill data = getItem(position);
@@ -244,7 +246,11 @@ public class MainBillFrag extends NamedFragment {
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
             // TODO: use userid here rather than user name
-            whoPaid.setText(data.recipient.equals(getActivity().getIntent().getStringExtra("username")) ? "You paid:" : data.recipient + " paid:");
+            ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
+                boolean isMyself = data.recipient.equals(getActivity().getIntent().getStringExtra("username"));
+                whoPaid.setText(isMyself ? "You paid:" : info.name + " paid:");
+            });
+
             paidAmount.setText("$" + data.getTotalAmount());
             desc1.setText(data.title);
 
