@@ -37,72 +37,76 @@
                     android:scaleType="centerCrop" />
 
                 <LinearLayout
-                    android:id="@+id/lYouPay"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/avatar"
                     android:layout_alignParentStart="false"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/noticable_padding"
-                    android:layout_toEndOf="@id/avatar"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/payer"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                        android:textColor="@android:color/black"
-                        android:text="You paid:"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/paidAmount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/black"
-                        android:text="$98.42"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/lDesc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="@dimen/general_padding"
-                    android:layout_toEndOf="@id/lYouPay"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/desc1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                        android:text="Sakanaya"
-                        android:textColor="@android:color/black"
-                        android:textAppearance="?android:attr/textAppearanceLarge"/>
-
+                    android:orientation="horizontal">
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:id="@+id/lYouPay"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_gravity="center_horizontal">
-                        <com.beardedhen.androidbootstrap.AwesomeTextView
-                            android:id="@+id/desc2icon"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            bootstrap:bootstrapText="{fa_credit_card}" />
+                        android:layout_weight="2"
+                        android:orientation="vertical">
 
                         <TextView
-                            android:id="@+id/desc2"
+                            android:id="@+id/payer"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="?android:attr/textAppearanceSmall"
-                            android:text=" Collecting $35.42" />
+                            android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
+                            android:textColor="@android:color/black"
+                            android:text="You paid:"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/paidAmount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
+                            android:text="$98.42"
+                            android:textSize="20sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/lDesc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/desc1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
+                            android:text="Sakanaya"
+                            android:textColor="@android:color/black"
+                            android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            <com.beardedhen.androidbootstrap.AwesomeTextView
+                                android:id="@+id/desc2icon"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                bootstrap:bootstrapText="{fa_credit_card}" />
+
+                            <TextView
+                                android:id="@+id/desc2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="?android:attr/textAppearanceSmall"
+                                android:text=" Collecting $35.42" />
+                        </LinearLayout>
+
                     </LinearLayout>
 
                 </LinearLayout>
+
             </RelativeLayout>
 
             <!-- The following TAG may be shown as warnings/indicators -->
