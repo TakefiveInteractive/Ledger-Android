@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:padding="0dp"
     android:layout_margin="0dp"
-    tools:context="com.takefive.ledger.WelcomeActivity">
+    tools:context=".view.WelcomeActivity">
 
     <ImageView
         android:id="@+id/backgroundImage"

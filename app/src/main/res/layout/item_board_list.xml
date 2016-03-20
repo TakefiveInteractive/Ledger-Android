@@ -7,7 +7,7 @@
     android:focusable="true"
     android:padding="@dimen/noticable_padding">
 
-    <com.takefive.ledger.ui.DotMark
+    <com.takefive.ledger.view.utils.DotMark
         android:id="@+id/dotMark"
         android:layout_gravity="center"
         android:layout_width="@dimen/general_padding"

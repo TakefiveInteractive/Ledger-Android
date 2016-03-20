@@ -3,10 +3,9 @@ package com.takefive.ledger;
 import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.takefive.ledger.client.BusinessLedgerServiceModule;
-import com.takefive.ledger.database.BusinessUserStoreModule;
-import com.takefive.ledger.task.BusProvider;
-import com.takefive.ledger.util.ChainFactoryProvider;
+import com.takefive.ledger.presenter.client.BusinessLedgerServiceModule;
+import com.takefive.ledger.presenter.database.BusinessUserStoreModule;
+import com.takefive.ledger.presenter.utils.ChainFactoryProvider;
 
 import dagger.ObjectGraph;
 

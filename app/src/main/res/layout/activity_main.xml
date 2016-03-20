@@ -5,7 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.takefive.ledger.MainActivity">
+    tools:context=".view.MainActivity">
 
     <!-- As the main content view, the view below consumes the entire
          space available using match_parent in both dimensions. -->
@@ -48,7 +48,8 @@
          the container. -->
     <fragment android:layout_height="match_parent"
         android:layout_width="wrap_content"
-        android:name="com.takefive.ledger.MainNavFrag"
+        android:id="@+id/navFrag"
+        android:name="com.takefive.ledger.view.MainNavFrag"
         android:layout_gravity="start"
         tools:layout="@layout/drawer_main" />
 
