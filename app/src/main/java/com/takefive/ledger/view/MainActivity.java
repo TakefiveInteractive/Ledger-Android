@@ -1,6 +1,7 @@
 package com.takefive.ledger.view;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -104,14 +105,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         navFrag.showMyUserInfo(me);
     }
 
-    @Override
-    public void showInfo(String str) {
-
+    public void showAlert(String info) {
+        Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void showInfo(int strId) {
-
+    public void showAlert(int info) {
+        Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 }
 

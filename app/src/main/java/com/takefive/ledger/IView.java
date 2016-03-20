@@ -9,6 +9,6 @@ public interface IView {
     Originally a "getContext" was required but we used D.I. for that
      */
 
-    void showInfo(String str);
-    void showInfo(int strId);
+    void showAlert(String str);
+    void showAlert(int strId);
 }

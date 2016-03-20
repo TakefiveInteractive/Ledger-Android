@@ -31,12 +31,12 @@ public class TestMainPresenter {
         }
 
         @Override
-        public void showInfo(String str) {
+        public void showAlert(String str) {
 
         }
 
         @Override
-        public void showInfo(int strId) {
+        public void showAlert(int strId) {
 
         }
     }

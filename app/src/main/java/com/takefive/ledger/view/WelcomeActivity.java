@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
-import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -21,22 +20,14 @@ import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.presenter.WelcomePresenter;
-import com.takefive.ledger.presenter.client.LedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
-import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.presenter.FbUserInfo;
 
 import java.util.Arrays;
-import java.util.concurrent.Executors;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.ActionChainFactory;
 
 public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
@@ -78,7 +69,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
             @Override
             public void onError(FacebookException error) {
-                showInfo(R.string.error_contact_facebook);
+                showAlert(R.string.error_contact_facebook);
             }
         });
         showAnim(true);
@@ -124,11 +115,11 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         finish();
     }
 
-    public void showInfo(String info) {
+    public void showAlert(String info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
-    public void showInfo(int info) {
+    public void showAlert(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
