@@ -91,9 +91,10 @@ public class MainNavFrag extends Fragment {
     }
 
     void showMyBoards(RawMyBoards myBoards) {
-        ArrayAdapter adapter = new MainNavAdapter(getContext(), myBoards.boards);
+        MainNavAdapter adapter = new MainNavAdapter(getContext(), myBoards.boards);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+        mListAdapter = adapter;
     }
 
     void onClickItem(int pos) {

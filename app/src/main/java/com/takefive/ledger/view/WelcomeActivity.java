@@ -57,10 +57,11 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        ButterKnife.bind(this);
         ((MyApplication) getApplication()).inject(this);
         presenter.attachView(this);
+
+        setContentView(R.layout.activity_welcome);
+        ButterKnife.bind(this);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         mFBCallbackManager = CallbackManager.Factory.create();
@@ -80,6 +81,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
                 showInfo(R.string.error_contact_facebook);
             }
         });
+        showAnim(true);
     }
 
     @Override

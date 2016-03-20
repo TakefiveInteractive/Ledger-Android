@@ -83,7 +83,7 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     public void loadMyUserInfo() {
         chainFactory.get(fail -> fail.getCause().printStackTrace()
-        ).netThen(() -> tasks.getAndSyncMyUserInfo()
+        ).netThen(tasks::getAndSyncMyUserInfo
         ).uiConsume(view::showMyUserInfo).start();
     }
 }

@@ -85,7 +85,7 @@ public class CommonTasks {
 
     ReadOnlyChain syncUserInfo(RawPerson person) {
         return realmAccess.process(realm -> {
-            Person target = realm.createObject(Person.class);
+            Person target = new Person();
             target.setPersonId(person._id);
             target.setCreatedAt(DateTimeConverter.fromISOString(person.createdAt).getTime());
 

@@ -41,8 +41,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
 
-    @Inject
-    MainBillFrag billFrag;
+    MainBillFrag billFrag = new MainBillFrag();
 
     MainBalanceFrag balanceFrag = new MainBalanceFrag();
 
@@ -54,10 +53,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+
         ((MyApplication) getApplication()).inject(this);
         presenter.attachView(this);
+
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
         navFrag = (MainNavFrag) getSupportFragmentManager().findFragmentById(R.id.navFrag);
 
