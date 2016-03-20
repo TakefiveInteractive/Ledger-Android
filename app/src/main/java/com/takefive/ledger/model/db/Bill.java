@@ -2,6 +2,7 @@ package com.takefive.ledger.model.db;
 
 import com.takefive.ledger.model.RawBill;
 
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -13,7 +14,6 @@ public class Bill extends RealmObject {
     @PrimaryKey
     private String id;
     private long createTime;
-    private RawBill content;
 
     public String getId() {
         return id;
@@ -23,11 +23,11 @@ public class Bill extends RealmObject {
         return createTime;
     }
 
-    public RawBill getRaw() {
-        return content;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setFromRaw(RawBill bill) {
-        this.content = bill;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

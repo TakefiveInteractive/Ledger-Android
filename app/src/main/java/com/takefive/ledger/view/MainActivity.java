@@ -17,6 +17,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
+import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.utils.NamedFragment;
 import com.takefive.ledger.model.db.Person;
@@ -45,8 +46,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     MainBalanceFrag balanceFrag = new MainBalanceFrag();
 
-    @Bind(R.id.navFrag)
-    MainNavFrag navFrag;
+    MainNavFrag navFrag = null;
 
     @Inject
     MainPresenter presenter;
@@ -58,6 +58,8 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         ButterKnife.bind(this);
         ((MyApplication) getApplication()).inject(this);
         presenter.attachView(this);
+
+        navFrag = (MainNavFrag) getSupportFragmentManager().findFragmentById(R.id.navFrag);
 
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -97,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public void showMyUserInfo(Person me) {
+    public void showMyUserInfo(RawPerson me) {
         navFrag.showMyUserInfo(me);
     }
 

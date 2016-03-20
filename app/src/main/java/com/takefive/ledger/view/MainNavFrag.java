@@ -23,6 +23,7 @@ import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
+import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
@@ -85,8 +86,8 @@ public class MainNavFrag extends Fragment {
         return root;
     }
 
-    public void showMyUserInfo(Person me) {
-        mUserName.setText(me.getRawPerson().name);
+    public void showMyUserInfo(RawPerson me) {
+        mUserName.setText(me.name);
     }
 
     void showMyBoards(RawMyBoards myBoards) {

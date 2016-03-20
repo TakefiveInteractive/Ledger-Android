@@ -2,6 +2,7 @@ package com.takefive.ledger;
 
 import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawMyBoards;
+import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.IMainView;
@@ -25,7 +26,7 @@ public class TestMainPresenter {
         }
 
         @Override
-        public void showMyUserInfo(Person me) {
+        public void showMyUserInfo(RawPerson me) {
 
         }
 

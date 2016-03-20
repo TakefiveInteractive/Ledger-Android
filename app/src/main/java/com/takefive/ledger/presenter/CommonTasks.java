@@ -23,6 +23,7 @@ import java.util.Iterator;
 import javax.inject.Inject;
 
 import okhttp3.ResponseBody;
+import retrofit2.Response;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
 /**
@@ -72,12 +73,23 @@ public class CommonTasks {
         return info;
     }
 
-    ReadOnlyChain saveRawPersonInRealm(RawPerson person) {
+    RawPerson getAndSyncMyUserInfo() throws Exception {
+        // TODO: let Retrofit cache for us
+        Response<RawPerson> me = service.getCurrentPerson().execute();
+        if(!me.isSuccessful())
+            throw new IOException(me.errorBody().string());
+        userStore.setUserId(me.body()._id);
+        syncUserInfo(me.body());
+        return me.body();
+    }
+
+    ReadOnlyChain syncUserInfo(RawPerson person) {
         return realmAccess.process(realm -> {
             Person target = realm.createObject(Person.class);
-            target.setRawPerson(person);
             target.setPersonId(person._id);
             target.setCreatedAt(DateTimeConverter.fromISOString(person.createdAt).getTime());
+
+            // TODO: add etags to avoid unnecessary writes?
 
             realm.beginTransaction();
 

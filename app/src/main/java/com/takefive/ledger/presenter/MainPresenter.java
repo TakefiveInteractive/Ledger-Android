@@ -5,6 +5,7 @@ import com.takefive.ledger.IView;
 import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
+import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
@@ -34,6 +35,9 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     @Inject
     LedgerService service;
+
+    @Inject
+    CommonTasks tasks;
 
     IMainView view = null;
 
@@ -79,10 +83,7 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     public void loadMyUserInfo() {
         chainFactory.get(fail -> fail.getCause().printStackTrace()
-        ).netThen(() -> realmAccess.process(realm -> {
-            return realm.where(Person.class)
-                    .equalTo("personId", userStore.getMostRecentUserId())
-                    .findFirst().getRawPerson().name;
-        })).uiConsume(view::showMyUserInfo).start();
+        ).netThen(() -> tasks.getAndSyncMyUserInfo()
+        ).uiConsume(view::showMyUserInfo).start();
     }
 }

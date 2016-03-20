@@ -13,7 +13,6 @@ public class Board extends RealmObject {
     @PrimaryKey
     private String id;
     private long createTime;
-    private RawBoard content;
 
     public String getId() {
         return id;
@@ -23,11 +22,11 @@ public class Board extends RealmObject {
         return createTime;
     }
 
-    public RawBoard getRaw() {
-        return content;
+    public void setId(String id) {
+        this.id = id;
     }
 
-    public void setFromRaw(RawBoard board) {
-        this.content = board;
+    public void setCreateTime(long createTime) {
+        this.createTime = createTime;
     }
 }

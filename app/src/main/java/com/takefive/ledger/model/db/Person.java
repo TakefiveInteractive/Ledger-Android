@@ -19,27 +19,6 @@ public class Person extends RealmObject {
     private RealmList<Bill> bills;
     private RealmList<Board> boards;
     private long createdAt;
-    private RawPerson rawPerson;
-
-    public void addBill(Bill bill) {
-        rawPerson.bills.add(bill.getId());
-        bills.add(bill);
-    }
-
-    public void removeBill(Bill bill) {
-        rawPerson.bills.remove(bill.getId());
-        bills.remove(bill);
-    }
-
-    public void addBoard(Board board) {
-        rawPerson.boards.add(board.getId());
-        boards.add(board);
-    }
-
-    public void removeBoard(Board board) {
-        rawPerson.boards.remove(board.getId());
-        boards.remove(board);
-    }
 
     public String getPersonId() {
         return personId;
@@ -71,13 +50,5 @@ public class Person extends RealmObject {
 
     public void setCreatedAt(long createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public RawPerson getRawPerson() {
-        return rawPerson;
-    }
-
-    public void setRawPerson(RawPerson rawPerson) {
-        this.rawPerson = rawPerson;
     }
 }

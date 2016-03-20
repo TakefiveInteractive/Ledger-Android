@@ -11,5 +11,5 @@ public interface IMainView extends IView {
     // show xxx clears the previous content of xxx and show the new one passed in
     void showBillsList(List<RawBill> bills);
     void showMyBoards(RawMyBoards boards);
-    void showMyUserInfo(Person me);
+    void showMyUserInfo(RawPerson me);
 }
