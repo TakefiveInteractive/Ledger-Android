@@ -245,24 +245,23 @@ public class MainBillFrag extends NamedFragment {
             AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
-            // TODO: use userid here rather than user name
             ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
                 boolean isMyself = data.recipient.equals(getActivity().getIntent().getStringExtra("username"));
                 whoPaid.setText(isMyself ? "You paid:" : info.name + " paid:");
+
+                paidAmount.setText("$" + data.getTotalAmount());
+                desc1.setText(data.title);
+
+                desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
+                        .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
+                desc2.setText(" " + data.description);
+
+                try {
+                    time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             });
-
-            paidAmount.setText("$" + data.getTotalAmount());
-            desc1.setText(data.title);
-
-            desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
-                    .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-            desc2.setText(" " + data.description);
-
-            try {
-                time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
 
             return convertView;
         }
