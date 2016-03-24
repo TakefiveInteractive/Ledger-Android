@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/noticable_padding"
+            android:showDividers="middle">
+
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/noticable_padding"
+                android:paddingBottom="@dimen/noticable_padding"
+                android:paddingRight="@dimen/noticable_padding">
+
+            <TextView
+                    android:id="@+id/Header"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:text="Details"
+                    android:textColor="@color/section_title"
+                    android:textSize="20sp" />
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="end"
+                    android:layout_alignTop="@id/Header"
+                    android:layout_alignBottom="@id/Header"
+                    android:layout_alignParentEnd="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                        android:id="@+id/closePopup"
+                        android:src="@android:drawable/ic_notification_clear_all"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        bootstrap:hasBorder="false"
+                        android:layout_alignParentEnd="true" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/noticable_padding"
+                android:layout_marginRight="@dimen/noticable_padding"
+                android:orientation="vertical">
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/noticable_padding"
+                    android:paddingTop="@dimen/noticable_padding">
+
+                <ImageView
+                        android:id="@+id/billDescriptionIcon"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_comment_black_36dp" />
+
+                <TextView
+                        android:id="@+id/billDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Lorem ipsum"
+                        android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/noticable_padding"
+                    android:paddingTop="@dimen/noticable_padding">
+
+                <ImageView
+                        android:layout_width="@dimen/bill_icon_width"
+                        android:layout_height="@dimen/bill_icon_height"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/ic_alarm_black_36dp" />
+
+                <TextView
+                        android:id="@+id/billTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="11:59 pm\nJan 6th, 2016"
+                        android:textSize="15sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/noticable_padding"
+                    android:paddingTop="@dimen/noticable_padding">
+
+                <ImageView
+                        android:layout_width="@dimen/bill_icon_width"
+                        android:layout_height="@dimen/bill_icon_height"
+                        android:layout_marginRight="10dp"
+                        android:scaleType="centerInside"
+                        android:src="@drawable/money_icon" />
+
+                <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Amount:"
+                            android:textSize="15sp" />
+
+                    <TextView
+                            android:id="@+id/billAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="$25.52"
+                            android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

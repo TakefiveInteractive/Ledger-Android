@@ -229,4 +229,7 @@
     <dimen name="bill_icon_width">60dp</dimen>
     <dimen name="bill_icon_height">30dp</dimen>
 
+    <!-- General values -->
+    <dimen name="general_margin">10dp</dimen>
+
 </resources>

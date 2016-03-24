@@ -1,5 +1,6 @@
 package com.takefive.ledger.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -10,18 +11,25 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
-import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
+import com.takefive.ledger.presenter.FbUserInfo;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.utils.NamedFragment;
-import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.view.utils.PopupCardView;
 
 import java.util.List;
 
@@ -29,7 +37,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import zyu19.libs.action.chain.ActionChainFactory;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
@@ -62,16 +69,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         ButterKnife.bind(this);
 
         navFrag = (MainNavFrag) getSupportFragmentManager().findFragmentById(R.id.navFrag);
+        ButterKnife.findById(navFrag.getView(), R.id.newBoard).setOnClickListener(v ->
+                new NewBoardFragment().show(getSupportFragmentManager(), "fragment_new_board"));
 
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_drawer);
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mDrawerLayout.openDrawer(GravityCompat.START);
-            }
-        });
-
+        mToolbar.setNavigationOnClickListener(v -> mDrawerLayout.openDrawer(GravityCompat.START));
 
         setupTabs();
     }

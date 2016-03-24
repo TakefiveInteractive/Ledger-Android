@@ -1,6 +1,12 @@
 package com.takefive.ledger.presenter;
 
+import android.os.Bundle;
+
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.takefive.ledger.IPresenter;
+import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
@@ -9,7 +15,12 @@ import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.view.IMainView;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -94,10 +105,35 @@ public class MainPresenter implements IPresenter<IMainView> {
         chainFactory.get(fail -> fail.getCause().printStackTrace()
         ).netThen(() -> {
             Response<RawPerson> response = service.getPerson(userId).execute();
-            if(!response.isSuccessful())
+            if (!response.isSuccessful())
                 throw new IOException(response.errorBody().string());
             tasks.syncUserInfo(response.body());
             return response.body();
         }).uiConsume(callback).start();
     }
+
+    public void loadUserFriends(Consumer<List<FbUserInfo>> callback) {
+        chainFactory.get(fail -> fail.getCause().printStackTrace())
+                .netThen(() -> {
+                    GraphRequest request =
+                            GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(), null);
+                    Bundle parameters = new Bundle();
+                    parameters.putString("fields", "id,name,picture");
+                    request.setParameters(parameters);
+                    JSONArray response = request.executeAndWait().getJSONObject().getJSONArray("data");
+                    List<FbUserInfo> infoList = new ArrayList<>();
+                    for (int i = 0; i < response.length(); ++i) {
+                        JSONObject user = response.getJSONObject(i);
+                        FbUserInfo info = new FbUserInfo();
+                        info.id = user.getString("id");
+                        info.name = user.getString("name");
+                        info.avatarUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
+                        infoList.add(info);
+                    }
+                    return infoList;
+                })
+                .uiConsume(callback)
+                .start();
+    }
+
 }

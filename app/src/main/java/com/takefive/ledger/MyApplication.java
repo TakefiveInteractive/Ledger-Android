@@ -23,7 +23,6 @@ public class MyApplication extends Application {
                 new ApplicationContextProvider(this),
                 new BusinessUserStoreModule(),
                 new BusinessLedgerServiceModule(),
-                new BusProvider(),
                 new ChainFactoryProvider()
         );
     }

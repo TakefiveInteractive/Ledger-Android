@@ -7,6 +7,8 @@
         <item name="android:colorPrimary">@color/theme_main_accent</item>
         <item name="android:colorPrimaryDark">@color/theme_accent_1</item>
         <item name="android:textColorPrimary">@android:color/white</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 
 

@@ -6,6 +6,9 @@ import com.facebook.AccessToken;
  * Created by zyu on 2/3/16.
  */
 public class FbUserInfo {
-    public AccessToken accessToken;
-    public String userName;
+    public AccessToken accessToken = null;
+    public String userName = null;
+    public String name = null;
+    public String avatarUrl = null;
+    public String id = null;
 }

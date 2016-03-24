@@ -119,9 +119,24 @@
         android:id="@+id/boardList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomBtnLayout"
+        android:layout_above="@+id/newBoard"
         android:layout_below="@+id/chosen_account_view"
         tools:listitem="@layout/item_board_list"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapButton
+            android:id="@+id/newBoard"
+            android:layout_above="@+id/bottomBtnLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="5dp"
+            android:alpha="1"
+            app:bootstrapBrand="primary"
+            app:bootstrapSize="sm"
+            app:buttonMode="regular"
+            app:showOutline="true"
+            app:roundedCorners="true"
+            android:text="New Board" />
 
     <LinearLayout
         android:id="@+id/bottomBtnLayout"

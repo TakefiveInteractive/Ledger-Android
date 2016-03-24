@@ -1,6 +1,7 @@
 package com.takefive.ledger.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -18,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -29,6 +31,7 @@ import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.view.utils.DotMark;
+import com.takefive.ledger.view.utils.PopupCardView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +48,8 @@ import zyu19.libs.action.chain.ActionChainFactory;
  * Created by zyu on 2/13/16.
  */
 public class MainNavFrag extends Fragment {
+
+    public static final int NEW_BOARD_REQUEST = 0;
     @Bind(R.id.profile_name_text)
     TextView mUserName;
     @Bind(R.id.chosen_account_view)
@@ -53,6 +58,10 @@ public class MainNavFrag extends Fragment {
     RelativeLayout mSideImgContent;
     @Bind(R.id.boardList)
     ListView mList;
+    @Bind(R.id.newBoard)
+    BootstrapButton mNewBoardButton;
+
+
     ArrayList<RawMyBoards.Entry> mListData = new ArrayList<>();
     MainNavAdapter mListAdapter;
 
@@ -84,6 +93,17 @@ public class MainNavFrag extends Fragment {
         mainActivity.presenter.loadMyUserInfo();
         mainActivity.presenter.loadMyBoards();
         return root;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case NEW_BOARD_REQUEST:
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     public void showMyUserInfo(RawPerson me) {
