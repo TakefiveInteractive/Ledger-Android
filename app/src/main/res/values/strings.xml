@@ -29,7 +29,19 @@
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_new_board">NewBoardActivity</string>
 
-<!-- TODO: Remove or change this placeholder text -->
+    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- New Board Fragment -->
+    <string name="new_board_success">Board created.</string>
+    <string name="new_board_no_name">Please specify a name.</string>
+    <string name="new_board_no_friends_set">Please add at least a friend.</string>
+
+    <!-- Network related -->
+    <string name="network_failure">Oops&#8230; Can\'t connect to server.</string>
+
+    <!-- General values -->
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
 
 </resources>

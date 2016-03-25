@@ -1,5 +1,7 @@
 package com.takefive.ledger.presenter;
 
+import android.content.Context;
+
 import com.facebook.AccessToken;
 import com.facebook.login.LoginResult;
 import com.takefive.ledger.IPresenter;
@@ -21,6 +23,9 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
 
     @Inject
     CommonTasks tasks;
+
+    @Inject
+    Context applicationContext;
 
     @Inject
     ActionChainFactory chainFactory;
@@ -52,7 +57,7 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
             AccessToken token = fbLoginResult.getAccessToken();
             return tasks.getFbUserInfo(token);
         }).fail(errorHolder -> {
-            view.showAlert("Oops cannot connect to server.");
+            view.showAlert(applicationContext.getString(R.string.network_failure));
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
             tasks.getAndSaveAccessToken(info.accessToken.getToken());

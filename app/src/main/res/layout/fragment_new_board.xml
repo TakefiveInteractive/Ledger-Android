@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:bootstrap="http://schemas.android.com/tools"
-              android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:padding="@dimen/noticable_padding"
-              android:showDividers="middle">
+              android:padding="@dimen/noticable_padding">
 
     <RelativeLayout
+            android:id="@+id/newBoardHeaderLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -19,7 +18,7 @@
                 android:layout_alignParentStart="true"
                 android:text="New Board"
                 android:textColor="@color/section_title"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -40,31 +39,61 @@
     </RelativeLayout>
 
     <android.support.design.widget.TextInputLayout
+            android:id="@+id/newBoardNameLayout"
+            android:layout_below="@id/newBoardHeaderLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_margin"
-            app:errorEnabled="false">
-        <EditText
+            app:errorEnabled="false"
+            android:layout_marginTop="@dimen/general_margin">
+        <android.support.design.widget.TextInputEditText
                 android:id="@+id/newBoardName"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:saveEnabled="false"
                 android:maxLength="52"
-                android:hint="Board Name"/>
+                android:hint="Board Name"
+                android:textSize="@dimen/small_text_size"
+                android:textColor="@android:color/black"/>
     </android.support.design.widget.TextInputLayout>
 
     <TextView
+            android:id="@+id/newBoardFriendsHeader"
+            android:layout_below="@id/newBoardNameLayout"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="Add Friends"
-            android:textSize="12sp"
-            android:layout_marginLeft="10dp"/>
+            android:textSize="@dimen/general_text_size"
+            android:layout_marginTop="@dimen/general_margin"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/newBoardFriendsView"
+            android:layout_below="@id/newBoardFriendsHeader"
             android:scrollbars="vertical"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             android:layout_width="match_parent"
             android:layout_marginTop="5dp"/>
 
-</LinearLayout>
+    <LinearLayout
+            android:id="@+id/newBoardActionButtonsLayout"
+            android:layout_below="@id/newBoardFriendsView"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/general_margin"
+            android:layout_marginBottom="1dp">
+        <Button
+                android:id="@+id/newBoardCancel"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight=".50"
+                android:text="@string/cancel"
+                android:theme="@style/ActionButtonSecondary"/>
+        <Button
+                android:id="@+id/newBoardSubmit"
+                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight=".50"
+                android:text="@string/ok"
+                android:theme="@style/ActionButtonPrimary"/>
+    </LinearLayout>
+
+</RelativeLayout>

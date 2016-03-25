@@ -1,15 +1,18 @@
 package com.takefive.ledger.presenter;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.takefive.ledger.IPresenter;
+import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
+import com.takefive.ledger.model.request.NewBoardRequest;
 import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
@@ -24,6 +27,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.config.Consumer;
@@ -35,6 +39,9 @@ import zyu19.libs.action.chain.config.PureAction;
 public class MainPresenter implements IPresenter<IMainView> {
     @Inject
     ActionChainFactory chainFactory;
+
+    @Inject
+    Context applicationContext;
 
     @Inject
     RealmAccess realmAccess;
@@ -131,6 +138,18 @@ public class MainPresenter implements IPresenter<IMainView> {
                         infoList.add(info);
                     }
                     return infoList;
+                })
+                .uiConsume(callback)
+                .start();
+    }
+
+    public void createBoard(NewBoardRequest request, Consumer<Response> callback) {
+        chainFactory.get(fail -> {
+            fail.getCause().printStackTrace();
+            view.showAlert(applicationContext.getString(R.string.network_failure));})
+                .netThen(() -> {
+                    Response<ResponseBody> response = service.createBoard(request).execute();
+                    return response;
                 })
                 .uiConsume(callback)
                 .start();

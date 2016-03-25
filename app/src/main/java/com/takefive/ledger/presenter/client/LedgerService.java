@@ -3,6 +3,7 @@ package com.takefive.ledger.presenter.client;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawPerson;
+import com.takefive.ledger.model.request.NewBoardRequest;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -28,6 +29,9 @@ public interface LedgerService {
 
     @GET("board")
     Call<RawMyBoards> getMyBoards();
+
+    @POST("board")
+    Call<ResponseBody> createBoard(@Body NewBoardRequest body);
 
     @GET("board/{id}")
     Call<RawBoard> getBoardById(@Path("id") String id);

@@ -229,7 +229,13 @@
     <dimen name="bill_icon_width">60dp</dimen>
     <dimen name="bill_icon_height">30dp</dimen>
 
+    <!-- New Board Fagment -->
+    <dimen name="new_board_button">20dp</dimen>
+
     <!-- General values -->
     <dimen name="general_margin">10dp</dimen>
+    <dimen name="small_text_size">12sp</dimen>
+    <dimen name="general_text_size">15sp</dimen>
+    <dimen name="large_text_size">20sp</dimen>
 
 </resources>
