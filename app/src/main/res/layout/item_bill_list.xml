@@ -29,13 +29,14 @@
                 android:padding="@dimen/noticable_padding"
                 android:gravity="center_vertical">
 
-                <ImageView
+                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
                     android:id="@+id/avatar"
                     android:layout_width="50sp"
                     android:layout_height="50dp"
                     android:layout_marginRight="@dimen/general_padding"
                     android:background="@drawable/person_image_empty"
                     android:scaleType="centerCrop"
+                    bootstrap:hasBorder="false"
                     android:layout_alignParentStart="true"/>
 
                 <LinearLayout

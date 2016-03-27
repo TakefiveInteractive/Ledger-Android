@@ -1,10 +1,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="@dimen/navdrawer_width"
-    android:layout_height="match_parent"
-    android:background="@color/navdrawer_background"
-    android:fitsSystemWindows="true">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="@dimen/navdrawer_width"
+                android:layout_height="match_parent"
+                android:background="@color/navdrawer_background"
+                android:fitsSystemWindows="true">
 
     <FrameLayout
         android:id="@+id/chosen_account_view"
@@ -33,12 +34,13 @@
             android:paddingRight="@dimen/keyline_1"
             android:paddingTop="@dimen/keyline_1">
 
-            <ImageView
+            <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
                 android:id="@+id/profile_image"
                 android:layout_width="@dimen/navdrawer_profile_image_size"
                 android:layout_height="@dimen/navdrawer_profile_image_size"
                 android:scaleType="centerCrop"
-                android:src="@drawable/person_image_empty" />
+                android:src="@drawable/person_image_empty"
+                bootstrap:hasBorder="false"/>
             <!--app:maskDrawable="@drawable/circle_mask"-->
 
             <ImageView

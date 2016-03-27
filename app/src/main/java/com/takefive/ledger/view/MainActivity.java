@@ -71,10 +71,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
         navFrag = (MainNavFrag) getSupportFragmentManager().findFragmentById(R.id.navFrag);
         mDrawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-        ButterKnife.findById(navFrag.getView(), R.id.newBoard).setOnClickListener(v -> {
-            new NewBoardFragment().show(getSupportFragmentManager(), "fragment_new_board");
-            mDrawerLayout.closeDrawers();
-        });
 
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -123,6 +119,10 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     public void showAlert(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void closeDrawers() {
+        mDrawerLayout.closeDrawers();
     }
 }
 

@@ -14,8 +14,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
+import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.BootstrapText;
 import com.beardedhen.androidbootstrap.font.FontAwesome;
+import com.melnykov.fab.FloatingActionButton;
+import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -50,6 +53,9 @@ public class MainBillFrag extends NamedFragment {
     @Bind(R.id.billNone)
     View mNone;
 
+    @Bind(R.id.billNew)
+    FloatingActionButton mNew;
+
     @Inject
     RealmUIAccess realmUIAccess;
 
@@ -78,6 +84,8 @@ public class MainBillFrag extends NamedFragment {
             mBillDetail.setContent((RawBill) mList.getItemAtPosition(position));
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
         });
+
+        mNew.attachToListView(mList);
 
         mSwipeLayout.setListView(mList);
         mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(currentBoardId));
@@ -118,6 +126,7 @@ public class MainBillFrag extends NamedFragment {
 
             RawBill data = getItem(position);
 
+            BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
             TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
             TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
             TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
@@ -125,16 +134,31 @@ public class MainBillFrag extends NamedFragment {
             AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
-            if (data.recipient.equals(userStore.getMostRecentUserId()))
-                whoPaid.setText("You paid:");
+            if (data.recipient.equals(userStore.getMostRecentUserId())) {
+                realmUIAccess.process(realm -> {
+                    Person me = realm.where(Person.class)
+                            .equalTo("personId", userStore.getMostRecentUserId()).findFirst();
+                    whoPaid.setText("You paid:");
+                    if (me.getAvatarUrl() != null)
+                        Picasso.with(getContext()).load(me.getAvatarUrl()).fit().into(avatar);
+                    return null;
+                });
+            }
             else {
                 realmUIAccess.process(realm -> {
                     Person recipient = realm.where(Person.class).equalTo("personId", data.recipient).findFirst();
-                    if (recipient != null && recipient.getName() != null)
+                    if (recipient != null && recipient.getName() != null) {
                         whoPaid.setText(recipient.getName() + "\npaid:");
-                    else
-                        ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info ->
-                                whoPaid.setText(info.name + "\npaid:"));
+                        if (recipient.getAvatarUrl() != null)
+                            Picasso.with(getContext()).load(recipient.getAvatarUrl()).fit().into(avatar);
+                    }
+                    else {
+                        ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
+                            whoPaid.setText(info.name + "\npaid:");
+                            if (info.avatarUrl != null)
+                            Picasso.with(getContext()).load(info.avatarUrl).fit().into(avatar);
+                        });
+                    }
                     return null;
                 });
             }

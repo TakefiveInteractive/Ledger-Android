@@ -20,6 +20,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
+import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -30,6 +32,7 @@ import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.view.database.RealmUIAccess;
 import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.DotMark;
 import com.takefive.ledger.view.utils.PopupCardView;
@@ -60,11 +63,19 @@ public class MainNavFrag extends Fragment {
     @Bind(R.id.boardList)
     ListView mList;
     @Bind(R.id.newBoard)
-    BootstrapButton mNewBoardButton;
+    BootstrapButton mNewBoard;
+    @Bind(R.id.profile_image)
+    BootstrapCircleThumbnail mAvatar;
 
 
     ArrayList<RawMyBoards.Entry> mListData = new ArrayList<>();
     MainNavAdapter mListAdapter;
+
+    @Inject
+    RealmUIAccess realmAccess;
+
+    @Inject
+    UserStore userStore;
 
     @Nullable
     @Override
@@ -85,6 +96,22 @@ public class MainNavFrag extends Fragment {
 
         // TODO: provide a graphical interface to refresh (That logic is ready, though)
 
+        realmAccess.process(realm -> {
+            Person me = realm.where(Person.class)
+                    .equalTo("personId", userStore.getMostRecentUserId())
+                    .findFirst();
+            Picasso.with(getContext())
+                    .load(me.getAvatarUrl())
+                    .placeholder(R.drawable.person_image_empty)
+                    .error(R.drawable.person_image_empty)
+                    .into(mAvatar);
+            return null;
+        });
+
+        mNewBoard.setOnClickListener(v -> {
+            new NewBoardFragment().show(getActivity().getSupportFragmentManager(), "fragment_new_board");
+            ((MainActivity) getActivity()).closeDrawers();
+        });
         // init list
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
             onClickItem(position);
@@ -135,6 +162,8 @@ public class MainNavFrag extends Fragment {
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
+
+            convertView.setOnClickListener(v -> ((MainActivity) getActivity()).closeDrawers());
 
             RawMyBoards.Entry data = getItem(position);
             TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
