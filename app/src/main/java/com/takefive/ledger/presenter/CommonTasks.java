@@ -87,6 +87,9 @@ public class CommonTasks {
         return realmAccess.process(realm -> {
             Person target = new Person();
             target.setPersonId(person._id);
+            target.setName(person.name);
+            target.setFacebookId(person.facebookId);
+            target.setAvatarUrl(person.avatarUrl);
             target.setCreatedAt(DateTimeConverter.fromISOString(person.createdAt).getTime());
 
             // TODO: add etags to avoid unnecessary writes?

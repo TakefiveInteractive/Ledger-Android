@@ -13,6 +13,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,8 +70,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         ButterKnife.bind(this);
 
         navFrag = (MainNavFrag) getSupportFragmentManager().findFragmentById(R.id.navFrag);
-        ButterKnife.findById(navFrag.getView(), R.id.newBoard).setOnClickListener(v ->
-                new NewBoardFragment().show(getSupportFragmentManager(), "fragment_new_board"));
+        mDrawerLayout.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+        ButterKnife.findById(navFrag.getView(), R.id.newBoard).setOnClickListener(v -> {
+            new NewBoardFragment().show(getSupportFragmentManager(), "fragment_new_board");
+            mDrawerLayout.closeDrawers();
+        });
 
         setSupportActionBar(mToolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_drawer);
@@ -91,6 +95,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 balanceFrag.setTitle(getString(R.string.title_main_balance)));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+    @Override
+    public void stopRefreshing() {
+        billFrag.stopRefreshing();
     }
 
     @Override

@@ -3,11 +3,42 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <ListView
-        android:id="@+id/billList"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout="@layout/item_bill_list"
-        android:layout_alignParentStart="false" />
+
+    <com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout
+            android:id="@+id/billSwipeRefreshLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:clickable="true">
+
+            <ListView
+                    android:id="@+id/billList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:layout="@layout/item_bill_list"/>
+
+            <ScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center">
+
+                <TextView
+                        android:id="@+id/billNone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:visibility="gone"
+                        android:text="None :P"/>
+
+            </ScrollView>
+
+        </FrameLayout>
+
+    </com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout>
 
 </RelativeLayout>

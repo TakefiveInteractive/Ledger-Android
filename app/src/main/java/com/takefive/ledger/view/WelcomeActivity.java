@@ -48,6 +48,12 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (!isTaskRoot()) {
+            finish();
+            return;
+        }
+
         ((MyApplication) getApplication()).inject(this);
         presenter.attachView(this);
 
@@ -69,6 +75,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
             @Override
             public void onError(FacebookException error) {
+                error.printStackTrace();
                 showAlert(R.string.error_contact_facebook);
             }
         });

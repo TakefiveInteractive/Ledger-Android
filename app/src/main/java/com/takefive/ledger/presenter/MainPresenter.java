@@ -69,6 +69,7 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     public void loadBills(String boardId) {
         chainFactory.get(errorHolder -> {
+            view.stopRefreshing();
             view.showAlert("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
         }).netThen(() -> {
@@ -79,7 +80,11 @@ public class MainPresenter implements IPresenter<IMainView> {
                 throw new IOException(msg);
             }
             return resp.body().bills;
-        }).uiConsume(view::showBillsList).start();
+        }).uiConsume(view::showBillsList)
+          .uiThen(() -> {
+              view.stopRefreshing();
+              return null;
+        }).start();
     }
 
     public void loadMyBoards() {

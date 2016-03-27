@@ -14,4 +14,5 @@ public interface IMainView extends IView {
     void showBillsList(List<RawBill> bills);
     void showMyBoards(RawMyBoards boards);
     void showMyUserInfo(RawPerson me);
+    void stopRefreshing();
 }

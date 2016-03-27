@@ -5,6 +5,7 @@ import com.takefive.ledger.model.RawPerson;
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
 
 /**
  * Created by @tourbillon on 2/1/16.
@@ -16,6 +17,10 @@ import io.realm.annotations.PrimaryKey;
 public class Person extends RealmObject {
     @PrimaryKey
     private String personId;
+    @Required
+    private String name;
+    private String facebookId;
+    private String avatarUrl;
     private RealmList<Bill> bills;
     private RealmList<Board> boards;
     private long createdAt;
@@ -26,6 +31,30 @@ public class Person extends RealmObject {
 
     public void setPersonId(String personId) {
         this.personId = personId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getFacebookId() {
+        return facebookId;
+    }
+
+    public void setFacebookId(String facebookId) {
+        this.facebookId = facebookId;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public RealmList<Bill> getBills() {

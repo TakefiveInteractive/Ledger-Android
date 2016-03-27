@@ -30,6 +30,7 @@ import com.takefive.ledger.presenter.client.LedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.DotMark;
 import com.takefive.ledger.view.utils.PopupCardView;
 
@@ -115,10 +116,12 @@ public class MainNavFrag extends Fragment {
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mListAdapter = adapter;
+        onClickItem(0);
     }
 
     void onClickItem(int pos) {
         MainActivity mainActivity = (MainActivity)getActivity();
+        mainActivity.billFrag.setCurrentBoardId(mListAdapter.getItem(pos).id);
         mainActivity.presenter.loadBills(mListAdapter.getItem(pos).id);
     }
 

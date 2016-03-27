@@ -1,4 +1,4 @@
-package com.takefive.ledger.presenter.database;
+package com.takefive.ledger.view.database;
 
 import android.content.Context;
 
@@ -13,9 +13,9 @@ import zyu19.libs.action.chain.ReadOnlyChain;
 import zyu19.libs.action.chain.config.PureAction;
 
 /**
- * Created by zyu on 3/14/16.
+ * Created by @tourbillon on 3/25/16.
  */
-public class RealmAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyChain> {
+public class RealmUIAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyChain> {
 
     @Inject
     ActionChainFactory chainFactory;
@@ -26,7 +26,7 @@ public class RealmAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyCha
     @Override
     public ReadOnlyChain process(PureAction<Realm, ?> editor) {
         return chainFactory.get(fail -> fail.getCause().printStackTrace()
-        ).netThen(() -> {
+        ).uiThen(() -> {
             Realm realm = null;
             try {
                 realm = Realm.getInstance(new RealmConfiguration.Builder(context)
