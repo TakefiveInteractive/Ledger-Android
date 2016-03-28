@@ -11,6 +11,7 @@ import com.takefive.ledger.presenter.FbUserInfo;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,6 +33,8 @@ public class BusinessFbRequest implements IFbRequest {
         config.putString("fields", "name");
         request.setParameters(config);
         GraphResponse response = request.executeAndWait();
+        if(response.getError() != null)
+            throw new IOException(response.getError().getErrorMessage());
         JSONObject object = response.getJSONObject();
 
         FbUserInfo userInfo = new FbUserInfo();

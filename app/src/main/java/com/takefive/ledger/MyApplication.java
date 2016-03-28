@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
 import com.facebook.FacebookSdk;
+import com.takefive.ledger.dagger.fb.BusinessFbFactoryProvider;
 import com.takefive.ledger.dagger.ledger.BusinessLedgerServiceModule;
 import com.takefive.ledger.dagger.userstore.BusinessUserStoreModule;
 import com.takefive.ledger.presenter.utils.ChainFactoryProvider;
@@ -24,7 +25,8 @@ public class MyApplication extends Application {
                 new ApplicationContextProvider(this),
                 new BusinessUserStoreModule(),
                 new BusinessLedgerServiceModule(),
-                new ChainFactoryProvider()
+                new ChainFactoryProvider(),
+                new BusinessFbFactoryProvider()
         );
         FacebookSdk.sdkInitialize(getApplicationContext());
     }
