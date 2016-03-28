@@ -1,16 +1,12 @@
-package com.takefive.ledger.presenter.database;
+package com.takefive.ledger.dagger.userstore;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.UserStore;
 
 import javax.inject.Inject;
-
-import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.ActionChainFactory;
-import zyu19.libs.action.chain.config.ErrorHolder;
-import zyu19.libs.action.chain.config.NiceConsumer;
 
 /**
  * Created by @tourbillon on 2/2/16.

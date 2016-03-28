@@ -3,8 +3,9 @@ package com.takefive.ledger;
 import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.takefive.ledger.world.ledger.BusinessLedgerServiceModule;
-import com.takefive.ledger.presenter.database.BusinessUserStoreModule;
+import com.facebook.FacebookSdk;
+import com.takefive.ledger.dagger.ledger.BusinessLedgerServiceModule;
+import com.takefive.ledger.dagger.userstore.BusinessUserStoreModule;
 import com.takefive.ledger.presenter.utils.ChainFactoryProvider;
 
 import dagger.ObjectGraph;

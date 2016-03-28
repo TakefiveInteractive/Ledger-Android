@@ -1,6 +1,6 @@
-package com.takefive.ledger.world.ledger;
+package com.takefive.ledger.dagger.ledger;
 
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.UserStore;
 
 import java.io.IOException;
 

@@ -4,11 +4,11 @@ import android.content.Context;
 
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
-import com.takefive.ledger.world.IFbFactory;
-import com.takefive.ledger.world.IFbLoginResult;
-import com.takefive.ledger.world.ILedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.IFbFactory;
+import com.takefive.ledger.dagger.IFbLoginResult;
+import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.WelcomeActivity;
 
 import javax.inject.Inject;

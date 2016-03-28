@@ -19,6 +19,7 @@ import com.facebook.login.LoginResult;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.presenter.WelcomePresenter;
 
 import java.util.Arrays;
@@ -66,7 +67,9 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                presenter.ledgerLogin(loginResult);
+                BusinessFbLoginResult businessFbLoginResult = new BusinessFbLoginResult();
+                businessFbLoginResult.setToken(loginResult.getAccessToken());
+                presenter.ledgerLogin(businessFbLoginResult);
             }
 
             @Override

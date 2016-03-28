@@ -1,8 +1,4 @@
-package com.takefive.ledger.presenter.database;
-
-import zyu19.libs.action.chain.ActionChain;
-import zyu19.libs.action.chain.config.ErrorHolder;
-import zyu19.libs.action.chain.config.NiceConsumer;
+package com.takefive.ledger.dagger;
 
 /**
  * Created by @tourbillon on 2/1/16.

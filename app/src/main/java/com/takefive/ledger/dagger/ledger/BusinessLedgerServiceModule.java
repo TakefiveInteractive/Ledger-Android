@@ -1,10 +1,10 @@
-package com.takefive.ledger.world.ledger;
+package com.takefive.ledger.dagger.ledger;
 
 import android.content.Context;
 
 import com.takefive.ledger.R;
 import com.takefive.ledger.view.WelcomeActivity;
-import com.takefive.ledger.world.ILedgerService;
+import com.takefive.ledger.dagger.ILedgerService;
 
 import dagger.Module;
 import dagger.Provides;

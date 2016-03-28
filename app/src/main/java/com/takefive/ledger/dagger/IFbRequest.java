@@ -1,9 +1,7 @@
-package com.takefive.ledger.world;
+package com.takefive.ledger.dagger;
 
 import java.util.List;
 import java.util.Map;
-
-import zyu19.libs.action.chain.config.NiceConsumer;
 
 /**
  * Created by zyu on 3/28/16.

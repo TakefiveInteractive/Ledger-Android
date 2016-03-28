@@ -1,9 +1,9 @@
-package com.takefive.ledger.world.fb;
+package com.takefive.ledger.dagger.fb;
 
 import android.os.Parcelable;
 
 import com.facebook.AccessToken;
-import com.takefive.ledger.world.IFbLoginResult;
+import com.takefive.ledger.dagger.IFbLoginResult;
 
 /**
  * Created by zyu on 3/28/16.

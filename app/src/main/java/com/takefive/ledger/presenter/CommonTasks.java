@@ -7,11 +7,11 @@ import com.takefive.ledger.model.db.Board;
 import com.takefive.ledger.model.db.Entry;
 import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.world.IFbRequest;
-import com.takefive.ledger.world.ILedgerService;
-import com.takefive.ledger.world.ledger.JSONRequestBody;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.IFbRequest;
+import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.dagger.ledger.JSONRequestBody;
+import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.DateTimeConverter;
 
 import org.json.JSONException;

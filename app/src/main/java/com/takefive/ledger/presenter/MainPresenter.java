@@ -11,9 +11,9 @@ import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.model.request.NewBoardRequest;
-import com.takefive.ledger.world.ILedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IMainView;
 
 import org.json.JSONArray;

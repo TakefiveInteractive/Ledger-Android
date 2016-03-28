@@ -1,4 +1,4 @@
-package com.takefive.ledger.world;
+package com.takefive.ledger.dagger;
 
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawBoard;

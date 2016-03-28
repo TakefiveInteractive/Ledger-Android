@@ -3,8 +3,6 @@ package com.takefive.ledger.view;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,17 +21,14 @@ import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
-import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.database.RealmUIAccess;
 import com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;

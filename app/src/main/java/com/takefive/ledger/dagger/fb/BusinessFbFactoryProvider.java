@@ -1,10 +1,10 @@
-package com.takefive.ledger.world.fb;
+package com.takefive.ledger.dagger.fb;
 
 import com.takefive.ledger.view.MainActivity;
 import com.takefive.ledger.view.WelcomeActivity;
-import com.takefive.ledger.world.IFbFactory;
-import com.takefive.ledger.world.IFbLoginResult;
-import com.takefive.ledger.world.IFbRequest;
+import com.takefive.ledger.dagger.IFbFactory;
+import com.takefive.ledger.dagger.IFbLoginResult;
+import com.takefive.ledger.dagger.IFbRequest;
 
 import dagger.Module;
 import dagger.Provides;

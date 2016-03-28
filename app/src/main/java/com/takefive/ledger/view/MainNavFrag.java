@@ -26,7 +26,7 @@ import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.view.database.RealmUIAccess;
 import com.takefive.ledger.view.utils.DotMark;

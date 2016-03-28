@@ -1,4 +1,4 @@
-package com.takefive.ledger.presenter.database;
+package com.takefive.ledger.presenter.utils;
 
 import android.content.Context;
 

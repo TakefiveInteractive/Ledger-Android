@@ -1,13 +1,6 @@
-package com.takefive.ledger.world;
+package com.takefive.ledger.dagger;
 
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
-
-import java.util.List;
-
-import javax.inject.Provider;
-
-import zyu19.libs.action.chain.config.NiceConsumer;
 
 /**
  * Created by zyu on 3/28/16.

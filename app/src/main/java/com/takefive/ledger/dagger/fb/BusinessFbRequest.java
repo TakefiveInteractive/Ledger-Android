@@ -1,11 +1,11 @@
-package com.takefive.ledger.world.fb;
+package com.takefive.ledger.dagger.fb;
 
 import android.os.Bundle;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.takefive.ledger.world.IFbRequest;
+import com.takefive.ledger.dagger.IFbRequest;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

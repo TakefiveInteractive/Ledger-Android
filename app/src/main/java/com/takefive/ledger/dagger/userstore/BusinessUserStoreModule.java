@@ -1,5 +1,6 @@
-package com.takefive.ledger.presenter.database;
+package com.takefive.ledger.dagger.userstore;
 
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.MainActivity;
 import com.takefive.ledger.view.MainNavFrag;
 import com.takefive.ledger.view.WelcomeActivity;
