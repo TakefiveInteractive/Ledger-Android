@@ -123,10 +123,8 @@ public class MainBillFrag extends NamedFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-            if (convertView != null)
-                return convertView;
-
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
+            if (convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
             RawBill data = getItem(position);
 
