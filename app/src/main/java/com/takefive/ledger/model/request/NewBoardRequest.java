@@ -6,6 +6,7 @@ import java.util.List;
  * Created by @tourbillon on 3/23/16.
  */
 public class NewBoardRequest {
+    /* TODO: in principal, IView does not touch any Models */
     public String name;
     public boolean isActive;
     public List<String> members;

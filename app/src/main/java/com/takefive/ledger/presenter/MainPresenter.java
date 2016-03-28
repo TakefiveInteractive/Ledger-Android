@@ -80,10 +80,10 @@ public class MainPresenter implements IPresenter<IMainView> {
                 throw new IOException(msg);
             }
             return resp.body().bills;
-        }).uiConsume(view::showBillsList)
-          .uiThen(() -> {
-              view.stopRefreshing();
-              return null;
+        }).uiConsume(view::showBillsList
+        ).uiThen(() -> {
+            view.stopRefreshing();
+            return null;
         }).start();
     }
 
@@ -111,7 +111,8 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     /**
      * load and SYNC userInfo (Person and RawPerson)
-     * @param userId the user id you want to query about
+     *
+     * @param userId   the user id you want to query about
      * @param callback it will be called on UI thread
      */
     public void loadUserInfo(String userId, Consumer<RawPerson> callback) {
@@ -126,39 +127,37 @@ public class MainPresenter implements IPresenter<IMainView> {
     }
 
     public void loadUserFriends(Consumer<List<FbUserInfo>> callback) {
-        chainFactory.get(fail -> fail.getCause().printStackTrace())
-                .netThen(() -> {
-                    GraphRequest request =
-                            GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(), null);
-                    Bundle parameters = new Bundle();
-                    parameters.putString("fields", "id,name,picture");
-                    request.setParameters(parameters);
-                    JSONArray response = request.executeAndWait().getJSONObject().getJSONArray("data");
-                    List<FbUserInfo> infoList = new ArrayList<>();
-                    for (int i = 0; i < response.length(); ++i) {
-                        JSONObject user = response.getJSONObject(i);
-                        FbUserInfo info = new FbUserInfo();
-                        info.id = user.getString("id");
-                        info.name = user.getString("name");
-                        info.avatarUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
-                        infoList.add(info);
-                    }
-                    return infoList;
-                })
-                .uiConsume(callback)
-                .start();
+        chainFactory.get(fail -> fail.getCause().printStackTrace()
+        ).netThen(() -> {
+            GraphRequest request =
+                    GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(), null);
+            Bundle parameters = new Bundle();
+            parameters.putString("fields", "id,name,picture");
+            request.setParameters(parameters);
+            JSONArray response = request.executeAndWait().getJSONObject().getJSONArray("data");
+            List<FbUserInfo> infoList = new ArrayList<>();
+            for (int i = 0; i < response.length(); ++i) {
+                JSONObject user = response.getJSONObject(i);
+                FbUserInfo info = new FbUserInfo();
+                info.id = user.getString("id");
+                info.name = user.getString("name");
+                info.avatarUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
+                infoList.add(info);
+            }
+            return infoList;
+        }).uiConsume(callback
+        ).start();
     }
 
     public void createBoard(NewBoardRequest request, Consumer<Response> callback) {
         chainFactory.get(fail -> {
             fail.getCause().printStackTrace();
-            view.showAlert(applicationContext.getString(R.string.network_failure));})
-                .netThen(() -> {
-                    Response<ResponseBody> response = service.createBoard(request).execute();
-                    return response;
-                })
-                .uiConsume(callback)
-                .start();
+            view.showAlert(applicationContext.getString(R.string.network_failure));
+        }).netThen(() -> {
+            Response<ResponseBody> response = service.createBoard(request).execute();
+            return response;
+        }).uiConsume(callback
+        ).start();
     }
 
     public void refreshBoardInfo(RawMyBoards.Entry entry) {
