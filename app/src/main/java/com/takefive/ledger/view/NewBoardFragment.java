@@ -82,9 +82,10 @@ public class NewBoardFragment extends DialogFragment {
         request.members = new ArrayList<>();
         request.members_fromfb = adapter.getSelected();
         ((MainActivity) getActivity()).presenter.createBoard(request, r -> {
-            if (r.isSuccessful())
+            if (r.isSuccessful()) {
                 Snackbar.make(getActivity().findViewById(android.R.id.content),
                         getString(R.string.new_board_success), Snackbar.LENGTH_SHORT).show();
+            }
             else {
                 Log.e("create board", String.format("code: %d, response: %s", r.code(), r.errorBody().string()));
                 showAlert(getString(R.string.network_failure));

@@ -98,6 +98,7 @@ public class MainPresenter implements IPresenter<IMainView> {
                 resp.errorBody().close();
                 throw new IOException(msg);
             }
+            tasks.syncMyBoardsInfo(resp.body());
             return resp.body();
         }).uiConsume(view::showMyBoards).start();
     }
@@ -158,6 +159,11 @@ public class MainPresenter implements IPresenter<IMainView> {
                 })
                 .uiConsume(callback)
                 .start();
+    }
+
+    public void refreshBoardInfo(RawMyBoards.Entry entry) {
+        view.setBoardTitle(entry.name);
+        view.setCurrentBoardId(entry.id);
     }
 
 }

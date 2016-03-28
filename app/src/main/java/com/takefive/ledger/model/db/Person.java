@@ -21,8 +21,6 @@ public class Person extends RealmObject {
     private String name;
     private String facebookId;
     private String avatarUrl;
-    private RealmList<Bill> bills;
-    private RealmList<Board> boards;
     private long createdAt;
 
     public String getPersonId() {
@@ -55,22 +53,6 @@ public class Person extends RealmObject {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public RealmList<Bill> getBills() {
-        return bills;
-    }
-
-    public void setBills(RealmList<Bill> bills) {
-        this.bills = bills;
-    }
-
-    public RealmList<Board> getBoards() {
-        return boards;
-    }
-
-    public void setBoards(RealmList<Board> boards) {
-        this.boards = boards;
     }
 
     public long getCreatedAt() {

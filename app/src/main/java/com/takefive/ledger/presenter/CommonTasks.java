@@ -6,7 +6,12 @@ import android.util.Log;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.takefive.ledger.model.RawBoard;
+import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
+import com.takefive.ledger.model.db.Board;
+import com.takefive.ledger.model.db.Entry;
+import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.presenter.client.JSONRequestBody;
 import com.takefive.ledger.presenter.client.LedgerService;
@@ -22,8 +27,12 @@ import java.util.Iterator;
 
 import javax.inject.Inject;
 
+import io.realm.RealmList;
+import io.realm.RealmQuery;
+import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
 /**
@@ -106,6 +115,52 @@ public class CommonTasks {
             realm.copyToRealm(target);
 
             realm.commitTransaction();
+            return target;
+        });
+    }
+
+    ReadOnlyChain syncBoardInfo(RawBoard board) {
+        return realmAccess.process(realm -> {
+            Board target = new Board();
+            target.setActive(board.isActive);
+            target.setCreator(board.creator);
+            target.setBoardId(board._id);
+            target.setName(board.name);
+            target.setCreatedAt(DateTimeConverter.fromISOString(board.createdAt).getTime());
+
+            realm.beginTransaction();
+
+            Board result = realm.where(Board.class)
+                    .equalTo("boardId", board._id)
+                    .findFirst();
+            if (result != null)
+                result.removeFromRealm();
+            realm.copyToRealm(target);
+
+            realm.commitTransaction();
+
+            return target;
+        });
+    }
+
+    ReadOnlyChain syncMyBoardsInfo(RawMyBoards myBoards) {
+        return realmAccess.process(realm -> {
+
+            MyBoards target = new MyBoards();
+            RealmList<Entry> entries = new RealmList<>();
+            for (RawMyBoards.Entry entry : myBoards.boards) {
+                entries.add(new Entry(entry.id, entry.name));
+            }
+            target.setBoards(entries);
+
+            realm.beginTransaction();
+
+            RealmResults<MyBoards> result = realm.where(MyBoards.class).findAll();
+            result.clear();
+            realm.copyToRealm(target);
+
+            realm.commitTransaction();
+
             return target;
         });
     }

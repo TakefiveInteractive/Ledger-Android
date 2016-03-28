@@ -8,6 +8,7 @@ import com.takefive.ledger.view.WelcomeActivity;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -27,6 +28,7 @@ public class BusinessLedgerServiceModule {
                                               AuthenticateInterceptor authenticateInterceptor) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(authenticateInterceptor)
+                .addInterceptor(new HttpLoggingInterceptor())
                 .build();
         return new Retrofit.Builder()
                 .baseUrl(context.getString(R.string.base_url) + context.getString(R.string.api_version) + "/")

@@ -23,6 +23,7 @@ import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
+import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;

@@ -15,4 +15,6 @@ public interface IMainView extends IView {
     void showMyBoards(RawMyBoards boards);
     void showMyUserInfo(RawPerson me);
     void stopRefreshing();
+    void setCurrentBoardId(String id);
+    void setBoardTitle(String boardName);
 }

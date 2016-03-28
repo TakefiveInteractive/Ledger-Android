@@ -77,6 +77,8 @@ public class MainNavFrag extends Fragment {
     @Inject
     UserStore userStore;
 
+    boolean isInitialized;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,18 +96,22 @@ public class MainNavFrag extends Fragment {
             Helpers.setMargins(mSideImgContent, Helpers.getStatusBarHeight(getResources()), null, null, null);
         }
 
+        isInitialized = false;
+
         // TODO: provide a graphical interface to refresh (That logic is ready, though)
 
         realmAccess.process(realm -> {
             Person me = realm.where(Person.class)
                     .equalTo("personId", userStore.getMostRecentUserId())
                     .findFirst();
-            Picasso.with(getContext())
-                    .load(me.getAvatarUrl())
-                    .placeholder(R.drawable.person_image_empty)
-                    .error(R.drawable.person_image_empty)
-                    .fit()
-                    .into(mAvatar);
+            if (me != null) {
+                Picasso.with(getContext())
+                        .load(me.getAvatarUrl())
+                        .placeholder(R.drawable.person_image_empty)
+                        .error(R.drawable.person_image_empty)
+                        .fit()
+                        .into(mAvatar);
+            }
             return null;
         });
 
@@ -144,13 +150,17 @@ public class MainNavFrag extends Fragment {
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mListAdapter = adapter;
-        onClickItem(0);
+        if (!isInitialized) {
+            onClickItem(0);
+            isInitialized = true;
+        }
     }
 
     void onClickItem(int pos) {
         MainActivity mainActivity = (MainActivity)getActivity();
-        mainActivity.billFrag.setCurrentBoardId(mListAdapter.getItem(pos).id);
         mainActivity.presenter.loadBills(mListAdapter.getItem(pos).id);
+        mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
+        mainActivity.closeDrawers();
     }
 
     class MainNavAdapter extends ArrayAdapter<RawMyBoards.Entry> {

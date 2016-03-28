@@ -99,6 +99,16 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
+    public void setCurrentBoardId(String id) {
+        billFrag.setCurrentBoardId(id);
+    }
+
+    @Override
+    public void setBoardTitle(String boardName) {
+        mToolbar.setTitle("Ledger - " + boardName);
+    }
+
+    @Override
     public void showBillsList(List<RawBill> bills) {
         billFrag.showBillsList(bills);
     }
