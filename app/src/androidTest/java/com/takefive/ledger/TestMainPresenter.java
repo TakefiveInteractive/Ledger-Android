@@ -39,6 +39,21 @@ public class TestMainPresenter {
         public void showAlert(int strId) {
 
         }
+
+        @Override
+        public void setBoardTitle(String boardName) {
+
+        }
+
+        @Override
+        public void stopRefreshing() {
+
+        }
+
+        @Override
+        public void setCurrentBoardId(String id) {
+
+        }
     }
 
     FakeView view = new FakeView();
