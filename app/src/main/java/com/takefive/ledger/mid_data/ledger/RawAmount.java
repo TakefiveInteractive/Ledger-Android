@@ -1,4 +1,4 @@
-package com.takefive.ledger.model;
+package com.takefive.ledger.mid_data.ledger;
 
 /**
  * These are the actual Models. RealmObjects are meant to be DAOs.

@@ -7,6 +7,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.IFbFactory;
 import com.takefive.ledger.dagger.IFbLoginResult;
 import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.mid_data.fb.FbUserInfo;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.WelcomeActivity;

@@ -1,12 +1,12 @@
 package com.takefive.ledger.presenter;
 
-import com.takefive.ledger.model.RawBoard;
-import com.takefive.ledger.model.RawMyBoards;
-import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.model.db.Board;
-import com.takefive.ledger.model.db.Entry;
-import com.takefive.ledger.model.db.MyBoards;
-import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.mid_data.ledger.RawBoard;
+import com.takefive.ledger.mid_data.ledger.RawMyBoards;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.model.Board;
+import com.takefive.ledger.model.Entry;
+import com.takefive.ledger.model.MyBoards;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.dagger.ledger.JSONRequestBody;
 import com.takefive.ledger.presenter.utils.RealmAccess;

@@ -1,7 +1,10 @@
 package com.takefive.ledger.view;
 
 import java.util.*;
-import com.takefive.ledger.model.*;
+
+import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawMyBoards;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.IView;
 
 /**

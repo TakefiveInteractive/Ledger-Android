@@ -1,6 +1,5 @@
-package com.takefive.ledger.model;
+package com.takefive.ledger.mid_data.ledger;
 
-import java.util.Date;
 import java.util.List;
 
 /**

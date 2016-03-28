@@ -1,4 +1,4 @@
-package com.takefive.ledger.model;
+package com.takefive.ledger.mid_data.ledger;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

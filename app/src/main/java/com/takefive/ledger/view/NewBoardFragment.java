@@ -21,8 +21,8 @@ import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
-import com.takefive.ledger.model.request.NewBoardRequest;
-import com.takefive.ledger.presenter.FbUserInfo;
+import com.takefive.ledger.mid_data.ledger.NewBoardRequest;
+import com.takefive.ledger.mid_data.fb.FbUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;

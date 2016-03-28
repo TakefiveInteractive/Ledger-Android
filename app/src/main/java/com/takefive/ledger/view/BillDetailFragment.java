@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.R;
-import com.takefive.ledger.model.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawBill;
 
 import java.text.DateFormat;
 import java.text.ParseException;

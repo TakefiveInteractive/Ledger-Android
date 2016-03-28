@@ -1,9 +1,8 @@
 package com.takefive.ledger.dagger;
 
-import com.takefive.ledger.presenter.FbUserInfo;
+import com.takefive.ledger.mid_data.fb.FbUserInfo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zyu on 3/28/16.

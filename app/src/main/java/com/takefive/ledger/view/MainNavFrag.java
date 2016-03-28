@@ -24,10 +24,10 @@ import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
-import com.takefive.ledger.model.RawMyBoards;
-import com.takefive.ledger.model.RawPerson;
+import com.takefive.ledger.mid_data.ledger.RawMyBoards;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.dagger.UserStore;
-import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.view.database.RealmUIAccess;
 import com.takefive.ledger.view.utils.DotMark;
 

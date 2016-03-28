@@ -1,8 +1,5 @@
-package com.takefive.ledger.model.db;
+package com.takefive.ledger.model;
 
-import com.takefive.ledger.model.RawPerson;
-
-import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;

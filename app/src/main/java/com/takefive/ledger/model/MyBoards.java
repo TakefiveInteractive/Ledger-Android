@@ -1,4 +1,4 @@
-package com.takefive.ledger.model.db;
+package com.takefive.ledger.model;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

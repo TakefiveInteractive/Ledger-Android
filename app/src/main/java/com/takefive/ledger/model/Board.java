@@ -1,9 +1,4 @@
-package com.takefive.ledger.model.db;
-
-import com.takefive.ledger.model.RawBill;
-import com.takefive.ledger.model.RawBoard;
-
-import java.util.List;
+package com.takefive.ledger.model;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;

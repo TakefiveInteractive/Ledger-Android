@@ -1,9 +1,8 @@
 package com.takefive.ledger;
 
-import com.takefive.ledger.model.RawBill;
-import com.takefive.ledger.model.RawMyBoards;
-import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.model.db.Person;
+import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawMyBoards;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.IMainView;
 

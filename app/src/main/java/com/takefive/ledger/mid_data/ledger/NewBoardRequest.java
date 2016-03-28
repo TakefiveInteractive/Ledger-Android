@@ -1,4 +1,4 @@
-package com.takefive.ledger.model.request;
+package com.takefive.ledger.mid_data.ledger;
 
 import java.util.List;
 
