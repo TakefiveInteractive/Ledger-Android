@@ -7,6 +7,6 @@ keys.ledgerGroupDebug.password=XXX
 
 JDK 8, and Build tools with version precisely equal to "23.0.2" are required.
 
-### Explannation of Package structure:
+### Explanation of Package structure:
 ![](webImages/packages.png)
 
