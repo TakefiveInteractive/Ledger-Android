@@ -27,7 +27,6 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.presenter.FbUserInfo;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.utils.NamedFragment;
 import com.takefive.ledger.view.utils.PopupCardView;

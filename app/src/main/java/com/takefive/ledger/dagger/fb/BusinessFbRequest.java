@@ -6,14 +6,13 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.takefive.ledger.dagger.IFbRequest;
+import com.takefive.ledger.presenter.FbUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by zyu on 3/28/16.
@@ -27,7 +26,7 @@ public class BusinessFbRequest implements IFbRequest {
     }
 
     @Override
-    public Map<String, String> getMe() throws Exception {
+    public FbUserInfo getMe() throws Exception {
         GraphRequest request = GraphRequest.newMeRequest(credentials.token, null);
         Bundle config = new Bundle();
         config.putString("fields", "name");
@@ -35,13 +34,13 @@ public class BusinessFbRequest implements IFbRequest {
         GraphResponse response = request.executeAndWait();
         JSONObject object = response.getJSONObject();
 
-        HashMap<String, String> result = new HashMap<>();
-        result.put("name", object.getString("name"));
-        return result;
+        FbUserInfo userInfo = new FbUserInfo();
+        userInfo.name = object.getString("name");
+        return userInfo;
     }
 
     @Override
-    public List<Map<String, String>> getMyFriends() throws Exception {
+    public List<FbUserInfo> getMyFriends() throws Exception {
         GraphRequest request =
                 GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(), null);
         Bundle parameters = new Bundle();
@@ -49,13 +48,13 @@ public class BusinessFbRequest implements IFbRequest {
         request.setParameters(parameters);
         JSONArray response = request.executeAndWait().getJSONObject().getJSONArray("data");
 
-        List<Map<String, String>> infoList = new ArrayList<>();
+        List<FbUserInfo> infoList = new ArrayList<>();
         for (int i = 0; i < response.length(); ++i) {
             JSONObject user = response.getJSONObject(i);
-            HashMap<String, String> info = new HashMap<>();
-            info.put("id", user.getString("id"));
-            info.put("name", user.getString("name"));
-            info.put("avatarUrl", user.getJSONObject("picture").getJSONObject("data").getString("url"));
+            FbUserInfo info = new FbUserInfo();
+            info.id = user.getString("id");
+            info.name = user.getString("name");
+            info.avatarUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
             infoList.add(info);
         }
         return infoList;

@@ -1,12 +1,9 @@
 package com.takefive.ledger.presenter;
 
-import android.content.Context;
-import android.os.Bundle;
-
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.IFbFactory;
+import com.takefive.ledger.dagger.IFbLoginResult;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
@@ -16,11 +13,8 @@ import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IMainView;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,9 +32,6 @@ public class MainPresenter implements IPresenter<IMainView> {
     ActionChainFactory chainFactory;
 
     @Inject
-    Context applicationContext;
-
-    @Inject
     RealmAccess realmAccess;
 
     @Inject
@@ -51,6 +42,9 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     @Inject
     CommonTasks tasks;
+
+    @Inject
+    IFbFactory fbFactory;
 
     IMainView view = null;
 
@@ -123,25 +117,10 @@ public class MainPresenter implements IPresenter<IMainView> {
         }).uiConsume(callback).start();
     }
 
-    public void loadUserFriends(Consumer<List<FbUserInfo>> callback) {
+    public void loadUserFriends(IFbLoginResult loginResult, Consumer<List<FbUserInfo>> callback) {
         chainFactory.get(fail -> fail.getCause().printStackTrace()
         ).netThen(() -> {
-            GraphRequest request =
-                    GraphRequest.newMyFriendsRequest(AccessToken.getCurrentAccessToken(), null);
-            Bundle parameters = new Bundle();
-            parameters.putString("fields", "id,name,picture");
-            request.setParameters(parameters);
-            JSONArray response = request.executeAndWait().getJSONObject().getJSONArray("data");
-            List<FbUserInfo> infoList = new ArrayList<>();
-            for (int i = 0; i < response.length(); ++i) {
-                JSONObject user = response.getJSONObject(i);
-                FbUserInfo info = new FbUserInfo();
-                info.id = user.getString("id");
-                info.name = user.getString("name");
-                info.avatarUrl = user.getJSONObject("picture").getJSONObject("data").getString("url");
-                infoList.add(info);
-            }
-            return infoList;
+            return fbFactory.newRequest(loginResult).getMyFriends();
         }).uiConsume(callback
         ).start();
     }
@@ -149,7 +128,7 @@ public class MainPresenter implements IPresenter<IMainView> {
     public void createBoard(NewBoardRequest request, Consumer<Response> callback) {
         chainFactory.get(fail -> {
             fail.getCause().printStackTrace();
-            view.showAlert(applicationContext.getString(R.string.network_failure));
+            view.showAlert(R.string.network_failure);
         }).netThen(() -> {
             Response<ResponseBody> response = service.createBoard(request).execute();
             return response;

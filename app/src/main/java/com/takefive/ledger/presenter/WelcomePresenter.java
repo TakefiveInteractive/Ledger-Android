@@ -58,14 +58,14 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
             view.showAlert(R.string.error_contact_facebook);
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
-            return tasks.getMyFbUserInfo(fbFactory.newRequest(fbLoginResult));
+            return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
             view.showAlert(applicationContext.getString(R.string.network_failure));
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
             tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());
             tasks.getAndSyncMyUserInfo();
-            return info.userName;
+            return info.name;
         }).uiThen((String username) -> {
             view.onLoginSuccess(username);
             return null;

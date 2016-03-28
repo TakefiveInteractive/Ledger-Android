@@ -7,7 +7,6 @@ import com.takefive.ledger.model.db.Board;
 import com.takefive.ledger.model.db.Entry;
 import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.dagger.IFbRequest;
 import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.dagger.ledger.JSONRequestBody;
 import com.takefive.ledger.presenter.utils.RealmAccess;
@@ -18,7 +17,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -51,18 +49,6 @@ public class CommonTasks {
         String ans = new JSONObject(responseBody.string()).getString("accessToken");
         userStore.setAccessToken(ans);
         return ans;
-    }
-
-    FbUserInfo getMyFbUserInfo(IFbRequest request) throws Exception {
-        FbUserInfo info = new FbUserInfo();
-        try {
-            Map<String, String> ans = request.getMe();
-            info.userName = ans.get("name");
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw e;
-        }
-        return info;
     }
 
     RawPerson getAndSyncMyUserInfo() throws Exception {
