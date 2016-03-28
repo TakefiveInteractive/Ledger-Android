@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +24,13 @@ import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
-import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.presenter.client.LedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.model.db.Person;
 import com.takefive.ledger.view.database.RealmUIAccess;
-import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.DotMark;
-import com.takefive.ledger.view.utils.PopupCardView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,8 +38,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import retrofit2.Response;
-import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
  * Created by zyu on 2/13/16.

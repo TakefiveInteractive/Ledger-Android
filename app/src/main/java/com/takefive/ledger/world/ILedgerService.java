@@ -1,4 +1,4 @@
-package com.takefive.ledger.presenter.client;
+package com.takefive.ledger.world;
 
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawBoard;
@@ -16,7 +16,7 @@ import retrofit2.http.Path;
 /**
  * Created by @tourbillon on 2/2/16.
  */
-public interface LedgerService {
+public interface ILedgerService {
 
     @POST("auth/login")
     Call<ResponseBody> login(@Body RequestBody body);

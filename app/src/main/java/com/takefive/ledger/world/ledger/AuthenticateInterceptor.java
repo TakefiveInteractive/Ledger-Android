@@ -1,4 +1,4 @@
-package com.takefive.ledger.presenter.client;
+package com.takefive.ledger.world.ledger;
 
 import com.takefive.ledger.presenter.database.UserStore;
 

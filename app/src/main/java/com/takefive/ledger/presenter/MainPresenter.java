@@ -5,15 +5,13 @@ import android.os.Bundle;
 
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
-import com.takefive.ledger.model.RawBill;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
 import com.takefive.ledger.model.request.NewBoardRequest;
-import com.takefive.ledger.presenter.client.LedgerService;
+import com.takefive.ledger.world.ILedgerService;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.view.IMainView;
@@ -31,7 +29,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.config.Consumer;
-import zyu19.libs.action.chain.config.PureAction;
 
 /**
  * Created by zyu on 3/19/16.
@@ -50,7 +47,7 @@ public class MainPresenter implements IPresenter<IMainView> {
     UserStore userStore;
 
     @Inject
-    LedgerService service;
+    ILedgerService service;
 
     @Inject
     CommonTasks tasks;

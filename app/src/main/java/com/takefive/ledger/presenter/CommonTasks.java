@@ -1,11 +1,5 @@
 package com.takefive.ledger.presenter;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.takefive.ledger.model.RawBoard;
 import com.takefive.ledger.model.RawMyBoards;
 import com.takefive.ledger.model.RawPerson;
@@ -13,8 +7,9 @@ import com.takefive.ledger.model.db.Board;
 import com.takefive.ledger.model.db.Entry;
 import com.takefive.ledger.model.db.MyBoards;
 import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.presenter.client.JSONRequestBody;
-import com.takefive.ledger.presenter.client.LedgerService;
+import com.takefive.ledger.world.IFbRequest;
+import com.takefive.ledger.world.ILedgerService;
+import com.takefive.ledger.world.ledger.JSONRequestBody;
 import com.takefive.ledger.presenter.database.RealmAccess;
 import com.takefive.ledger.presenter.database.UserStore;
 import com.takefive.ledger.presenter.utils.DateTimeConverter;
@@ -23,16 +18,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.Map;
 
 import javax.inject.Inject;
 
 import io.realm.RealmList;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
 /**
@@ -41,7 +34,7 @@ import zyu19.libs.action.chain.ReadOnlyChain;
 public class CommonTasks {
 
     @Inject
-    LedgerService service;
+    ILedgerService service;
 
     @Inject
     UserStore userStore;
@@ -60,22 +53,12 @@ public class CommonTasks {
         return ans;
     }
 
-    FbUserInfo getFbUserInfo(AccessToken fbToken) throws Exception {
-        GraphRequest request = GraphRequest.newMeRequest(fbToken, null);
-        Bundle config = new Bundle();
-        config.putString("fields", "name");
-        request.setParameters(config);
-        GraphResponse response = request.executeAndWait();
-        JSONObject object = response.getJSONObject();
-
+    FbUserInfo getMyFbUserInfo(IFbRequest request) throws Exception {
         FbUserInfo info = new FbUserInfo();
         try {
-            info.accessToken = fbToken;
-            info.userName = object.getString("name");
+            Map<String, String> ans = request.getMe();
+            info.userName = ans.get("name");
         } catch (JSONException e) {
-            Iterator<String> keys = object.keys();
-            while(keys.hasNext())
-                Log.d("object properties", keys.next());
             e.printStackTrace();
             throw e;
         }

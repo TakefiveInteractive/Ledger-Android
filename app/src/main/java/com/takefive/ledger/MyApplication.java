@@ -3,7 +3,7 @@ package com.takefive.ledger;
 import android.app.Application;
 
 import com.beardedhen.androidbootstrap.TypefaceProvider;
-import com.takefive.ledger.presenter.client.BusinessLedgerServiceModule;
+import com.takefive.ledger.world.ledger.BusinessLedgerServiceModule;
 import com.takefive.ledger.presenter.database.BusinessUserStoreModule;
 import com.takefive.ledger.presenter.utils.ChainFactoryProvider;
 
@@ -25,6 +25,7 @@ public class MyApplication extends Application {
                 new BusinessLedgerServiceModule(),
                 new ChainFactoryProvider()
         );
+        FacebookSdk.sdkInitialize(getApplicationContext());
     }
 
     public void inject(Object object) {

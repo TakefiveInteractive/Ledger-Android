@@ -1,9 +1,10 @@
-package com.takefive.ledger.presenter.client;
+package com.takefive.ledger.world.ledger;
 
 import android.content.Context;
 
 import com.takefive.ledger.R;
 import com.takefive.ledger.view.WelcomeActivity;
+import com.takefive.ledger.world.ILedgerService;
 
 import dagger.Module;
 import dagger.Provides;
@@ -24,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class BusinessLedgerServiceModule {
 
     @Provides
-    public LedgerService provideLedgerService(Context context,
+    public ILedgerService provideLedgerService(Context context,
                                               AuthenticateInterceptor authenticateInterceptor) {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(authenticateInterceptor)
@@ -35,6 +36,6 @@ public class BusinessLedgerServiceModule {
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-                .create(LedgerService.class);
+                .create(ILedgerService.class);
     }
 }

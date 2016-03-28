@@ -9,7 +9,7 @@ import java.util.List;
 public class RawPerson {
     public String _id;
 
-    // LedgerService does not provide this field
+    // ILedgerService does not provide this field
     public String name;
     public String avatarUrl;
     public String facebookId;
