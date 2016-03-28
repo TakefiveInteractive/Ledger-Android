@@ -13,7 +13,7 @@ public class BusinessFbLoginResult implements IFbLoginResult {
 
     @Override
     public void setToken(Parcelable token) {
-        token = (AccessToken) token;
+        this.token = (AccessToken) token;
     }
 
     @Override
