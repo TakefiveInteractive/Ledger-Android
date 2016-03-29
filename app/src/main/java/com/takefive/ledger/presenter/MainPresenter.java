@@ -5,11 +5,13 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.IFbFactory;
 import com.takefive.ledger.dagger.IFbLoginResult;
 import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.mid_data.ledger.RawBill;
 import com.takefive.ledger.mid_data.ledger.RawBoard;
 import com.takefive.ledger.mid_data.ledger.RawMyBoards;
 import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.mid_data.ledger.NewBoardRequest;
 import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.mid_data.view.ShownBill;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IMainView;
@@ -71,8 +73,8 @@ public class MainPresenter implements IPresenter<IMainView> {
                 resp.errorBody().close();
                 throw new IOException(msg);
             }
-            return resp.body().bills;
-        }).uiConsume(view::showBillsList
+            return tasks.inflateBills(resp.body().bills);
+        }).uiConsume((List<ShownBill> bills) -> view.showBillsList(bills)
         ).uiThen(() -> {
             view.stopRefreshing();
             return null;

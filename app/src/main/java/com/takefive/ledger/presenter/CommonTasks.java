@@ -1,8 +1,10 @@
 package com.takefive.ledger.presenter;
 
+import com.takefive.ledger.mid_data.ledger.RawBill;
 import com.takefive.ledger.mid_data.ledger.RawBoard;
 import com.takefive.ledger.mid_data.ledger.RawMyBoards;
 import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.mid_data.view.ShownBill;
 import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Entry;
 import com.takefive.ledger.model.MyBoards;
@@ -17,6 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -131,6 +135,40 @@ public class CommonTasks {
             realm.commitTransaction();
 
             return target;
+        });
+    }
+
+    ReadOnlyChain inflateBills(List<RawBill> rawBillList) {
+        return realmAccess.process(realm -> {
+            List<ShownBill> ansList = new ArrayList<ShownBill>();
+            for(RawBill rawBill : rawBillList) {
+                ShownBill ans = new ShownBill();
+                ans.rawBill = rawBill;
+
+                Person person = realm.where(Person.class)
+                        .equalTo("personId", rawBill.recipient).findFirst();
+                if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
+                    if (person == null)
+                        return ans;
+                    ans.recipientAvatarUrl = person.getAvatarUrl();
+                    ans.recipientName = null; // this is not going to be used anyway.
+                } else {
+                    if (person != null && person.getName() != null && person.getAvatarUrl() != null) {
+                        ans.recipientName = person.getName();
+                        ans.recipientAvatarUrl = person.getAvatarUrl();
+                    } else {
+                        Response<RawPerson> response = service.getPerson(rawBill.recipient).execute();
+                        if (!response.isSuccessful())
+                            throw new IOException(response.errorBody().string());
+                        syncUserInfo(response.body());
+                        ans.recipientName = response.body().name;
+                        ans.recipientAvatarUrl = response.body().avatarUrl;
+                    }
+                }
+
+                ansList.add(ans);
+            }
+            return ansList;
         });
     }
 

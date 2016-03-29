@@ -22,6 +22,7 @@ import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.mid_data.ledger.RawBill;
 import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.mid_data.view.ShownBill;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.RealmAccess;
@@ -78,7 +79,8 @@ public class MainBillFrag extends NamedFragment {
         // init list
         mList.setEmptyView(mNone);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            mBillDetail.setContent((RawBill) mList.getItemAtPosition(position));
+            // TODO: convert DetailFragment to use ShownBill
+            mBillDetail.setContent(((ShownBill)mList.getItemAtPosition(position)).rawBill);
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
         });
 
@@ -98,7 +100,7 @@ public class MainBillFrag extends NamedFragment {
         this.currentBoardId = currentBoardId;
     }
 
-    public void showBillsList(List<RawBill> bills) {
+    public void showBillsList(List<ShownBill> bills) {
         MainBillAdapter adapter = new MainBillAdapter(getContext(), bills);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -110,9 +112,9 @@ public class MainBillFrag extends NamedFragment {
     }
 
 
-    class MainBillAdapter extends ArrayAdapter<RawBill> {
+    class MainBillAdapter extends ArrayAdapter<ShownBill> {
 
-        public MainBillAdapter(Context context, List<RawBill> objects) {
+        public MainBillAdapter(Context context, List<ShownBill> objects) {
             super(context, R.layout.item_bill_list, objects);
         }
 
@@ -122,7 +124,8 @@ public class MainBillFrag extends NamedFragment {
             if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
-            RawBill data = getItem(position);
+            ShownBill data = getItem(position);
+            RawBill rawBill = data.rawBill;
 
             BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
             TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
@@ -132,57 +135,24 @@ public class MainBillFrag extends NamedFragment {
             AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
-            if (data.recipient.equals(userStore.getMostRecentUserId())) {
+            if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
                 whoPaid.setText("You paid:");
-                chainFactory.get(fail -> {
-                    fail.getCause().printStackTrace();
-                    ((MainActivity) getActivity()).showAlert(fail.getCause().getMessage());
-                }).netThen(() -> realmAccess.process(realm -> {
-                    Person me = realm.where(Person.class)
-                            .equalTo("personId", userStore.getMostRecentUserId()).findFirst();
-                    if (!me.load())
-                        throw new Exception(getString(R.string.ex_cannot_load_realm));
-                    return me.getAvatarUrl();
-                })).uiConsume((String url) -> {
-                    Picasso.with(getContext()).load(url).fit().into(avatar);
-                }).start();
+                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
             } else {
-                chainFactory.get(fail -> {
-                    fail.getCause().printStackTrace();
-                    ((MainActivity) getActivity()).showAlert(fail.getCause().getMessage());
-                }).netThen(() -> realmAccess.process(realm -> {
-                    Person recipient = realm.where(Person.class).equalTo("personId", data.recipient).findFirst();
-                    if(!recipient.load())
-                        throw new Exception(getString(R.string.ex_cannot_load_realm));
-
-                    RawPerson detached = new RawPerson();
-                    detached.name = recipient.getName();
-                    detached.avatarUrl = recipient.getAvatarUrl();
-                    return detached;
-                })).uiConsume((RawPerson recipient) -> {
-                    if (recipient != null && recipient.name != null) {
-                        whoPaid.setText(recipient.name + "\npaid:");
-                        if (recipient.avatarUrl != null)
-                            Picasso.with(getContext()).load(recipient.avatarUrl).fit().into(avatar);
-                    } else {
-                        ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
-                            whoPaid.setText(info.name + "\npaid:");
-                            if (info.avatarUrl != null)
-                                Picasso.with(getContext()).load(info.avatarUrl).fit().into(avatar);
-                        });
-                    }
-                }).start();
+                whoPaid.setText(data.recipientName + "\npaid:");
+                if (data.recipientAvatarUrl != null)
+                    Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
             }
 
-            paidAmount.setText("$" + data.getTotalAmount());
-            desc1.setText(data.title);
+            paidAmount.setText("$" + rawBill.getTotalAmount());
+            desc1.setText(rawBill.title);
 
             desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
                     .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-            desc2.setText(" " + data.description);
+            desc2.setText(" " + rawBill.description);
 
             try {
-                time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
+                time.setText(Helpers.shortDate(DateFormat.SHORT, rawBill.getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
