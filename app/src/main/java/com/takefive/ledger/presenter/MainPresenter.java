@@ -138,6 +138,7 @@ public class MainPresenter implements IPresenter<IMainView> {
     }
 
     public void refreshBoardInfo(RawMyBoards.Entry entry) {
+        // TODO: actually reload board? Otherwise why is this in Presenter?
         view.setBoardTitle(entry.name);
         view.setCurrentBoardId(entry.id);
     }
