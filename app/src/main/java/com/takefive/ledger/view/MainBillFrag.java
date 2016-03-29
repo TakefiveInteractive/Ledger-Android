@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,18 +21,17 @@ import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
-import com.takefive.ledger.model.RawBill;
-import com.takefive.ledger.model.db.MyBoards;
-import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
-import com.takefive.ledger.view.database.RealmUIAccess;
+import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.model.Person;
+import com.takefive.ledger.dagger.UserStore;
+import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
 import java.text.DateFormat;
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -60,7 +57,7 @@ public class MainBillFrag extends NamedFragment {
     FloatingActionButton mNew;
 
     @Inject
-    RealmUIAccess realmUIAccess;
+    RealmAccess realmAccess;
 
     @Inject
     UserStore userStore;
@@ -84,7 +81,8 @@ public class MainBillFrag extends NamedFragment {
         // init list
         mList.setEmptyView(mNone);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
-            mBillDetail.setContent((RawBill) mList.getItemAtPosition(position));
+            // TODO: convert DetailFragment to use ShownBill
+            mBillDetail.setContent(((ShownBill)mList.getItemAtPosition(position)).rawBill);
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
         });
 
@@ -117,7 +115,7 @@ public class MainBillFrag extends NamedFragment {
         this.currentBoardId = currentBoardId;
     }
 
-    public void showBillsList(List<RawBill> bills) {
+    public void showBillsList(List<ShownBill> bills) {
         MainBillAdapter adapter = new MainBillAdapter(getContext(), bills);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
@@ -129,9 +127,9 @@ public class MainBillFrag extends NamedFragment {
     }
 
 
-    class MainBillAdapter extends ArrayAdapter<RawBill> {
+    class MainBillAdapter extends ArrayAdapter<ShownBill> {
 
-        public MainBillAdapter(Context context, List<RawBill> objects) {
+        public MainBillAdapter(Context context, List<ShownBill> objects) {
             super(context, R.layout.item_bill_list, objects);
         }
 
@@ -141,7 +139,8 @@ public class MainBillFrag extends NamedFragment {
             if (convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_bill_list, parent, false);
 
-            RawBill data = getItem(position);
+            ShownBill data = getItem(position);
+            RawBill rawBill = data.rawBill;
 
             BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
             TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
@@ -151,44 +150,24 @@ public class MainBillFrag extends NamedFragment {
             AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
-            if (data.recipient.equals(userStore.getMostRecentUserId())) {
-                realmUIAccess.process(realm -> {
-                    Person me = realm.where(Person.class)
-                            .equalTo("personId", userStore.getMostRecentUserId()).findFirst();
-                    whoPaid.setText("You paid:");
-                    if (me.getAvatarUrl() != null)
-                        Picasso.with(getContext()).load(me.getAvatarUrl()).fit().into(avatar);
-                    return null;
-                });
-            }
-            else {
-                realmUIAccess.process(realm -> {
-                    Person recipient = realm.where(Person.class).equalTo("personId", data.recipient).findFirst();
-                    if (recipient != null && recipient.getName() != null) {
-                        whoPaid.setText(recipient.getName() + "\npaid:");
-                        if (recipient.getAvatarUrl() != null)
-                            Picasso.with(getContext()).load(recipient.getAvatarUrl()).fit().into(avatar);
-                    }
-                    else {
-                        ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
-                            whoPaid.setText(info.name + "\npaid:");
-                            if (info.avatarUrl != null)
-                            Picasso.with(getContext()).load(info.avatarUrl).fit().into(avatar);
-                        });
-                    }
-                    return null;
-                });
+            if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
+                whoPaid.setText("You paid:");
+                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
+            } else {
+                whoPaid.setText(data.recipientName + "\npaid:");
+                if (data.recipientAvatarUrl != null)
+                    Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
             }
 
-            paidAmount.setText("$" + data.getTotalAmount());
-            desc1.setText(data.title);
+            paidAmount.setText("$" + rawBill.getTotalAmount());
+            desc1.setText(rawBill.title);
 
             desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
                     .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-            desc2.setText(" " + data.description);
+            desc2.setText(" " + rawBill.description);
 
             try {
-                time.setText(Helpers.shortDate(DateFormat.SHORT, data.getTime()));
+                time.setText(Helpers.shortDate(DateFormat.SHORT, rawBill.getTime()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }

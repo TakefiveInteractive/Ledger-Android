@@ -2,13 +2,14 @@ package com.takefive.ledger.presenter;
 
 import android.content.Context;
 
-import com.facebook.AccessToken;
-import com.facebook.login.LoginResult;
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
-import com.takefive.ledger.presenter.client.LedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.dagger.IFbFactory;
+import com.takefive.ledger.dagger.IFbLoginResult;
+import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.WelcomeActivity;
 
 import javax.inject.Inject;
@@ -37,7 +38,10 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
     UserStore userStore;
 
     @Inject
-    LedgerService service;
+    ILedgerService service;
+
+    @Inject
+    IFbFactory fbFactory;
 
     @Override
     public void attachView(WelcomeActivity view) {
@@ -49,20 +53,20 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
         this.view = null;
     }
 
-    public void ledgerLogin(final LoginResult fbLoginResult) {
+    // TODO: decide how to separate Facebook API from Presenters. Maybe another layer of abstraction?
+    public void ledgerLogin(final IFbLoginResult fbLoginResult) {
         chainFactory.get(errorHolder -> {
             view.showAlert(R.string.error_contact_facebook);
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
-            AccessToken token = fbLoginResult.getAccessToken();
-            return tasks.getFbUserInfo(token);
+            return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
             view.showAlert(applicationContext.getString(R.string.network_failure));
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
-            tasks.getAndSaveAccessToken(info.accessToken.getToken());
+            tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());
             tasks.getAndSyncMyUserInfo();
-            return info.userName;
+            return info.name;
         }).uiThen((String username) -> {
             view.onLoginSuccess(username);
             return null;

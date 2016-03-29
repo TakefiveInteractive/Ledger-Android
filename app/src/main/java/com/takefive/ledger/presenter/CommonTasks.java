@@ -1,38 +1,33 @@
 package com.takefive.ledger.presenter;
 
-import android.os.Bundle;
-import android.util.Log;
-
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.takefive.ledger.model.RawBoard;
-import com.takefive.ledger.model.RawMyBoards;
-import com.takefive.ledger.model.RawPerson;
-import com.takefive.ledger.model.db.Board;
-import com.takefive.ledger.model.db.Entry;
-import com.takefive.ledger.model.db.MyBoards;
-import com.takefive.ledger.model.db.Person;
-import com.takefive.ledger.presenter.client.JSONRequestBody;
-import com.takefive.ledger.presenter.client.LedgerService;
-import com.takefive.ledger.presenter.database.RealmAccess;
-import com.takefive.ledger.presenter.database.UserStore;
+import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawBoard;
+import com.takefive.ledger.mid_data.ledger.RawMyBoards;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.model.Board;
+import com.takefive.ledger.model.Entry;
+import com.takefive.ledger.model.MyBoards;
+import com.takefive.ledger.model.Person;
+import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.dagger.ledger.JSONRequestBody;
+import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.DateTimeConverter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
 import io.realm.RealmList;
-import io.realm.RealmQuery;
 import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
-import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
 /**
@@ -41,7 +36,7 @@ import zyu19.libs.action.chain.ReadOnlyChain;
 public class CommonTasks {
 
     @Inject
-    LedgerService service;
+    ILedgerService service;
 
     @Inject
     UserStore userStore;
@@ -58,28 +53,6 @@ public class CommonTasks {
         String ans = new JSONObject(responseBody.string()).getString("accessToken");
         userStore.setAccessToken(ans);
         return ans;
-    }
-
-    FbUserInfo getFbUserInfo(AccessToken fbToken) throws Exception {
-        GraphRequest request = GraphRequest.newMeRequest(fbToken, null);
-        Bundle config = new Bundle();
-        config.putString("fields", "name");
-        request.setParameters(config);
-        GraphResponse response = request.executeAndWait();
-        JSONObject object = response.getJSONObject();
-
-        FbUserInfo info = new FbUserInfo();
-        try {
-            info.accessToken = fbToken;
-            info.userName = object.getString("name");
-        } catch (JSONException e) {
-            Iterator<String> keys = object.keys();
-            while(keys.hasNext())
-                Log.d("object properties", keys.next());
-            e.printStackTrace();
-            throw e;
-        }
-        return info;
     }
 
     RawPerson getAndSyncMyUserInfo() throws Exception {
@@ -162,6 +135,40 @@ public class CommonTasks {
             realm.commitTransaction();
 
             return target;
+        });
+    }
+
+    ReadOnlyChain inflateBills(List<RawBill> rawBillList) {
+        return realmAccess.process(realm -> {
+            List<ShownBill> ansList = new ArrayList<ShownBill>();
+            for(RawBill rawBill : rawBillList) {
+                ShownBill ans = new ShownBill();
+                ans.rawBill = rawBill;
+
+                Person person = realm.where(Person.class)
+                        .equalTo("personId", rawBill.recipient).findFirst();
+                if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
+                    if (person == null)
+                        return ans;
+                    ans.recipientAvatarUrl = person.getAvatarUrl();
+                    ans.recipientName = null; // this is not going to be used anyway.
+                } else {
+                    if (person != null && person.getName() != null && person.getAvatarUrl() != null) {
+                        ans.recipientName = person.getName();
+                        ans.recipientAvatarUrl = person.getAvatarUrl();
+                    } else {
+                        Response<RawPerson> response = service.getPerson(rawBill.recipient).execute();
+                        if (!response.isSuccessful())
+                            throw new IOException(response.errorBody().string());
+                        syncUserInfo(response.body());
+                        ans.recipientName = response.body().name;
+                        ans.recipientAvatarUrl = response.body().avatarUrl;
+                    }
+                }
+
+                ansList.add(ans);
+            }
+            return ansList;
         });
     }
 

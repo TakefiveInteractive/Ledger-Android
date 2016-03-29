@@ -19,6 +19,7 @@ import com.facebook.login.LoginResult;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.presenter.WelcomePresenter;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import zyu19.libs.action.chain.config.NiceConsumer;
 
 public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
@@ -60,12 +62,14 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
 
-        FacebookSdk.sdkInitialize(getApplicationContext());
+        // TODO: decide how to separate Facebook API from Presenters. Maybe another layer of abstraction?
         mFBCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
-                presenter.ledgerLogin(loginResult);
+                BusinessFbLoginResult businessFbLoginResult = new BusinessFbLoginResult();
+                businessFbLoginResult.setToken(loginResult.getAccessToken());
+                presenter.ledgerLogin(businessFbLoginResult);
             }
 
             @Override
