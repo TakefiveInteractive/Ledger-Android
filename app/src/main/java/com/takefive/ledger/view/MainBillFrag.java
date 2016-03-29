@@ -21,9 +21,10 @@ import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.dagger.UserStore;
-import com.takefive.ledger.view.database.RealmUIAccess;
+import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
@@ -53,7 +54,7 @@ public class MainBillFrag extends NamedFragment {
     FloatingActionButton mNew;
 
     @Inject
-    RealmUIAccess realmUIAccess;
+    RealmAccess realmAccess;
 
     @Inject
     UserStore userStore;
@@ -132,32 +133,45 @@ public class MainBillFrag extends NamedFragment {
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
             if (data.recipient.equals(userStore.getMostRecentUserId())) {
-                realmUIAccess.process(realm -> {
+                whoPaid.setText("You paid:");
+                chainFactory.get(fail -> {
+                    fail.getCause().printStackTrace();
+                    ((MainActivity) getActivity()).showAlert(fail.getCause().getMessage());
+                }).netThen(() -> realmAccess.process(realm -> {
                     Person me = realm.where(Person.class)
                             .equalTo("personId", userStore.getMostRecentUserId()).findFirst();
-                    whoPaid.setText("You paid:");
-                    if (me.getAvatarUrl() != null)
-                        Picasso.with(getContext()).load(me.getAvatarUrl()).fit().into(avatar);
-                    return null;
-                });
-            }
-            else {
-                realmUIAccess.process(realm -> {
+                    if (!me.load())
+                        throw new Exception(getString(R.string.ex_cannot_load_realm));
+                    return me.getAvatarUrl();
+                })).uiConsume((String url) -> {
+                    Picasso.with(getContext()).load(url).fit().into(avatar);
+                }).start();
+            } else {
+                chainFactory.get(fail -> {
+                    fail.getCause().printStackTrace();
+                    ((MainActivity) getActivity()).showAlert(fail.getCause().getMessage());
+                }).netThen(() -> realmAccess.process(realm -> {
                     Person recipient = realm.where(Person.class).equalTo("personId", data.recipient).findFirst();
-                    if (recipient != null && recipient.getName() != null) {
-                        whoPaid.setText(recipient.getName() + "\npaid:");
-                        if (recipient.getAvatarUrl() != null)
-                            Picasso.with(getContext()).load(recipient.getAvatarUrl()).fit().into(avatar);
-                    }
-                    else {
+                    if(!recipient.load())
+                        throw new Exception(getString(R.string.ex_cannot_load_realm));
+
+                    RawPerson detached = new RawPerson();
+                    detached.name = recipient.getName();
+                    detached.avatarUrl = recipient.getAvatarUrl();
+                    return detached;
+                })).uiConsume((RawPerson recipient) -> {
+                    if (recipient != null && recipient.name != null) {
+                        whoPaid.setText(recipient.name + "\npaid:");
+                        if (recipient.avatarUrl != null)
+                            Picasso.with(getContext()).load(recipient.avatarUrl).fit().into(avatar);
+                    } else {
                         ((MainActivity) getActivity()).presenter.loadUserInfo(data.recipient, info -> {
                             whoPaid.setText(info.name + "\npaid:");
                             if (info.avatarUrl != null)
-                            Picasso.with(getContext()).load(info.avatarUrl).fit().into(avatar);
+                                Picasso.with(getContext()).load(info.avatarUrl).fit().into(avatar);
                         });
                     }
-                    return null;
-                });
+                }).start();
             }
 
             paidAmount.setText("$" + data.getTotalAmount());

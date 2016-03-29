@@ -2,6 +2,8 @@
     <string name="app_name">Ledger</string>
     <string name="facebook_app_id">498920826950721</string>
 
+    <string name="ex_cannot_load_realm">Cannot load local database.</string>
+
     <string name="title_main_bill">Bill</string>
     <string name="title_main_balance">Balance</string>
 

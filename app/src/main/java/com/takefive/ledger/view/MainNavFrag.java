@@ -28,7 +28,7 @@ import com.takefive.ledger.mid_data.ledger.RawMyBoards;
 import com.takefive.ledger.mid_data.ledger.RawPerson;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.model.Person;
-import com.takefive.ledger.view.database.RealmUIAccess;
+import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.view.utils.DotMark;
 
 import java.util.ArrayList;
@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
  * Created by zyu on 2/13/16.
@@ -63,10 +64,13 @@ public class MainNavFrag extends Fragment {
     MainNavAdapter mListAdapter;
 
     @Inject
-    RealmUIAccess realmAccess;
+    RealmAccess realmAccess;
 
     @Inject
     UserStore userStore;
+
+    @Inject
+    ActionChainFactory chainFactory;
 
     boolean isInitialized;
 
@@ -91,20 +95,24 @@ public class MainNavFrag extends Fragment {
 
         // TODO: provide a graphical interface to refresh (That logic is ready, though)
 
-        realmAccess.process(realm -> {
+        chainFactory.get(fail -> {
+            fail.getCause().printStackTrace();
+            ((MainActivity) getActivity()).showAlert(fail.getCause().getMessage());
+        }).netThen(() -> realmAccess.process(realm -> {
             Person me = realm.where(Person.class)
                     .equalTo("personId", userStore.getMostRecentUserId())
                     .findFirst();
-            if (me != null) {
-                Picasso.with(getContext())
-                        .load(me.getAvatarUrl())
-                        .placeholder(R.drawable.person_image_empty)
-                        .error(R.drawable.person_image_empty)
-                        .fit()
-                        .into(mAvatar);
-            }
-            return null;
-        });
+            if(!me.load())
+                throw new Exception(getString(R.string.ex_cannot_load_realm));
+            return me.getAvatarUrl();
+        })).uiConsume((String url) -> {
+            Picasso.with(getContext())
+                    .load(url)
+                    .placeholder(R.drawable.person_image_empty)
+                    .error(R.drawable.person_image_empty)
+                    .fit()
+                    .into(mAvatar);
+        }).start();
 
         mNewBoard.setOnClickListener(v -> {
             new NewBoardFragment().show(getActivity().getSupportFragmentManager(), "fragment_new_board");
@@ -148,7 +156,7 @@ public class MainNavFrag extends Fragment {
     }
 
     void onClickItem(int pos) {
-        MainActivity mainActivity = (MainActivity)getActivity();
+        MainActivity mainActivity = (MainActivity) getActivity();
         mainActivity.presenter.loadBills(mListAdapter.getItem(pos).id);
         mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
         mainActivity.closeDrawers();
