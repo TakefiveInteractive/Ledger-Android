@@ -12,28 +12,28 @@
 
         <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:clickable="true">
 
             <ListView
                     android:id="@+id/billList"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     tools:layout="@layout/item_bill_list"/>
 
             <ScrollView
+                    android:id="@+id/billNone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:gravity="center">
+                    android:gravity="center"
+                    android:visibility="gone">
 
                 <TextView
-                        android:id="@+id/billNone"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:gravity="center"
-                        android:visibility="gone"
                         android:text="None :P"/>
 
             </ScrollView>

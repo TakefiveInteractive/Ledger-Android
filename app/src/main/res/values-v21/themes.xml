@@ -18,6 +18,9 @@
     <style name="WelcomeTheme" parent="MyTheme">
         <!-- <item name="android:navigationBarColor">#000</item> -->
     </style>
+    <style name="NewBillTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#000</item> -->
+    </style>
 
     <style name="Theme.AppCompat.Translucent">
         <item name="android:windowNoTitle">true</item>
@@ -25,5 +28,11 @@
         <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
+
+    <style name="Theme.AppCompat.Translucent.FullScreen" parent="Theme.AppCompat.Translucent">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowContentOverlay">@null</item>
     </style>
 </resources>
