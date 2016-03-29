@@ -1,6 +1,7 @@
 package com.takefive.ledger.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
@@ -90,6 +92,19 @@ public class MainBillFrag extends NamedFragment {
         mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(currentBoardId));
 
         return root;
+    }
+
+    @OnClick(R.id.billNew)
+    public void onNewBillButtonClicked() {
+        double radius = ((double) mNew.getWidth()) / 2;
+        int[] location = new int[2];
+        mNew.getLocationOnScreen(location);
+
+        Intent intent = new Intent(getActivity(), NewBillActivity.class);
+        intent.putExtra("revealLocation", location);
+        intent.putExtra("revealStartRadius", radius);
+
+        startActivity(intent);
     }
 
     public String getCurrentBoardId() {

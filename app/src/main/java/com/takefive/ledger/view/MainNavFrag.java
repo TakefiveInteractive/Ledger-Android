@@ -170,10 +170,9 @@ public class MainNavFrag extends Fragment {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView != null)
-                return convertView;
 
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
+            if (convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_board_list, parent, false);
 
             convertView.setOnClickListener(v -> ((MainActivity) getActivity()).closeDrawers());
 

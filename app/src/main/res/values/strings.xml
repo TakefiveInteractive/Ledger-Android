@@ -45,5 +45,6 @@
     <!-- General values -->
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
+    <string name="title_activity_new_bill">NewBillActivity</string>
 
 </resources>

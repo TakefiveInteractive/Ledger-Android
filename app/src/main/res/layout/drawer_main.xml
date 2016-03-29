@@ -120,7 +120,7 @@
     <ListView
         android:id="@+id/boardList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_above="@+id/newBoard"
         android:layout_below="@+id/chosen_account_view"
         tools:listitem="@layout/item_board_list"/>
