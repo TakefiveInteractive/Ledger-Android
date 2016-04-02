@@ -1,7 +1,5 @@
 package com.takefive.ledger.presenter;
 
-import android.content.Context;
-
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.IFbFactory;
@@ -24,9 +22,6 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
 
     @Inject
     CommonTasks tasks;
-
-    @Inject
-    Context applicationContext;
 
     @Inject
     ActionChainFactory chainFactory;
@@ -61,7 +56,7 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
         }).netThen(obj -> {
             return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
-            view.showAlert(applicationContext.getString(R.string.network_failure));
+            view.showAlert(R.string.network_failure);
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
             tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());

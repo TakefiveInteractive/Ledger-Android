@@ -1,10 +1,7 @@
 package com.takefive.ledger.presenter.utils;
 
-import android.content.Context;
-
-import com.takefive.ledger.R;
-
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -17,11 +14,13 @@ import zyu19.libs.action.chain.config.PureAction;
  */
 public class RealmAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyChain> {
 
+    public final static String DEFAULT_REALM_FILENAME = "ledger.realm";
+
     @Inject
     ActionChainFactory chainFactory;
 
     @Inject
-    Context context;
+    Provider<RealmConfiguration.Builder> startRealmConf;
 
     @Override
     public ReadOnlyChain process(PureAction<Realm, ?> editor) {
@@ -29,8 +28,8 @@ public class RealmAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyCha
         ).netThen(() -> {
             Realm realm = null;
             try {
-                realm = Realm.getInstance(new RealmConfiguration.Builder(context)
-                        .name(context.getString(R.string.realm_filename))
+                realm = Realm.getInstance(startRealmConf.get()
+                        .name(DEFAULT_REALM_FILENAME)
                         .deleteRealmIfMigrationNeeded()
                         .build());
                 Object result = editor.process(realm);

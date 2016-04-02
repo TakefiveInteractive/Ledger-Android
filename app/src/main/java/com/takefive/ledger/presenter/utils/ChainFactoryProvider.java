@@ -21,6 +21,7 @@ import zyu19.libs.action.chain.config.ThreadPolicy;
 
 /**
  * Created by zyu on 3/13/16.
+ * This is a Business MODULE so it is allowed to use Android APIs.
  */
 
 @Module(

@@ -5,8 +5,6 @@ import android.content.Context;
 import com.takefive.ledger.dagger.IFbFactory;
 import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.dagger.UserStore;
-import com.takefive.ledger.dagger.ledger.AuthenticateInterceptor;
-import com.takefive.ledger.dagger.userstore.BusinessUserStore;
 import com.takefive.ledger.presenter.WelcomePresenter;
 import com.takefive.ledger.view.IWelcomeView;
 
@@ -20,7 +18,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import dagger.Module;
 import dagger.ObjectGraph;
 import dagger.Provides;
-import retrofit2.http.POST;
+import io.realm.RealmConfiguration;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.config.ThreadPolicy;
 
@@ -67,7 +65,7 @@ public class TestWelcome {
         };
 
         ObjectGraph objectGraph = ObjectGraph.create(
-                new MyModule()
+                new NullModule()
         );
         WelcomePresenter presenter = objectGraph.get(WelcomePresenter.class);
         presenter.attachView(view);
@@ -82,12 +80,10 @@ public class TestWelcome {
             library = true,
             injects = {WelcomePresenter.class}
     )
-    class MyModule {
+    class NullModule {
+
         @Provides
-        public Context provideFakeContext() {
-            // using "null" is enough
-            return null;
-        }
+        public RealmConfiguration.Builder provideRealm() {return null;}
 
         @Provides
         public UserStore provideUserStore() {
