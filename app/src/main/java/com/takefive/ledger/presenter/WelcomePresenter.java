@@ -10,7 +10,7 @@ import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.mid_data.fb.FbUserInfo;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
-import com.takefive.ledger.view.WelcomeActivity;
+import com.takefive.ledger.view.IWelcomeView;
 
 import javax.inject.Inject;
 
@@ -19,8 +19,8 @@ import zyu19.libs.action.chain.ActionChainFactory;
 /**
  * Created by zyu on 3/19/16.
  */
-public class WelcomePresenter implements IPresenter<WelcomeActivity> {
-    WelcomeActivity view = null;
+public class WelcomePresenter implements IPresenter<IWelcomeView> {
+    IWelcomeView view = null;
 
     @Inject
     CommonTasks tasks;
@@ -44,7 +44,7 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
     IFbFactory fbFactory;
 
     @Override
-    public void attachView(WelcomeActivity view) {
+    public void attachView(IWelcomeView view) {
         this.view = view;
     }
 
