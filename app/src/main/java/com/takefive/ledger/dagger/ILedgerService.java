@@ -1,9 +1,9 @@
 package com.takefive.ledger.dagger;
 
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawBoard;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
-import com.takefive.ledger.mid_data.ledger.NewBoardRequest;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawBoard;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.ledger.NewBoardRequest;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;

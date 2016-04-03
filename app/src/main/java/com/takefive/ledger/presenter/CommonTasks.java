@@ -1,10 +1,10 @@
 package com.takefive.ledger.presenter;
 
-import com.takefive.ledger.mid_data.ledger.RawBill;
-import com.takefive.ledger.mid_data.ledger.RawBoard;
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
-import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.midData.ledger.RawBill;
+import com.takefive.ledger.midData.ledger.RawBoard;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Entry;
 import com.takefive.ledger.model.MyBoards;

@@ -6,7 +6,7 @@ import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.takefive.ledger.dagger.IFbRequest;
-import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.midData.fb.FbUserInfo;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

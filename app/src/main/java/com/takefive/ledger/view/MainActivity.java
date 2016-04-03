@@ -15,10 +15,9 @@ import android.view.ViewGroup;
 
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
-import com.takefive.ledger.mid_data.ledger.RawBill;
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
-import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.utils.NamedFragment;
 

@@ -1,20 +1,61 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                tools:context="com.takefive.ledger.view.NewBillActivity">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                tools:context="com.takefive.ledger.view.NewBillActivity"
+                android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
             android:id="@+id/newBillContent"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
-            android:background="@color/colorPrimary">
+            android:background="@color/colorPrimary"
+            android:orientation="vertical">
 
-        <TextView
-                android:text="@string/hello_world"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+        <android.support.v7.widget.Toolbar
+                android:fitsSystemWindows="true"
+                app:layout_scrollFlags="scroll|enterAlways"
+                android:id="@+id/newBillToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:title="New Bill"
+                android:focusable="true"/>
 
-    </RelativeLayout>
+        <android.support.v4.view.ViewPager
+                android:id="@+id/newBillPager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
 
-</RelativeLayout>
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/general_padding"
+                android:gravity="right">
+
+            <Button
+                    android:id="@+id/newBillCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancel"
+                    android:textSize="@dimen/general_text_size"
+                    android:background="@android:color/transparent"
+                    android:stateListAnimator="@null"/>
+
+            <Button
+                    android:id="@+id/newBillSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Submit"
+                    android:textSize="@dimen/general_text_size"
+                    android:background="@android:color/transparent"
+                    android:stateListAnimator="@null"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
