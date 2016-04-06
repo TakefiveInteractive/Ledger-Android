@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -82,7 +83,12 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
                 showAlert(R.string.error_contact_facebook);
             }
         });
-        showAnim(true);
+
+        if(AccessToken.getCurrentAccessToken() != null) {
+            showAnim(false);
+            presenter.ledgerLogin(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
+        }
+        else showAnim(true);
     }
 
     @Override
