@@ -16,40 +16,38 @@
             android:gravity="center_horizontal"
             android:layout_marginTop="100dp"/>
 
-    <android.support.v7.widget.CardView
+    <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/general_padding"
+            android:gravity="center">
 
-        <LinearLayout
+        <com.takefive.ledger.view.utils.MoneyEdit
+                android:id="@+id/newBillAmount"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:textSize="@dimen/general_text_size"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="@dimen/general_margin"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:textAlignment="center"/>
 
-            <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="to"
+                android:textSize="@dimen/general_text_size"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="@dimen/general_margin"/>
 
-                <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".3"
-                        android:text="$"
-                        android:textSize="@dimen/large_text_size"
-                        android:textAlignment="textEnd"/>
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/newBillMembersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin" />
 
-                <TextView
-                        android:id="@+id/newBillAmount"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight=".7"
-                        android:textSize="@dimen/large_text_size"
-                        android:layout_marginLeft="@dimen/general_margin"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
+    </LinearLayout>
 
 </LinearLayout>

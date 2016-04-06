@@ -67,12 +67,13 @@ public class MainPresenter implements IPresenter<IMainView> {
             view.showAlert("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
         }).netThen(() -> {
-            Response<RawBoard> resp = service.getBoardById(boardId).execute();
+            Response<RawBoard> resp = service.getBoardByIdInflated(boardId).execute();
             if (!resp.isSuccessful()) {
                 String msg = resp.errorBody().string();
                 resp.errorBody().close();
                 throw new IOException(msg);
             }
+            tasks.syncBoardInfo(resp.body());
             return tasks.inflateBills(resp.body().bills);
         }).uiConsume((List<ShownBill> bills) -> view.showBillsList(bills)
         ).uiThen(() -> {

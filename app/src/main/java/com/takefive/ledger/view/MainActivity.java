@@ -21,6 +21,7 @@ import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.presenter.MainPresenter;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.NamedFragment;
 
 import java.util.List;
@@ -92,11 +93,13 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void setCurrentBoardId(String id) {
         billFrag.setCurrentBoardId(id);
+        SessionStore.getDefault().activeBoardId = id;
     }
 
     @Override
     public void setBoardTitle(String boardName) {
         mToolbar.setTitle("Ledger - " + boardName);
+        SessionStore.getDefault().activeBoardName = boardName;
     }
 
     @Override

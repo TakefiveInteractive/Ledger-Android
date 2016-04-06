@@ -25,8 +25,11 @@ import android.widget.RelativeLayout;
 
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.presenter.NewBillPresenter;
 
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,14 +48,20 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
     @Bind(R.id.newBillCancel)
     Button mCancel;
 
+    @Inject
+    NewBillPresenter presenter;
+
     boolean isAnimating;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((MyApplication) getApplication()).inject(this);
+        presenter.attachView(this);
+
         setContentView(R.layout.activity_new_bill);
         ButterKnife.bind(this);
-        // ((MyApplication) getApplication()).inject(this);
 
         overridePendingTransition(0, 0);
 
@@ -64,7 +73,8 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
         mToolbar.setNavigationOnClickListener(v -> close());
 
         mPager.setAdapter(new NewBillPageAdapter(getSupportFragmentManager(),
-                new NewBillTitleFragment()));
+                new NewBillTitleFragment(),
+                new NewBillAmountFragment()));
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -73,10 +83,7 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
 
             @Override
             public void onPageSelected(int position) {
-                String nextText = position == mPager.getAdapter().getCount() - 1 ? "Submit" : "Next";
-                String prevText = position == 0 ? "Cancel" : "Back";
-                mNext.setText(nextText);
-                mCancel.setText(prevText);
+                setupButtons(position);
             }
 
             @Override
@@ -84,6 +91,8 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
 
             }
         });
+
+        setupButtons(0);
 
         if (savedInstanceState == null) {
 
@@ -99,6 +108,19 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
                 });
             }
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        presenter.detachView();
+        super.onDestroy();
+    }
+
+    private void setupButtons(int position) {
+        String nextText = position == mPager.getAdapter().getCount() - 1 ? "Submit" : "Next";
+        String prevText = position == 0 ? "Cancel" : "Back";
+        mNext.setText(nextText);
+        mCancel.setText(prevText);
     }
 
     private void expandCircle() {
@@ -207,7 +229,7 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
     public void prevSlide() {
         int currentItem = mPager.getCurrentItem();
         if (currentItem != 0) {
-            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
         else {
             close();
