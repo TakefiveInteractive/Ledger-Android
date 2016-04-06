@@ -1,5 +1,6 @@
 package com.takefive.ledger.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -13,13 +14,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 
+import com.facebook.login.LoginManager;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
-import com.takefive.ledger.mid_data.ledger.RawBill;
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
-import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.presenter.MainPresenter;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.NamedFragment;
 
 import java.util.List;
@@ -91,11 +93,22 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void setCurrentBoardId(String id) {
         billFrag.setCurrentBoardId(id);
+        SessionStore.getDefault().activeBoardId = id;
     }
 
     @Override
     public void setBoardTitle(String boardName) {
         mToolbar.setTitle("Ledger - " + boardName);
+        SessionStore.getDefault().activeBoardName = boardName;
+    }
+
+    @Override
+    public void finishLogout() {
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        startActivity(intent);
+        finish();
     }
 
     @Override

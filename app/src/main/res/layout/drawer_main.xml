@@ -162,6 +162,7 @@
                 android:layout_marginEnd="@dimen/general_padding"
                 app:fontAwesomeIcon="fa_sign_out"/>
             <TextView
+                android:id="@+id/logout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Logout"

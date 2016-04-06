@@ -1,10 +1,11 @@
 package com.takefive.ledger.presenter;
 
-import com.takefive.ledger.mid_data.ledger.RawBill;
-import com.takefive.ledger.mid_data.ledger.RawBoard;
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
-import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.midData.ledger.RawBill;
+import com.takefive.ledger.midData.ledger.RawBoard;
+import com.takefive.ledger.midData.ledger.RawBoardSimple;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Entry;
 import com.takefive.ledger.model.MyBoards;
@@ -28,6 +29,7 @@ import io.realm.RealmList;
 import io.realm.RealmResults;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
 /**
@@ -43,6 +45,9 @@ public class CommonTasks {
 
     @Inject
     RealmAccess realmAccess;
+
+    @Inject
+    ActionChainFactory chainFactory;
 
     String getAndSaveAccessToken(String fbToken) throws IOException, JSONException {
         JSONRequestBody query = new JSONRequestBody(new JSONObject().put("fbToken", fbToken));
@@ -91,6 +96,31 @@ public class CommonTasks {
             return target;
         });
     }
+
+    ReadOnlyChain syncSimpleBoardInfo(RawBoardSimple board) {
+        return realmAccess.process(realm -> {
+            Board target = new Board();
+            target.setActive(board.isActive);
+            target.setCreator(board.creator);
+            target.setBoardId(board._id);
+            target.setName(board.name);
+            target.setCreatedAt(DateTimeConverter.fromISOString(board.createdAt).getTime());
+
+            realm.beginTransaction();
+
+            Board result = realm.where(Board.class)
+                    .equalTo("boardId", board._id)
+                    .findFirst();
+            if (result != null)
+                result.removeFromRealm();
+            realm.copyToRealm(target);
+
+            realm.commitTransaction();
+
+            return target;
+        });
+    }
+
 
     ReadOnlyChain syncBoardInfo(RawBoard board) {
         return realmAccess.process(realm -> {

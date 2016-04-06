@@ -5,7 +5,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.IFbFactory;
 import com.takefive.ledger.dagger.IFbLoginResult;
 import com.takefive.ledger.dagger.ILedgerService;
-import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.midData.fb.FbUserInfo;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IWelcomeView;
@@ -54,6 +54,7 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
             view.showAlert(R.string.error_contact_facebook);
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
+            realmAccess.enableAccess();
             return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
             view.showAlert(R.string.network_failure);

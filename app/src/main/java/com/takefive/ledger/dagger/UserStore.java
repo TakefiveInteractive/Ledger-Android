@@ -16,6 +16,8 @@ public interface UserStore {
 
     void setFbToken(String fbToken);
 
+    void clearAll();
+
     String getMostRecentUserId();
 
     String getMostRecentAccessToken();

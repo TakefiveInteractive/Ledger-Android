@@ -26,6 +26,7 @@ public class MyApplication extends Application {
                 new ApplicationContextProvider(this),
                 new BusinessUserStoreModule(),
                 new BusinessLedgerServiceModule(),
+                new BusinessRealmModule(),
                 new ChainFactoryProvider(),
                 new BusinessFbFactoryProvider(),
                 new BusinessRealmModule()

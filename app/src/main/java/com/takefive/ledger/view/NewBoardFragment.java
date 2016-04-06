@@ -1,9 +1,11 @@
 package com.takefive.ledger.view;
 
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -13,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,8 +24,8 @@ import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
-import com.takefive.ledger.mid_data.ledger.NewBoardRequest;
-import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.midData.ledger.NewBoardRequest;
+import com.takefive.ledger.midData.fb.FbUserInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -99,6 +102,14 @@ public class NewBoardFragment extends DialogFragment {
         });
     }
 
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
+    }
+
     public void showAlert(String info) {
         Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
@@ -159,7 +170,7 @@ class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHol
         public ViewHolder(View layout) {
             super(layout);
             mLayout = layout;
-            mCheck =(CheckBox) mLayout.findViewById(R.id.friendSelect);
+            mCheck = (CheckBox) mLayout.findViewById(R.id.friendSelect);
             mAvatar = (ImageView) mLayout.findViewById(R.id.friendAvatar);
             mName = (TextView) mLayout.findViewById(R.id.friendName);
         }

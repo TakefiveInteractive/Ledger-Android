@@ -62,7 +62,6 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
 
-        // TODO: decide how to separate Facebook API from Presenters. Maybe another layer of abstraction?
         mFBCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override

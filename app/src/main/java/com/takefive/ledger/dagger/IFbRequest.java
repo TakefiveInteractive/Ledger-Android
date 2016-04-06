@@ -1,6 +1,6 @@
 package com.takefive.ledger.dagger;
 
-import com.takefive.ledger.mid_data.fb.FbUserInfo;
+import com.takefive.ledger.midData.fb.FbUserInfo;
 
 import java.util.List;
 

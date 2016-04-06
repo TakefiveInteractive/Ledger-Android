@@ -1,17 +1,20 @@
 package com.takefive.ledger.view;
 
 
+import android.app.Dialog;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.TextView;
 
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.R;
-import com.takefive.ledger.mid_data.ledger.RawBill;
+import com.takefive.ledger.midData.ledger.RawBill;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -58,6 +61,14 @@ public class BillDetailFragment extends DialogFragment {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        return dialog;
     }
 
     @OnClick(R.id.closePopup)

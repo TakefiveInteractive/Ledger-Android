@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-       android:layout_height="match_parent"
-       android:layout_width="match_parent">
-    <size
-            android:height="2dp" />
-    <solid
+<shape
+        android:shape="line"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <stroke
+            android:dashGap="1dp"
+            android:dashWidth="1.5dp"
+            android:width="1dp"
             android:color="@android:color/darker_gray" />
+
+    <size android:height="2dp" />
+
 </shape>

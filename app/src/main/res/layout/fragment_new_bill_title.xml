@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/general_padding"
+        android:orientation="vertical"
+        xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="What's it for?"
+            android:textSize="@dimen/header_text_size"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="100dp"/>
+
+    <android.support.v7.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/general_padding"
+            android:layout_marginTop="80dp">
+
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            <EditText
+                    android:id="@+id/newBillTitle"
+                    android:layout_marginTop="@dimen/new_bill_card_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/general_text_size"
+                    android:hint="Title"
+                    android:textColor="@android:color/black"
+                    android:maxLength="30"
+                    android:imeOptions="actionNext"/>
+
+            <EditText
+                    android:id="@+id/newBillDescription"
+                    android:layout_marginTop="@dimen/new_bill_card_margin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textMultiLine"
+                    android:hint="Description"
+                    android:textSize="@dimen/general_text_size"
+                    android:textColor="@android:color/black"
+                    android:scrollbars="vertical"
+                    android:maxLines="9"
+                    android:imeOptions="actionDone"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

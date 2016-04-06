@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.UserStore;
 
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
 import javax.inject.Inject;
 
 /**
@@ -22,6 +24,11 @@ public class BusinessUserStore implements UserStore {
         this.context = context;
         this.preferences = context.getSharedPreferences(
                 context.getString(R.string.preferences_file_key), Context.MODE_PRIVATE);
+    }
+
+    @Override
+    public void clearAll() {
+        preferences.edit().clear().commit();
     }
 
     @Override

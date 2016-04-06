@@ -232,10 +232,17 @@
     <!-- New Board Fagment -->
     <dimen name="new_board_button">20dp</dimen>
 
+    <!-- New Bill Activity -->
+    <dimen name="new_bill_card_margin">8dp</dimen>
+    <dimen name="new_bill_side_padding">11dp</dimen>
+    <!-- New Bill Amount Fragment -->
+    <dimen name="new_bill_amount_textview_separation">30dp</dimen>
+
     <!-- General values -->
     <dimen name="general_margin">10dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="general_text_size">15sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
+    <dimen name="header_text_size">30sp</dimen>
 
 </resources>

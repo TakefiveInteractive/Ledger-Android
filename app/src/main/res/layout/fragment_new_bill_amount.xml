@@ -1,0 +1,53 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.takefive.ledger.view.NewBillAmountFragment"
+             android:padding="@dimen/general_padding"
+             android:orientation="vertical"
+             android:background="@android:color/transparent">
+
+    <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="How much?"
+            android:textSize="@dimen/header_text_size"
+            android:textColor="@android:color/white"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="100dp"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/general_padding"
+            android:gravity="center">
+
+        <com.takefive.ledger.view.utils.MoneyEdit
+                android:id="@+id/newBillAmount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/general_text_size"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="@dimen/general_margin"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
+                android:textAlignment="center"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="to"
+                android:textSize="@dimen/general_text_size"
+                android:textColor="@android:color/white"
+                android:layout_marginTop="@dimen/general_margin"/>
+
+        <android.support.v7.widget.RecyclerView
+                android:id="@+id/newBillMembersRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_margin" />
+
+    </LinearLayout>
+
+</LinearLayout>

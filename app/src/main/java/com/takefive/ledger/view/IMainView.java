@@ -2,10 +2,10 @@ package com.takefive.ledger.view;
 
 import java.util.*;
 
-import com.takefive.ledger.mid_data.ledger.RawMyBoards;
-import com.takefive.ledger.mid_data.ledger.RawPerson;
+import com.takefive.ledger.midData.ledger.RawMyBoards;
+import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.IView;
-import com.takefive.ledger.mid_data.view.ShownBill;
+import com.takefive.ledger.midData.view.ShownBill;
 
 /**
  * Created by zyu on 3/19/16.
@@ -19,4 +19,9 @@ public interface IMainView extends IView {
     void stopRefreshing();
     void setCurrentBoardId(String id);
     void setBoardTitle(String boardName);
+
+    /**
+     * View is responsible to log out of Facebook in this callback.
+     */
+    void finishLogout();
 }
