@@ -52,6 +52,7 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
     public void ledgerLogin(final IFbLoginResult fbLoginResult) {
         chainFactory.get(errorHolder -> {
             view.showAlert(R.string.error_contact_facebook);
+            view.afterLoginFailure();
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
             realmAccess.enableAccess();

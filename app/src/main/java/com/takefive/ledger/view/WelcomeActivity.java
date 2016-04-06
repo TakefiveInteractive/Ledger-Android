@@ -145,14 +145,13 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
     public void showAlert(String info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
-        afterLoginFailure();
     }
 
     public void showAlert(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
-        afterLoginFailure();
     }
 
+    @Override
     public void afterLoginFailure() {
         // We need to check whether the spinner is still spinning, and whether buttons are still visible
         progressView.setVisibility(View.GONE);
