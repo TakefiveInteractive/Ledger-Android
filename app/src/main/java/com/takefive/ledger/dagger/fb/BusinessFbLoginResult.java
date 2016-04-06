@@ -9,6 +9,13 @@ import com.takefive.ledger.dagger.IFbLoginResult;
  * Created by zyu on 3/28/16.
  */
 public class BusinessFbLoginResult implements IFbLoginResult {
+
+    public BusinessFbLoginResult(AccessToken from) {
+        token = from;
+    }
+
+    public BusinessFbLoginResult() {}
+
     AccessToken token = null;
 
     @Override

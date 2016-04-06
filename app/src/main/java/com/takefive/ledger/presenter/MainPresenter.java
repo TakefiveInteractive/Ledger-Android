@@ -146,11 +146,12 @@ public class MainPresenter implements IPresenter<IMainView> {
         view.setCurrentBoardId(entry.id);
     }
 
-    public void logout() {
+    public void logout(IFbLoginResult loginResult) {
         chainFactory.get(fail -> {
             fail.getCause().printStackTrace();
             view.showAlert(R.string.ex_cannot_logout);
-        }).netThen(() -> realmAccess.clearAndDo(() -> {
+        }).netConsume(obj -> fbFactory.newRequest(loginResult).logout()
+        ).netThen(() -> realmAccess.clearAndDo(() -> {
             userStore.clearAll();
             return null;
         })).uiConsume(obj -> view.finishLogout()

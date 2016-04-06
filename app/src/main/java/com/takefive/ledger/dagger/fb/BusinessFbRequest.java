@@ -5,6 +5,8 @@ import android.os.Bundle;
 import com.facebook.AccessToken;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
+import com.facebook.login.LoginManager;
 import com.takefive.ledger.dagger.IFbRequest;
 import com.takefive.ledger.midData.fb.FbUserInfo;
 
@@ -61,5 +63,12 @@ public class BusinessFbRequest implements IFbRequest {
             infoList.add(info);
         }
         return infoList;
+    }
+
+    @Override
+    public void logout() throws Exception {
+        new GraphRequest(credentials.token, "/me/permissions/", null, HttpMethod.DELETE)
+                .executeAndWait();
+        LoginManager.getInstance().logOut();
     }
 }

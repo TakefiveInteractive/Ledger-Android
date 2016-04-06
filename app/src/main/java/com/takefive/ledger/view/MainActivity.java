@@ -14,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 
+import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void finishLogout() {
-        LoginManager.getInstance().logOut();
         Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
