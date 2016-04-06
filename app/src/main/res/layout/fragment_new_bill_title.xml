@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/general_padding"
-            android:layout_marginTop="100dp">
+            android:layout_marginTop="80dp">
 
         <LinearLayout
                 android:layout_width="match_parent"

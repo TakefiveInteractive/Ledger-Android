@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+              android:orientation="vertical"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:gravity="center">
+
+    <ImageView
+            android:id="@+id/personAdd"
+            android:src="@drawable/ic_add_white_24dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:visibility="gone"/>
+
+    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+            android:id="@+id/personAvatar"
+            android:layout_height="30dp"
+            android:layout_width="30dp"
+            android:src="@drawable/person_image_empty"
+            bootstrap:hasBorder="false"
+            android:layout_marginLeft="@dimen/general_margin"/>
+
+    <TextView
+            android:id="@+id/personName"
+            android:gravity="center_vertical"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="@dimen/general_margin"/>
+
+</LinearLayout>

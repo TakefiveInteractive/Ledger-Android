@@ -170,7 +170,7 @@ class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHol
         public ViewHolder(View layout) {
             super(layout);
             mLayout = layout;
-            mCheck =(CheckBox) mLayout.findViewById(R.id.friendSelect);
+            mCheck = (CheckBox) mLayout.findViewById(R.id.friendSelect);
             mAvatar = (ImageView) mLayout.findViewById(R.id.friendAvatar);
             mName = (TextView) mLayout.findViewById(R.id.friendName);
         }
