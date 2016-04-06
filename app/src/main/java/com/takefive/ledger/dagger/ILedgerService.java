@@ -29,7 +29,8 @@ public interface ILedgerService {
     @GET("person/{id}")
     Call<RawPerson> getPerson(@Path("id") String id);
 
-    @GET("board")
+    // getMyBoards returns really little information. But make sure ETag is not included in request.
+    @GET("board?unsafePopulate=true")
     Call<RawMyBoards> getMyBoards();
 
     @POST("board")
