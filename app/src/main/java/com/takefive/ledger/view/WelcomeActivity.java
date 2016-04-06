@@ -53,6 +53,8 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
     @Inject
     WelcomePresenter presenter;
 
+    Point screenSize;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,12 +92,20 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
             }
         });
 
+        // Prepare for animations
+        screenSize = new Point();
+        getWindowManager().getDefaultDisplay().getSize(screenSize);
+        Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
+        mLogin.setAlpha(0);
+
         if(AccessToken.getCurrentAccessToken() != null) {
-            showAnim(false);
+            animShowTitleName();
             progressView.setVisibility(View.VISIBLE);
             presenter.ledgerLogin(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
+        } else {
+            animShowButton();
+            animShowTitleName();
         }
-        else showAnim(true);
     }
 
     @Override
@@ -104,24 +114,19 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         super.onDestroy();
     }
 
-    void showAnim(boolean showBtn) {
-        Point screenSize = new Point();
-        getWindowManager().getDefaultDisplay().getSize(screenSize);
+    void animShowButton() {
+        mLogin.animate(
+        ).alpha(1
+        ).setDuration(1000
+        ).start();
+    }
 
-        Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
-        Helpers.setMargins(mLogin, null, -getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin), null, null);
-        ViewPropertyAnimator[] animators = new ViewPropertyAnimator[]{
-                mLogin.animate()
-                        .translationYBy(-getResources().getDimensionPixelSize(R.dimen.activity_vertical_margin))
-                        .alpha(showBtn ? 1 : 0)
-                        .setDuration(1000),
-                mNameTag.animate()
-                        .translationYBy(screenSize.y / 5 - screenSize.y / 3)
-                        .alpha(1)
-                        .setDuration(1000)
-        };
-
-        for (ViewPropertyAnimator x : animators) x.start();
+    void animShowTitleName() {
+        mNameTag.animate(
+        ).translationYBy(screenSize.y / 5 - screenSize.y / 3
+        ).alpha(1
+        ).setDuration(1000
+        ).start();
     }
 
     @OnClick(R.id.login)
@@ -140,10 +145,19 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
     public void showAlert(String info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+        afterLoginFailure();
     }
 
     public void showAlert(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
+        afterLoginFailure();
+    }
+
+    public void afterLoginFailure() {
+        // We need to check whether the spinner is still spinning, and whether buttons are still visible
+        progressView.setVisibility(View.GONE);
+        if(mLogin.getAlpha() < 0.5f || mLogin.getVisibility() != View.VISIBLE)
+            animShowButton();
     }
 
     @Override
