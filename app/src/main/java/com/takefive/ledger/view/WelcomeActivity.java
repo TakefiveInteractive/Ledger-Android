@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -36,6 +38,9 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
     @Bind(R.id.backgroundImage)
     ImageView mBgImg;
+
+    @Bind(R.id.progress_view)
+    CircularProgressView progressView;
 
     @Bind(R.id.login)
     BootstrapButton mLogin;
@@ -67,6 +72,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(final LoginResult loginResult) {
+                progressView.setVisibility(View.VISIBLE);
                 BusinessFbLoginResult businessFbLoginResult = new BusinessFbLoginResult();
                 businessFbLoginResult.setToken(loginResult.getAccessToken());
                 presenter.ledgerLogin(businessFbLoginResult);
@@ -86,6 +92,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
         if(AccessToken.getCurrentAccessToken() != null) {
             showAnim(false);
+            progressView.setVisibility(View.VISIBLE);
             presenter.ledgerLogin(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
         }
         else showAnim(true);
