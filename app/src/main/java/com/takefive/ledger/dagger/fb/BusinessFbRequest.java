@@ -1,11 +1,14 @@
 package com.takefive.ledger.dagger.fb;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import com.facebook.AccessToken;
+import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
+import com.facebook.Profile;
 import com.facebook.login.LoginManager;
 import com.takefive.ledger.dagger.IFbRequest;
 import com.takefive.ledger.midData.fb.FbUserInfo;
@@ -22,10 +25,12 @@ import java.util.List;
  */
 public class BusinessFbRequest implements IFbRequest {
     final BusinessFbLoginResult credentials;
+    final Context context;
 
     // Cannot use D.I. because this time, we have different object in the same configuration, for different Activities
-    public BusinessFbRequest(BusinessFbLoginResult credentials) {
+    public BusinessFbRequest(Context context, BusinessFbLoginResult credentials) {
         this.credentials = credentials;
+        this.context = context;
     }
 
     @Override
@@ -67,8 +72,8 @@ public class BusinessFbRequest implements IFbRequest {
 
     @Override
     public void logout() throws Exception {
-        new GraphRequest(credentials.token, "/me/permissions/", null, HttpMethod.DELETE)
-                .executeAndWait();
+        //new GraphRequest(credentials.token, "/me/permissions/", null, HttpMethod.DELETE)
+        //        .executeAndWait();
         LoginManager.getInstance().logOut();
     }
 }

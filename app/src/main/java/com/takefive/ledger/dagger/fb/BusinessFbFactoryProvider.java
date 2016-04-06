@@ -1,5 +1,7 @@
 package com.takefive.ledger.dagger.fb;
 
+import android.content.Context;
+
 import com.takefive.ledger.view.MainActivity;
 import com.takefive.ledger.view.WelcomeActivity;
 import com.takefive.ledger.dagger.IFbFactory;
@@ -19,11 +21,11 @@ import dagger.Provides;
 )
 public class BusinessFbFactoryProvider {
     @Provides
-    public IFbFactory provideFbFactory() {
+    public IFbFactory provideFbFactory(Context context) {
         return new IFbFactory() {
             @Override
             public IFbRequest newRequest(IFbLoginResult loginResult) {
-                return new BusinessFbRequest((BusinessFbLoginResult)loginResult);
+                return new BusinessFbRequest(context, (BusinessFbLoginResult)loginResult);
             }
         };
     }
