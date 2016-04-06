@@ -1,5 +1,6 @@
 package com.takefive.ledger.view;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
 
+import com.facebook.login.LoginManager;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
@@ -95,6 +97,15 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Override
     public void setBoardTitle(String boardName) {
         mToolbar.setTitle("Ledger - " + boardName);
+    }
+
+    @Override
+    public void finishLogout() {
+        LoginManager.getInstance().logOut();
+        Intent intent = new Intent(getApplicationContext(), WelcomeActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
+        startActivity(intent);
+        finish();
     }
 
     @Override

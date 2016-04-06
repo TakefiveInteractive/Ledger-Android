@@ -19,4 +19,9 @@ public interface IMainView extends IView {
     void stopRefreshing();
     void setCurrentBoardId(String id);
     void setBoardTitle(String boardName);
+
+    /**
+     * View is responsible to log out of Facebook in this callback.
+     */
+    void finishLogout();
 }

@@ -59,6 +59,7 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
             view.showAlert(R.string.error_contact_facebook);
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
+            realmAccess.enableAccess();
             return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
             view.showAlert(applicationContext.getString(R.string.network_failure));

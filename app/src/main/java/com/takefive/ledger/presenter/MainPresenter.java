@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
 import zyu19.libs.action.chain.ActionChainFactory;
@@ -142,6 +143,17 @@ public class MainPresenter implements IPresenter<IMainView> {
         // TODO: actually reload board? Otherwise why is this in Presenter?
         view.setBoardTitle(entry.name);
         view.setCurrentBoardId(entry.id);
+    }
+
+    public void logout() {
+        chainFactory.get(fail -> {
+            fail.getCause().printStackTrace();
+            view.showAlert(R.string.ex_cannot_logout);
+        }).netThen(() -> realmAccess.clearAndDo(() -> {
+            userStore.clearAll();
+            return null;
+        })).uiConsume(obj -> view.finishLogout()
+        ).start();
     }
 
 }

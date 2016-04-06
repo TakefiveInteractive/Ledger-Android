@@ -38,6 +38,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
@@ -160,6 +161,11 @@ public class MainNavFrag extends Fragment {
         mainActivity.presenter.loadBills(mListAdapter.getItem(pos).id);
         mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
         mainActivity.closeDrawers();
+    }
+
+    @OnClick(R.id.logout)
+    void logout() {
+        ((MainActivity) getActivity()).presenter.logout();
     }
 
     class MainNavAdapter extends ArrayAdapter<RawMyBoards.Entry> {
