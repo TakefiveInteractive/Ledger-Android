@@ -13,6 +13,7 @@ import com.takefive.ledger.view.database.SessionStore;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -65,7 +66,7 @@ public class NewBillPresenter implements IPresenter<INewBill> {
                         throw new IOException(msg);
                     }
 
-                    List<ReadOnlyChain> c = new ArrayList<>();
+                    List<Object> c = new ArrayList<>();
                     for (String member : response.body().members) {
                         ReadOnlyChain roc = chainFactory.get(fail -> fail.getCause().printStackTrace())
                                 .netThen(() -> {
