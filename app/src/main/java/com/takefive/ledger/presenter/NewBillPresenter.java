@@ -23,6 +23,8 @@ import zyu19.libs.action.chain.AbstractActionChain;
 import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.ReadOnlyChain;
+import zyu19.libs.action.chain.TActionChain;
+import zyu19.libs.action.chain.TActionChainFactory;
 import zyu19.libs.action.chain.config.Consumer;
 
 /**
@@ -66,7 +68,7 @@ public class NewBillPresenter implements IPresenter<INewBill> {
                         throw new IOException(msg);
                     }
 
-                    List<Object> c = new ArrayList<>();
+                    List<ReadOnlyChain> c = new ArrayList<>();
                     for (String member : response.body().members) {
                         ReadOnlyChain roc = chainFactory.get(fail -> fail.getCause().printStackTrace())
                                 .netThen(() -> {
