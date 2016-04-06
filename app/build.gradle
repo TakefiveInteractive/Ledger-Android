@@ -64,19 +64,6 @@ configurations.all {
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    // Realm
-    // Dagger (Dependency Injection):
-    //  (the dagger-compiler is said to be optional)
-    // Butter Knife (View and Listener bindings)
-    // Nine old androids (basic animations)
-    // compile 'com.nineoldandroids:library:2.4.0+'
-    // Image Loading, Caching, automatically resizing for memory optimization
-    // boostrap buttons and controls for android
-    // appcompat
-    // For snackbar:
-    // For Cardview:
-    // Retrofit for API communication
-    // compile group: 'com.github.C4Phone',name:'SmartActionChain',version:'-SNAPSHOT', changing: true
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.android.support:appcompat-v7:23.2.1'
