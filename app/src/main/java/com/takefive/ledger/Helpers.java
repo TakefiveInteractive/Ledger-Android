@@ -8,7 +8,10 @@ import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +30,40 @@ import zyu19.libs.action.chain.config.ThreadPolicy;
  * Created by zyu on 1/30/16.
  */
 public class Helpers {
+
+    public static final NumberFormat CURRENCY_FORMAT;
+    static {
+        CURRENCY_FORMAT = NumberFormat.getCurrencyInstance();
+        CURRENCY_FORMAT.setRoundingMode(RoundingMode.DOWN);
+    }
+
+    public static String parseText(String s) {
+        /* Old implementation
+        int dotIndex = current.indexOf('.');
+        if (dotIndex != -1 && dotIndex < current.length() - 1) {
+            String integer = current.substring(0, dotIndex);
+            String decimal = current.substring(dotIndex + 1).replaceAll("[^\\d]", "");
+            if (decimal.length() >= 2)
+                decimal = decimal.substring(0, 2);
+            else
+                decimal += "0";
+            current = integer + "." + decimal;
+        } else
+            current += ".00";
+        return current;
+        */
+
+        String current = s.replaceAll("[^\\d.]", "");
+        return parseText(Double.parseDouble(current));
+    }
+
+    public static String parseText(double amount) {
+        /* Old implementation
+        return parseText(Double.toString(amount));
+        */
+
+        return CURRENCY_FORMAT.format(amount);
+    }
 
     // This method does not rely on any injection, thus static.
     public static void setMargins(View v, Integer t, Integer b, Integer l, Integer r) {

@@ -137,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void closeDrawers() {
         mDrawerLayout.closeDrawers();
     }
+
 }
 
 class StaticPagerAdapter extends FragmentPagerAdapter {

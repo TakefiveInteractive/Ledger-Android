@@ -1,31 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
-              android:layout_width="wrap_content"
+              android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:gravity="center">
+              android:padding="@dimen/noticable_padding"
+              android:orientation="horizontal">
 
-    <ImageView
-            android:id="@+id/personAdd"
-            android:src="@drawable/ic_add_white_24dp"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:visibility="gone"/>
+    <LinearLayout
+            android:id="@+id/personEmptyLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-            android:id="@+id/personAvatar"
-            android:layout_height="30dp"
-            android:layout_width="30dp"
-            android:src="@drawable/person_image_empty"
-            bootstrap:hasBorder="false"
-            android:layout_marginLeft="@dimen/general_margin"/>
+        <Button
+                android:id="@+id/personAdd"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight=".5"
+                android:text="Add New"
+                android:drawableStart="@drawable/ic_add_white_24dp"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/general_text_size"
+                android:background="?selectableItemBackground"
+                android:textAlignment="center"/>
 
-    <TextView
-            android:id="@+id/personName"
+        <Button
+                android:id="@+id/personReset"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="Reset"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/general_text_size"
+                android:background="?selectableItemBackground"
+                android:drawableStart="@drawable/ic_refresh_white_24dp"
+                android:layout_weight=".5"
+                android:textAlignment="center"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/personContentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_height="match_parent"
-            android:layout_width="wrap_content"
-            android:layout_marginLeft="@dimen/general_margin"/>
+            android:orientation="horizontal">
 
+        <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                android:id="@+id/personAvatar"
+                android:layout_height="30dp"
+                android:layout_width="30dp"
+                android:src="@drawable/person_image_empty"
+                bootstrap:hasBorder="false"/>
+
+        <TextView
+                android:id="@+id/personName"
+                android:layout_height="match_parent"
+                android:layout_width="0dp"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"
+                android:textSize="@dimen/general_text_size"/>
+
+        <com.takefive.ledger.view.utils.MoneyEdit
+                android:id="@+id/personAmount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/general_text_size"
+                android:textColor="@android:color/black"
+                android:layout_marginLeft="10dp"
+                android:layout_weight=".5"/>
+
+    </LinearLayout>
 </LinearLayout>

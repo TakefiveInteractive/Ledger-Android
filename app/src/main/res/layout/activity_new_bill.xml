@@ -23,36 +23,11 @@
                 android:title="New Bill"
                 android:focusable="true"/>
 
-        <android.support.v4.view.ViewPager
+        <com.takefive.ledger.view.utils.ControllableViewPager
                 android:id="@+id/newBillPager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"/>
-
-        <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="@dimen/general_padding"
-                android:gravity="right">
-
-            <Button
-                    android:id="@+id/newBillCancel"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Cancel"
-                    android:textSize="@dimen/general_text_size"
-                    android:background="?selectableItemBackground"/>
-
-            <Button
-                    android:id="@+id/newBillSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Submit"
-                    android:textSize="@dimen/general_text_size"
-                    android:background="?selectableItemBackground"/>
-
-        </LinearLayout>
 
     </LinearLayout>
 
