@@ -16,4 +16,6 @@ public interface IFbRequest {
 
     // callback result: [ {name: "xxx", id:"0123", avatarUrl:"http://sss"}, {name: "yyy", id:"1234"} ]
     List<FbUserInfo> getMyFriends() throws Exception;
+
+    void logout() throws Exception;
 }

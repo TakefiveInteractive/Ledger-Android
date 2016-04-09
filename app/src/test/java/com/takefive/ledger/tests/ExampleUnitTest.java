@@ -1,4 +1,4 @@
-package com.takefive.ledger;
+package com.takefive.ledger.tests;
 
 import org.junit.Test;
 

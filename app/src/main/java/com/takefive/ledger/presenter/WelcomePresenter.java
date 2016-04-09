@@ -1,7 +1,5 @@
 package com.takefive.ledger.presenter;
 
-import android.content.Context;
-
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.IFbFactory;
@@ -10,7 +8,7 @@ import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.midData.fb.FbUserInfo;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
-import com.takefive.ledger.view.WelcomeActivity;
+import com.takefive.ledger.view.IWelcomeView;
 
 import javax.inject.Inject;
 
@@ -19,14 +17,11 @@ import zyu19.libs.action.chain.ActionChainFactory;
 /**
  * Created by zyu on 3/19/16.
  */
-public class WelcomePresenter implements IPresenter<WelcomeActivity> {
-    WelcomeActivity view = null;
+public class WelcomePresenter implements IPresenter<IWelcomeView> {
+    IWelcomeView view = null;
 
     @Inject
     CommonTasks tasks;
-
-    @Inject
-    Context applicationContext;
 
     @Inject
     ActionChainFactory chainFactory;
@@ -44,7 +39,7 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
     IFbFactory fbFactory;
 
     @Override
-    public void attachView(WelcomeActivity view) {
+    public void attachView(IWelcomeView view) {
         this.view = view;
     }
 
@@ -57,12 +52,13 @@ public class WelcomePresenter implements IPresenter<WelcomeActivity> {
     public void ledgerLogin(final IFbLoginResult fbLoginResult) {
         chainFactory.get(errorHolder -> {
             view.showAlert(R.string.error_contact_facebook);
+            view.afterLoginFailure();
             errorHolder.getCause().printStackTrace();
         }).netThen(obj -> {
             realmAccess.enableAccess();
             return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
-            view.showAlert(applicationContext.getString(R.string.network_failure));
+            view.showAlert(R.string.network_failure);
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
             tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());

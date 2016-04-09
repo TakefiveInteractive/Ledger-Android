@@ -28,7 +28,8 @@ public class MyApplication extends Application {
                 new BusinessLedgerServiceModule(),
                 new BusinessRealmModule(),
                 new ChainFactoryProvider(),
-                new BusinessFbFactoryProvider()
+                new BusinessFbFactoryProvider(),
+                new BusinessRealmModule()
         );
         FacebookSdk.sdkInitialize(getApplicationContext());
     }

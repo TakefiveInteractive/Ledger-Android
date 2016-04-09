@@ -20,10 +20,12 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
+import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.dagger.UserStore;
@@ -165,7 +167,7 @@ public class MainNavFrag extends Fragment {
 
     @OnClick(R.id.logout)
     void logout() {
-        ((MainActivity) getActivity()).presenter.logout();
+        ((MainActivity) getActivity()).presenter.logout(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
     }
 
     class MainNavAdapter extends ArrayAdapter<RawMyBoards.Entry> {
