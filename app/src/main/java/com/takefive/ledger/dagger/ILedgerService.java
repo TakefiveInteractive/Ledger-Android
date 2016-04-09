@@ -1,5 +1,6 @@
 package com.takefive.ledger.dagger;
 
+import com.takefive.ledger.midData.ledger.NewBillRequest;
 import com.takefive.ledger.midData.ledger.RawBoardSimple;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawBoard;
@@ -42,4 +43,6 @@ public interface ILedgerService {
     @GET("board/{id}?unsafePopulate=false")
     Call<RawBoardSimple> getBoardByIdSimple(@Path("id") String id);
 
+    @POST("bill")
+    Call<ResponseBody> createBill(@Body NewBillRequest body);
 }

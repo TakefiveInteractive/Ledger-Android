@@ -44,6 +44,8 @@ import zyu19.libs.action.chain.ActionChainFactory;
  */
 public class MainBillFrag extends NamedFragment {
 
+    public static final int NEW_BILL_REQUEST = 0;
+
     @Bind(R.id.billList)
     ListView mList;
     @Bind(R.id.billSwipeRefreshLayout)
@@ -102,7 +104,20 @@ public class MainBillFrag extends NamedFragment {
         intent.putExtra("revealLocation", location);
         intent.putExtra("revealStartRadius", radius);
 
-        startActivity(intent);
+        startActivityForResult(intent, NEW_BILL_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case NEW_BILL_REQUEST:
+                ((MainActivity) getActivity()).presenter.loadBills(currentBoardId);
+                mSwipeLayout.setRefreshing(true);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     public String getCurrentBoardId() {

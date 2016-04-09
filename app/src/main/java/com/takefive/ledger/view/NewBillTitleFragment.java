@@ -49,13 +49,15 @@ public class NewBillTitleFragment extends ConfirmableFragment {
 
     @Override
     public boolean confirm() {
-        if (mTitle.getText().length() == 0 || mDescription.getText().length() == 0)
+        if (mTitle.getText().length() == 0)
             return false;
-        listener.onConfirmTitle(mTitle.getText().toString(), mDescription.getText().toString());
+        String description = mDescription.length() == 0 ? "" : mDescription.getText().toString();
+        listener.onConfirmTitle(mTitle.getText().toString(), description);
         return true;
     }
 
     public interface OnConfirmListener {
         void onConfirmTitle(String title, String description);
     }
+
 }

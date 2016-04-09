@@ -1,6 +1,6 @@
 package com.takefive.ledger.midData.ledger;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * Created by @tourbillon on 4/6/16.
@@ -9,5 +9,5 @@ public class NewBillRequest {
     public String boardId;
     public String title;
     public String description;
-    public Map<String, Double> amounts;
+    public List<PersonAmountPair> amounts;
 }

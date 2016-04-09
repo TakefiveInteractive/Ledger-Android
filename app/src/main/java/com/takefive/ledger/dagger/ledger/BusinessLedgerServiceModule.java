@@ -27,9 +27,11 @@ public class BusinessLedgerServiceModule {
     @Provides
     public ILedgerService provideLedgerService(Context context,
                                               AuthenticateInterceptor authenticateInterceptor) {
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(authenticateInterceptor)
-                .addInterceptor(new HttpLoggingInterceptor())
+                .addInterceptor(logging)
                 .build();
         return new Retrofit.Builder()
                 .baseUrl(context.getString(R.string.base_url) + context.getString(R.string.api_version) + "/")

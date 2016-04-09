@@ -26,11 +26,13 @@ import android.widget.RelativeLayout;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.NewBillRequest;
+import com.takefive.ledger.midData.ledger.PersonAmountPair;
 import com.takefive.ledger.presenter.NewBillPresenter;
 import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.ConfirmableFragment;
 import com.takefive.ledger.view.utils.ControllableViewPager;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -81,12 +83,13 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("New Bill");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(v -> close());
+        mToolbar.setNavigationOnClickListener(v -> close(false));
 
         mPager.setSwipeEnabled(false);
         mPager.setAdapter(new NewBillPageAdapter(getSupportFragmentManager(),
                 new NewBillAmountFragment(),
-                new NewBillTitleFragment()));
+                new NewBillTitleFragment(),
+                new NewBillSubmitFragment()));
         // Change action bar buttons when appropriate
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -128,7 +131,12 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
     }
 
     private void setupButtons(int position) {
-        String nextText = position == mPager.getAdapter().getCount() - 1 ? "Submit" : "Next";
+        if (position == mPager.getAdapter().getCount() - 1) {
+            mCancel.setVisible(false);
+            mNext.setVisible(false);
+            return;
+        }
+        String nextText = position == mPager.getAdapter().getCount() - 2 ? "Submit" : "Next";
         String prevText = position == 0 ? "Cancel" : "Back";
         mNext.setTitle(nextText);
         mCancel.setTitle(prevText);
@@ -156,7 +164,12 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         anim.start();
     }
 
-    private void close() {
+    @Override
+    public void doneAndClose() {
+        nextSlide();
+    }
+
+    private void close(boolean successful) {
         if (isAnimating)
             return;
 
@@ -191,6 +204,9 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
                 isAnimating = false;
             }
         });
+        Intent intent = getIntent();
+        int resultCode = successful ? RESULT_OK : RESULT_CANCELED;
+        setResult(resultCode, intent);
         anim.start();
         overridePendingTransition(0, 0);
     }
@@ -227,31 +243,32 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
     }
 
     private void submit() {
-        // TODO: Connect to server
+        presenter.createBill(request);
     }
 
-    @Override
     public void nextSlide() {
         int currentItem = mPager.getCurrentItem();
         if (!((NewBillPageAdapter) mPager.getAdapter()).getItem(currentItem).confirm())
             return;
-        if (currentItem != mPager.getAdapter().getCount() - 1) {
-            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+        if (currentItem < mPager.getAdapter().getCount() - 2) {
+            mPager.setCurrentItem(currentItem + 1);
+        }
+        else if (currentItem == mPager.getAdapter().getCount() - 2) {
+            mPager.setCurrentItem(currentItem + 1);
+            submit();
         }
         else {
-            submit();
-            close();
+            close(true);
         }
     }
 
-    @Override
     public void prevSlide() {
         int currentItem = mPager.getCurrentItem();
         if (currentItem != 0) {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
         else {
-            close();
+            close(false);
         }
     }
 
@@ -275,7 +292,10 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
     @Override
     public void onConfirmAmount(double total, Map<String, Double> amounts) {
         Log.d("NewBillActivity", "Amount fragment confirmed");
-        request.amounts = amounts;
+        request.amounts = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : amounts.entrySet()) {
+            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue()));
+        }
     }
 
     private class NewBillPageAdapter extends FragmentPagerAdapter {
