@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -162,29 +165,30 @@ public class MainBillFrag extends NamedFragment {
             RawBill rawBill = data.rawBill;
 
             BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
-            TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
-            TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
-            TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
-            TextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
-            AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
+            TextView summary = ButterKnife.findById(convertView, R.id.payerSummary);
+            TextView amount= ButterKnife.findById(convertView, R.id.amount);
+            TextView description = ButterKnife.findById(convertView, R.id.description);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
+            // Begin building string
+            StringBuilder builder = new StringBuilder();
             if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
-                whoPaid.setText("You paid:");
-                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
+                builder.append("<b>You</b>");
             } else {
-                whoPaid.setText(data.recipientName + "\npaid:");
-                if (data.recipientAvatarUrl != null)
-                    Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
+                builder.append("<b>" + data.recipientName + "</b>");
             }
+            builder.append(" paid for <b>" + rawBill.title + "</b>");
+            // Set String
+            summary.setText(Html.fromHtml(builder.toString()));
 
-            paidAmount.setText("$" + rawBill.getTotalAmount());
-            desc1.setText(rawBill.title);
+            // Set avatar
+            if (data.recipientAvatarUrl != null)
+                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
 
-            desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
-                    .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-            desc2.setText(" " + rawBill.description);
+            // Set amount
+            amount.setText("$" + rawBill.getTotalAmount());
 
+            // Set time
             try {
                 time.setText(Helpers.shortDate(DateFormat.SHORT, rawBill.getTime()));
             } catch (ParseException e) {

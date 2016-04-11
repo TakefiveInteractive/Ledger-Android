@@ -14,136 +14,74 @@
         cardview:cardElevation="@dimen/card_elevation"
         cardview:cardPreventCornerOverlap="false">
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <RelativeLayout
+        <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/noticable_padding"
-                android:gravity="center_vertical">
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/noticable_padding">
 
-                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-                    android:id="@+id/avatar"
-                    android:layout_width="50sp"
-                    android:layout_height="50dp"
-                    android:layout_marginRight="@dimen/general_padding"
-                    android:background="@drawable/person_image_empty"
-                    android:scaleType="centerCrop"
-                    bootstrap:hasBorder="false"
-                    android:layout_alignParentStart="true"/>
-
-                <LinearLayout
+            <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_toEndOf="@id/avatar"
-                    android:layout_alignParentStart="false"
-                    android:layout_centerVertical="true"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:orientation="horizontal">
 
-                    <LinearLayout
-                        android:id="@+id/lYouPay"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="2"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical">
+                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                        android:id="@+id/avatar"
+                        android:layout_width="50sp"
+                        android:layout_height="50dp"
+                        android:layout_marginRight="@dimen/general_padding"
+                        android:background="@drawable/person_image_empty"
+                        android:scaleType="centerCrop"
+                        bootstrap:hasBorder="false"
+                        android:layout_alignParentStart="true"/>
 
-                        <TextView
-                            android:id="@+id/payer"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                            android:textColor="@android:color/black"
-                            android:text="You paid:"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:id="@+id/paidAmount"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@android:color/black"
-                            android:text="$98.42"
-                            android:textSize="20sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/lDesc"
-                        android:layout_width="match_parent"
+                <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:gravity="center_vertical">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/desc1"
+                    <TextView
+                            android:id="@+id/payerSummary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                            android:text="Sakanaya"
                             android:textColor="@android:color/black"
-                            android:textAppearance="?android:attr/textAppearanceMedium"/>
+                            android:text="You paid for something really long"
+                            android:textSize="@dimen/text_size_medium"/>
 
-                        <LinearLayout
+                    <TextView
+                            android:id="@+id/time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <com.beardedhen.androidbootstrap.AwesomeTextView
-                                android:id="@+id/desc2icon"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                bootstrap:bootstrapText="{fa_credit_card}" />
-
-                            <TextView
-                                android:id="@+id/desc2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textAppearance="?android:attr/textAppearanceSmall"
-                                android:text=" Collecting $35.42" />
-                        </LinearLayout>
-
-                    </LinearLayout>
+                            android:text="12:00 PM"
+                            android:textColor="@android:color/darker_gray"/>
 
                 </LinearLayout>
 
-            </RelativeLayout>
-
-            <!-- The following TAG may be shown as warnings/indicators -->
-            <FrameLayout
-                android:visibility="invisible"
-                android:id="@+id/detailBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true">
-                <com.takefive.ledger.view.utils.TagButtonBg
-                    android:src="@color/theme_accent_1"
-                    android:layout_width="50sp"
-                    android:layout_height="50sp"/>
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:paddingBottom="18sp"
-                    android:textSize="12sp"
-                    android:rotation="45"
-                    android:textColor="@android:color/white"
-                    android:text="Detail" />
+                        android:id="@+id/amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="top|right"
+                        android:layout_marginRight="@dimen/general_margin"
+                        android:textSize="@dimen/text_size_xlarge"
+                        android:text="$1.10"/>
 
-            </FrameLayout>
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding"
-                android:text="12:00 PM"
-                android:layout_alignParentEnd="true"/>
+                    android:id="@+id/description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Lorem Ipsum"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textColor="@android:color/black"
+                    android:layout_marginTop="@dimen/general_margin"
+                    android:layout_marginLeft="@dimen/general_margin"
+                    android:layout_marginRight="@dimen/general_margin"/>
 
-        </RelativeLayout>
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 
