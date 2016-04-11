@@ -2,11 +2,10 @@ package com.takefive.ledger.view;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,11 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
@@ -33,7 +28,6 @@ import com.takefive.ledger.view.utils.ConfirmableFragment;
 import com.takefive.ledger.view.utils.ControllableViewPager;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
@@ -258,7 +252,7 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
             submit();
         }
         else {
-            close(true);
+            new Handler().postDelayed(() -> close(true), 1500);
         }
     }
 

@@ -75,7 +75,7 @@ public class NewBillAmountFragment extends ConfirmableFragment {
     }
 
     private void calculateAndSetAmountLeft() {
-        mAmountLeft.setText(Helpers.CURRENCY_FORMAT.format(total - collected));
+        mAmountLeft.setText(Helpers.currencyText(total - collected, getResources().getConfiguration().locale));
     }
 
     public List<RawPerson> getSelection() {

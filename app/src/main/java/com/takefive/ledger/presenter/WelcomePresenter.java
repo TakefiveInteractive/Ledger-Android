@@ -59,6 +59,7 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
             return fbFactory.newRequest(fbLoginResult).getMe();
         }).fail(errorHolder -> {
             view.showAlert(R.string.network_failure);
+            view.afterLoginFailure();
             errorHolder.getCause().printStackTrace();
         }).netThen((FbUserInfo info) -> {
             tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());

@@ -39,6 +39,9 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import zyu19.libs.action.chain.ActionChainFactory;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by zyu on 2/3/16.
  */
@@ -111,8 +114,15 @@ public class MainBillFrag extends NamedFragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case NEW_BILL_REQUEST:
-                ((MainActivity) getActivity()).presenter.loadBills(currentBoardId);
-                mSwipeLayout.setRefreshing(true);
+                switch (resultCode) {
+                    case RESULT_OK:
+                        ((MainActivity) getActivity()).presenter.loadBills(currentBoardId);
+                        mSwipeLayout.setRefreshing(true);
+                        break;
+                    case RESULT_CANCELED:
+                    default:
+                        break;
+                }
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);

@@ -30,19 +30,14 @@ public class NewBillSubmitFragment extends ConfirmableFragment {
         View root = inflater.inflate(R.layout.fragment_new_bill_submit, container, false);
         ButterKnife.bind(this, root);
         mProgressLayout.setVisibility(View.VISIBLE);
-        mDoneLayout.setVisibility(View.INVISIBLE);
+        mDoneLayout.setVisibility(View.GONE);
         return root;
     }
 
     @Override
     public boolean confirm() {
-        mProgressLayout.setVisibility(View.INVISIBLE);
+        mProgressLayout.setVisibility(View.GONE);
         mDoneLayout.setVisibility(View.VISIBLE);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         return true;
     }
 

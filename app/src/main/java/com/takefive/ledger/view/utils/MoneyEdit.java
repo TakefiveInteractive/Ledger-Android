@@ -3,6 +3,7 @@ package com.takefive.ledger.view.utils;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -11,15 +12,20 @@ import android.widget.EditText;
 
 import com.takefive.ledger.Helpers;
 
+import java.math.RoundingMode;
+import java.text.NumberFormat;
+import java.util.Currency;
+
 /**
  * Created by @tourbillon on 4/3/16.
  */
 public class MoneyEdit extends EditText {
 
     private boolean parsingText;
-    private boolean shouldSendEvent;
 
     private OnAmountChangeListener listener;
+
+    private NumberFormat format;
 
     public MoneyEdit(Context context) {
         super(context);
@@ -38,11 +44,19 @@ public class MoneyEdit extends EditText {
 
     private void init() {
         parsingText = false;
-        shouldSendEvent = false;
+        format = NumberFormat.getCurrencyInstance(getTextLocale());
+        format.setRoundingMode(RoundingMode.DOWN);
         listener = amount -> {};
-        this.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        this.addTextChangedListener(new MoneyFormatListener());
+        setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+        setRawInputType(Configuration.KEYBOARD_QWERTY);
+        addTextChangedListener(new MoneyFormatListener());
+        setHint(Currency.getInstance(getTextLocale()).getSymbol());
         setText("0.00");
+    }
+
+    @Override
+    public void onSelectionChanged(int start, int end) {
+        setSelection(getText().length());
     }
 
     public double getAmount() {
@@ -58,25 +72,10 @@ public class MoneyEdit extends EditText {
         this.listener = listener;
     }
 
-    private class MoneyEditFocusChangeListener implements OnFocusChangeListener {
-
-        @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (!hasFocus) {
-                parsingText = true;
-                setText(Helpers.parseText(getText().toString()));
-            }
-        }
-
-    }
-
     private class MoneyFormatListener implements TextWatcher {
-
-        private String previous = "";
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            previous = s.toString();
         }
 
         @Override
@@ -88,28 +87,33 @@ public class MoneyEdit extends EditText {
         public void afterTextChanged(Editable s) {
             if (parsingText) {
                 parsingText = false;
-                if (shouldSendEvent)
-                    listener.onAmountChange(getAmount());
+                listener.onAmountChange(getAmount());
                 return;
             }
 
             parsingText = true;
-            String str;
-            try {
-                str = s.toString();
-                Double.parseDouble(str);
-                int dotIndex = str.indexOf('.');
-                if (dotIndex != -1 && dotIndex != str.length() - 1 && str.substring(dotIndex + 1).length() > 2)
-                    str = str.substring(0, dotIndex + 3);
-                shouldSendEvent = true;
-            } catch (NumberFormatException e) {
-                Log.d("MoneyEdit", "New value is not a double. Falling back.");
-                str = previous;
-                shouldSendEvent = false;
+            String str = s.toString().replaceAll("[^\\d.]", "");
+            String newStr;
+
+            int dotIndex = str.indexOf('.');
+            if (dotIndex != -1) {
+                if (dotIndex >= str.length() - 2)
+                    newStr = str.substring(0, dotIndex - 1) + "." + str.substring(dotIndex - 1, dotIndex) + str.substring(dotIndex + 1);
+                else {
+                    if (str.charAt(0) == '0')
+                        newStr = "";
+                    else
+                        newStr = str.substring(0, dotIndex);
+                    newStr += str.substring(dotIndex + 1, dotIndex + 2) + "." + str.substring(dotIndex + 2);
+                }
+            } else {
+                Log.d("Formatting", "Mysterious condition where there isn't a dot");
+                newStr = "0.00";
             }
 
-            setText(str);
-            setSelection(str.length());
+            String formatted = format.format(Double.valueOf(newStr));
+            setText(formatted);
+            setSelection(formatted.length());
         }
     }
 
