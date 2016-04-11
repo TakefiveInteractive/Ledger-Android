@@ -95,6 +95,8 @@ public class NewBillAmountFragment extends ConfirmableFragment {
 
     @Override
     public boolean confirm() {
+        if (total - collected != 0)
+            return false;
         if (mAmount.getText().length() == 0 || adapter.getSelection().size() == 0 || amounts.size() == 0)
             return false;
         listener.onConfirmAmount(mAmount.getAmount(), amounts);

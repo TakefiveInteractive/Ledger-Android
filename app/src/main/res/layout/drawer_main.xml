@@ -1,20 +1,18 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="@dimen/navdrawer_width"
                 android:layout_height="match_parent"
                 android:background="@color/navdrawer_background"
-                android:fitsSystemWindows="true">
+                android:fitsSystemWindows="true"
+                android:orientation="vertical"
+                android:clickable="true">
 
     <FrameLayout
-        android:id="@+id/chosen_account_view"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/navdrawer_chosen_account_height"
-        android:layout_alignParentBottom="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
-        android:layout_alignParentTop="true">
+            android:id="@+id/chosen_account_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/navdrawer_chosen_account_height">
 
         <ImageView
             android:id="@+id/profile_cover_image_placeholder"
@@ -24,15 +22,16 @@
             android:paddingRight="@dimen/navdrawer_logo_padding_right"
             android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
             android:scaleType="center"
-            android:src="@drawable/gradient_background" />
+            android:src="@drawable/gradient_background"/>
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/chosen_account_content_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:paddingLeft="@dimen/keyline_1"
             android:paddingRight="@dimen/keyline_1"
-            android:paddingTop="@dimen/keyline_1">
+            android:paddingTop="@dimen/keyline_1"
+            android:orientation="vertical">
 
             <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
                 android:id="@+id/profile_image"
@@ -41,58 +40,40 @@
                 android:scaleType="centerCrop"
                 android:src="@drawable/person_image_empty"
                 bootstrap:hasBorder="false"/>
-            <!--app:maskDrawable="@drawable/circle_mask"-->
 
-            <ImageView
-                android:id="@+id/expand_account_box_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginLeft="@dimen/navview_start_padding"
-                android:layout_marginStart="@dimen/navview_start_padding"
-                android:paddingBottom="@dimen/navview_header_bottom_padding"
-                android:scaleType="center"
-                android:src="@drawable/ic_navview_accounts_expand"
-                android:visibility="gone" />
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical"
+                    android:gravity="bottom">
 
-            <TextView
-                android:id="@+id/profile_balance_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignLeft="@id/profile_image"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@id/profile_image"
-                android:layout_toLeftOf="@id/expand_account_box_indicator"
-                android:layout_toStartOf="@id/expand_account_box_indicator"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:paddingBottom="@dimen/navview_header_bottom_padding"
-                android:singleLine="true"
-                android:text="Balance: $1.43"
-                android:textSize="@dimen/text_size_medium" />
+                <TextView
+                        android:id="@+id/profile_name_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text="Username"
+                        android:textSize="@dimen/text_size_large"
+                        android:textColor="@android:color/white"
+                        android:textStyle="bold"/>
 
-            <TextView
-                android:id="@+id/profile_name_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_above="@id/profile_balance_text"
-                android:layout_alignLeft="@id/profile_image"
-                android:layout_alignStart="@id/profile_image"
-                android:layout_toLeftOf="@id/expand_account_box_indicator"
-                android:layout_toStartOf="@id/expand_account_box_indicator"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:singleLine="true"
-                android:text="Username"
-                android:textSize="@dimen/text_size_large" />
+                <TextView
+                        android:id="@+id/profile_balance_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:paddingBottom="@dimen/navview_header_bottom_padding"
+                        android:singleLine="true"
+                        android:text="Balance: $1.43"
+                        android:textSize="@dimen/text_size_medium"
+                        android:textColor="@android:color/white"/>
 
-        </RelativeLayout>
+            </LinearLayout>
 
-        <RadioGroup
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"></RadioGroup>
+        </LinearLayout>
 
     </FrameLayout>
 
@@ -120,75 +101,59 @@
     <ListView
         android:id="@+id/boardList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/newBoard"
-        android:layout_below="@+id/chosen_account_view"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         tools:listitem="@layout/item_board_list"/>
 
-    <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/newBoard"
-            android:layout_above="@+id/bottomBtnLayout"
+    <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_margin="5dp"
-            android:alpha="1"
-            app:bootstrapBrand="primary"
-            app:bootstrapSize="sm"
-            app:buttonMode="regular"
-            app:showOutline="true"
-            app:roundedCorners="true"
-            android:text="New Board" />
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"/>
 
     <LinearLayout
-        android:id="@+id/bottomBtnLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:padding="@dimen/noticable_padding">
-            <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:layout_width="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:orientation="vertical">
+
+        <com.beardedhen.androidbootstrap.BootstrapButton
+                android:id="@+id/newBoard"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/general_padding"
-                app:fontAwesomeIcon="fa_sign_out"/>
-            <TextView
+                android:layout_margin="5dp"
+                android:alpha="1"
+                app:bootstrapBrand="primary"
+                app:bootstrapSize="sm"
+                app:buttonMode="regular"
+                app:showOutline="true"
+                app:roundedCorners="true"
+                android:text="New Board" />
+
+        <Button
                 android:id="@+id/logout"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Logout"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
+                android:textColor="@android:color/black"
+                android:textAlignment="textStart"
+                android:drawablePadding="@dimen/navdrawer_action_text_margin"
+                android:drawableLeft="@drawable/ic_settings_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/navdrawer_action_layout_padding"
+                android:textAllCaps="false"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="?android:attr/selectableItemBackground"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
-            android:padding="@dimen/noticable_padding">
-            <com.beardedhen.androidbootstrap.AwesomeTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/general_padding"
-                app:fontAwesomeIcon="fa_gear"/>
-
-            <TextView
-                android:layout_width="wrap_content"
+        <Button
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Settings"
-                android:textColor="@android:color/black" />
-        </LinearLayout>
+                android:textColor="@android:color/black"
+                android:textAlignment="textStart"
+                android:drawablePadding="@dimen/navdrawer_action_text_margin"
+                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/navdrawer_action_layout_padding"
+                android:textAllCaps="false"/>
+
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>

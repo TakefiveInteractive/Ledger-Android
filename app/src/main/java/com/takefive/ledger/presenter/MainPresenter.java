@@ -66,6 +66,9 @@ public class MainPresenter implements IPresenter<IMainView> {
             view.stopRefreshing();
             view.showAlert("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
+        }).uiThen(() -> {
+            view.startRefreshing();
+            return null;
         }).netThen(() -> {
             Response<RawBoard> resp = service.getBoardByIdInflated(boardId).execute();
             if (!resp.isSuccessful()) {

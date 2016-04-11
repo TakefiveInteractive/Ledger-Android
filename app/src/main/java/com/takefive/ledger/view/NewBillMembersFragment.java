@@ -18,14 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.midData.ledger.RawPerson;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -38,6 +41,9 @@ public class NewBillMembersFragment extends DialogFragment {
 
     @Bind(R.id.newBillMembersView)
     RecyclerView mRecyclerView;
+
+    @Inject
+    UserStore userStore;
 
     private NewBillMembersAdapter adapter;
 
@@ -60,12 +66,14 @@ public class NewBillMembersFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MyApplication) getActivity().getApplication()).inject(this);
         View root = inflater.inflate(R.layout.fragment_new_bill_members, container, false);
         ButterKnife.bind(this, root);
 
         adapter = new NewBillMembersAdapter(getContext(), new ArrayList<>(), selection);
         getDialog().setCanceledOnTouchOutside(true);
         ((NewBillActivity) getActivity()).presenter.loadBoardMembers((List<RawPerson> members) -> {
+
             adapter = new NewBillMembersAdapter(getContext(), members, selection);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();

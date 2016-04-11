@@ -25,6 +25,7 @@ import com.takefive.ledger.midData.ledger.RawBill;
 import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
@@ -70,8 +71,6 @@ public class MainBillFrag extends NamedFragment {
 
     BillDetailFragment mBillDetail;
 
-    String currentBoardId = "";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,7 +91,7 @@ public class MainBillFrag extends NamedFragment {
         mNew.attachToListView(mList);
 
         mSwipeLayout.setListView(mList);
-        mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(currentBoardId));
+        mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(SessionStore.getDefault().activeBoardId));
 
         return root;
     }
@@ -116,7 +115,7 @@ public class MainBillFrag extends NamedFragment {
             case NEW_BILL_REQUEST:
                 switch (resultCode) {
                     case RESULT_OK:
-                        ((MainActivity) getActivity()).presenter.loadBills(currentBoardId);
+                        ((MainActivity) getActivity()).presenter.loadBills(SessionStore.getDefault().activeBoardId);
                         mSwipeLayout.setRefreshing(true);
                         break;
                     case RESULT_CANCELED:
@@ -130,18 +129,15 @@ public class MainBillFrag extends NamedFragment {
         }
     }
 
-    public String getCurrentBoardId() {
-        return currentBoardId;
-    }
-
-    public void setCurrentBoardId(String currentBoardId) {
-        this.currentBoardId = currentBoardId;
-    }
-
     public void showBillsList(List<ShownBill> bills) {
         MainBillAdapter adapter = new MainBillAdapter(getContext(), bills);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    public void startRefreshing() {
+        if (!mSwipeLayout.isRefreshing())
+            mSwipeLayout.setRefreshing(true);
     }
 
     public void stopRefreshing() {

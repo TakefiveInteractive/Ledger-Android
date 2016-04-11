@@ -131,17 +131,6 @@
     <dimen name="map_info_item_height">72dp</dimen>
     <dimen name="map_info_item_vertical_padding">20dp</dimen>
 
-
-    <!-- Deprecate these -->
-    <dimen name="navdrawer_chosen_account_height">140dp</dimen>
-    <dimen name="navdrawer_width">260dp</dimen>
-    <dimen name="navdrawer_profile_image_size">40dp</dimen>
-    <dimen name="navdrawer_item_icon_size">24dp</dimen>
-    <dimen name="navdrawer_item_icon_margin_end">32dp</dimen>
-    <dimen name="navdrawer_logo_vertical_padding">16dp</dimen>
-    <dimen name="navdrawer_logo_padding_right">16dp</dimen>
-    <!-- End Deprecate -->
-
     <!-- Action Bar auto-hide-on-scroll behavior parameters -->
     <dimen name="action_bar_auto_hide_min_y">152dp</dimen>
     <dimen name="action_bar_auto_hide_sensivity">48dp</dimen>
@@ -225,6 +214,19 @@
     <dimen name="welcome_content_width">@dimen/match_parent</dimen>
     <dimen name="welcome_title_size">20sp</dimen>
 
+    <!-- Navigation Drawer -->
+    <dimen name="navdrawer_action_layout_padding">10dp</dimen>
+    <dimen name="navdrawer_action_text_margin">30dp</dimen>
+    <!-- Deprecate these -->
+    <dimen name="navdrawer_chosen_account_height">170dp</dimen>
+    <dimen name="navdrawer_width">300dp</dimen>
+    <dimen name="navdrawer_profile_image_size">70dp</dimen>
+    <dimen name="navdrawer_item_icon_size">24dp</dimen>
+    <dimen name="navdrawer_item_icon_margin_end">32dp</dimen>
+    <dimen name="navdrawer_logo_vertical_padding">16dp</dimen>
+    <dimen name="navdrawer_logo_padding_right">16dp</dimen>
+    <!-- End Deprecate -->
+
     <!-- RawBill Details Activity -->
     <dimen name="bill_icon_width">60dp</dimen>
     <dimen name="bill_icon_height">30dp</dimen>
@@ -244,5 +246,7 @@
     <dimen name="general_text_size">15sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="header_text_size">30sp</dimen>
+
+    <dimen name="icon_24dp">24dp</dimen>
 
 </resources>

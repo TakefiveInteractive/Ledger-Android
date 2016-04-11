@@ -86,15 +86,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
         mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        ((ListView) tab.getCustomView().findViewById(R.id.billList))
-                                .setSelectionAfterHeaderView();
-                        break;
-                    case 1:
-                    default:
-                        break;
-                }
+
             }
 
             @Override
@@ -104,8 +96,22 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        ((ListView) billFrag.getView().findViewById(R.id.billList))
+                                .setSelectionAfterHeaderView();
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
             }
         });
+    }
+
+    @Override
+    public void startRefreshing() {
+        billFrag.startRefreshing();
     }
 
     @Override
@@ -115,13 +121,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void setCurrentBoardId(String id) {
-        billFrag.setCurrentBoardId(id);
         SessionStore.getDefault().activeBoardId = id;
     }
 
     @Override
     public void setBoardTitle(String boardName) {
-        mToolbar.setTitle("Ledger - " + boardName);
+        mToolbar.setTitle(boardName);
         SessionStore.getDefault().activeBoardName = boardName;
     }
 
@@ -135,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void showBillsList(List<ShownBill> bills) {
+        billFrag.stopRefreshing();
         billFrag.showBillsList(bills);
     }
 
