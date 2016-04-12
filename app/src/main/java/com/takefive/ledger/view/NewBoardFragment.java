@@ -16,7 +16,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +42,7 @@ import butterknife.OnClick;
 public class NewBoardFragment extends DialogFragment {
 
     @Bind(R.id.newBoardName)
-    TextInputEditText mBoardName;
+    EditText mBoardName;
     @Bind(R.id.newBoardFriendsView)
     RecyclerView mRecyclerView;
 
@@ -66,11 +68,6 @@ public class NewBoardFragment extends DialogFragment {
         mRecyclerView.setAdapter(adapter);
 
         return root;
-    }
-
-    @OnClick({R.id.closePopup, R.id.newBoardCancel})
-    public void onCloseButtonClick() {
-        this.dismiss();
     }
 
     @OnClick(R.id.newBoardSubmit)
@@ -103,8 +100,10 @@ public class NewBoardFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        Dialog dialog = new Dialog(getContext(), R.style.MyDialogTheme);
+        Window window = dialog.getWindow();
+        // window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
     }
 

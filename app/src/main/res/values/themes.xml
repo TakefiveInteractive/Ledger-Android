@@ -2,16 +2,20 @@
 <resources>
 
     <style name="MainTheme" parent="MyTheme">
-        <!-- <item name="android:navigationBarColor">#fff</item> -->
     </style>
     <style name="WelcomeTheme" parent="MyTheme">
         <!-- <item name="android:navigationBarColor">#000</item> -->
         <item name="android:windowFullscreen">false</item>
     </style>
     <style name="NewBillTheme" parent="MyTheme">
-        <!-- <item name="android:navigationBarColor">#000</item> -->
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
     </style>
-
+    <style name="MyDialogTheme">
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/myDialogBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
 </resources>
