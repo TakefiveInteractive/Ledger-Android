@@ -5,7 +5,7 @@
              tools:context="com.takefive.ledger.view.NewBillAmountFragment"
              android:padding="@dimen/general_padding"
              android:orientation="vertical"
-             android:background="@android:color/transparent"
+             android:background="@android:color/white"
              android:gravity="center">
 
     <TextView
@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:text="How much?"
             android:textSize="@dimen/header_text_size"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:gravity="center_horizontal"
             android:layout_marginTop="80dp"/>
 
@@ -33,7 +33,7 @@
             android:layout_height="wrap_content"
             android:text="to"
             android:textSize="@dimen/general_text_size"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:layout_marginTop="@dimen/general_margin"/>
 
     <android.support.v7.widget.RecyclerView
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:textSize="@dimen/general_text_size"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="with"
                 android:textAlignment="textEnd"/>
 
@@ -66,7 +66,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".2"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:textSize="@dimen/general_text_size"
                 android:textAlignment="center"/>
         <TextView
@@ -74,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".3"
                 android:textSize="@dimen/general_text_size"
-                android:textColor="@android:color/white"
+                android:textColor="@android:color/black"
                 android:text="left"
                 android:textAlignment="textStart"/>
 
