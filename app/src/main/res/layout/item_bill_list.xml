@@ -76,7 +76,6 @@
                     android:layout_height="wrap_content"
                     android:text="Lorem Ipsum"
                     android:textSize="@dimen/text_size_medium"
-                    android:textColor="@android:color/black"
                     android:layout_marginTop="@dimen/general_margin"
                     android:layout_marginLeft="@dimen/general_margin"
                     android:layout_marginRight="@dimen/general_margin"/>

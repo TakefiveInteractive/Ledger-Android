@@ -130,6 +130,18 @@
                 android:text="New Board" />
 
         <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Settings"
+                android:textColor="@android:color/black"
+                android:textAlignment="textStart"
+                android:drawablePadding="@dimen/navdrawer_action_text_margin"
+                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+                android:background="?attr/selectableItemBackground"
+                android:padding="@dimen/navdrawer_action_layout_padding"
+                android:textAllCaps="false"/>
+
+        <Button
                 android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -138,18 +150,6 @@
                 android:textAlignment="textStart"
                 android:drawablePadding="@dimen/navdrawer_action_text_margin"
                 android:drawableLeft="@drawable/ic_settings_black_24dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="@dimen/navdrawer_action_layout_padding"
-                android:textAllCaps="false"/>
-
-        <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textColor="@android:color/black"
-                android:textAlignment="textStart"
-                android:drawablePadding="@dimen/navdrawer_action_text_margin"
-                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
                 android:background="?attr/selectableItemBackground"
                 android:padding="@dimen/navdrawer_action_layout_padding"
                 android:textAllCaps="false"/>

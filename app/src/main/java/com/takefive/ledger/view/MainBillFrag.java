@@ -2,11 +2,14 @@ package com.takefive.ledger.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
+import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -187,6 +190,17 @@ public class MainBillFrag extends NamedFragment {
 
             // Set amount
             amount.setText("$" + rawBill.getTotalAmount());
+
+            // Set description
+            if (rawBill.description != null && !rawBill.description.isEmpty()) {
+                SpannableStringBuilder descriptionBuilder = new SpannableStringBuilder(rawBill.description);
+                descriptionBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),
+                        0, descriptionBuilder.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                description.setVisibility(View.VISIBLE);
+                description.setText(descriptionBuilder.toString());
+            }
+            else
+                description.setVisibility(View.GONE);
 
             // Set time
             try {
