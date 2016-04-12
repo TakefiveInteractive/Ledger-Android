@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -59,7 +60,7 @@ public class MainNavFrag extends Fragment {
     @Bind(R.id.boardList)
     ListView mList;
     @Bind(R.id.newBoard)
-    BootstrapButton mNewBoard;
+    Button mNewBoard;
     @Bind(R.id.profile_image)
     BootstrapCircleThumbnail mAvatar;
 

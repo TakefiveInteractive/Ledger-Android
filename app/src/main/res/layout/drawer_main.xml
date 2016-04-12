@@ -1,18 +1,18 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="@dimen/navdrawer_width"
-                android:layout_height="match_parent"
-                android:background="@color/navdrawer_background"
-                android:fitsSystemWindows="true"
-                android:orientation="vertical"
-                android:clickable="true">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/navdrawer_width"
+    android:layout_height="match_parent"
+    android:background="@color/navdrawer_background"
+    android:clickable="true"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <FrameLayout
-            android:id="@+id/chosen_account_view"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/navdrawer_chosen_account_height">
+        android:id="@+id/chosen_account_view"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/navdrawer_chosen_account_height">
 
         <ImageView
             android:id="@+id/profile_cover_image_placeholder"
@@ -22,16 +22,16 @@
             android:paddingRight="@dimen/navdrawer_logo_padding_right"
             android:paddingTop="@dimen/navdrawer_logo_vertical_padding"
             android:scaleType="center"
-            android:src="@drawable/gradient_background"/>
+            android:src="@drawable/gradient_background" />
 
         <LinearLayout
             android:id="@+id/chosen_account_content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:orientation="vertical"
             android:paddingLeft="@dimen/keyline_1"
             android:paddingRight="@dimen/keyline_1"
-            android:paddingTop="@dimen/keyline_1"
-            android:orientation="vertical">
+            android:paddingTop="@dimen/keyline_1">
 
             <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
                 android:id="@+id/profile_image"
@@ -39,37 +39,37 @@
                 android:layout_height="@dimen/navdrawer_profile_image_size"
                 android:scaleType="centerCrop"
                 android:src="@drawable/person_image_empty"
-                bootstrap:hasBorder="false"/>
+                bootstrap:hasBorder="false" />
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/profile_name_text"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical"
-                    android:gravity="bottom">
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:singleLine="true"
+                    android:text="Username"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_large"
+                    android:textStyle="bold" />
 
                 <TextView
-                        android:id="@+id/profile_name_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:singleLine="true"
-                        android:text="Username"
-                        android:textSize="@dimen/text_size_large"
-                        android:textColor="@android:color/white"
-                        android:textStyle="bold"/>
-
-                <TextView
-                        android:id="@+id/profile_balance_text"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:ellipsize="end"
-                        android:maxLines="1"
-                        android:paddingBottom="@dimen/navview_header_bottom_padding"
-                        android:singleLine="true"
-                        android:text="Balance: $1.43"
-                        android:textSize="@dimen/text_size_medium"
-                        android:textColor="@android:color/white"/>
+                    android:id="@+id/profile_balance_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:paddingBottom="@dimen/navview_header_bottom_padding"
+                    android:singleLine="true"
+                    android:text="Balance: $1.43"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/text_size_medium" />
 
             </LinearLayout>
 
@@ -103,56 +103,57 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        tools:listitem="@layout/item_board_list"/>
+        tools:listitem="@layout/item_board_list" />
 
     <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@android:color/darker_gray"/>
+        android:layout_width="match_parent"
+        android:alpha="1"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray" />
 
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="0dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/newBoard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="0dp"
-            android:orientation="vertical">
-
-        <com.beardedhen.androidbootstrap.BootstrapButton
-                android:id="@+id/newBoard"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:alpha="1"
-                app:bootstrapBrand="primary"
-                app:bootstrapSize="sm"
-                app:buttonMode="regular"
-                app:showOutline="true"
-                app:roundedCorners="true"
-                android:text="New Board" />
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_add_black_24dp"
+            android:drawablePadding="@dimen/navdrawer_action_text_margin"
+            android:padding="@dimen/navdrawer_action_layout_padding"
+            android:text="New Board"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
 
         <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Settings"
-                android:textColor="@android:color/black"
-                android:textAlignment="textStart"
-                android:drawablePadding="@dimen/navdrawer_action_text_margin"
-                android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="@dimen/navdrawer_action_layout_padding"
-                android:textAllCaps="false"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_settings_black_24dp"
+            android:drawablePadding="@dimen/navdrawer_action_text_margin"
+            android:padding="@dimen/navdrawer_action_layout_padding"
+            android:text="Settings"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
 
         <Button
-                android:id="@+id/logout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Logout"
-                android:textColor="@android:color/black"
-                android:textAlignment="textStart"
-                android:drawablePadding="@dimen/navdrawer_action_text_margin"
-                android:drawableLeft="@drawable/ic_settings_black_24dp"
-                android:background="?attr/selectableItemBackground"
-                android:padding="@dimen/navdrawer_action_layout_padding"
-                android:textAllCaps="false"/>
+            android:id="@+id/logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
+            android:drawablePadding="@dimen/navdrawer_action_text_margin"
+            android:padding="@dimen/navdrawer_action_layout_padding"
+            android:text="Logout"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
 
     </LinearLayout>
 
