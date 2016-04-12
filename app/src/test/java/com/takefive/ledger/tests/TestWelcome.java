@@ -57,6 +57,13 @@ public class TestWelcome {
             }
 
             @Override
+            public void afterLoginFailure() {
+                System.out.println("\n\nError detected. Successful.\n\n");
+                finished.set(true);
+                pPresenter[0].detachView();
+            }
+
+            @Override
             public void showAlert(int strId) {
                 System.out.println("\n\nError detected. Successful.\n\n");
                 finished.set(true);
@@ -72,6 +79,13 @@ public class TestWelcome {
         pPresenter[0] = presenter;
 
         presenter.ledgerLogin(null);
+        while(!finished.get()) {
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                ;
+            }
+        }
     }
 
 
