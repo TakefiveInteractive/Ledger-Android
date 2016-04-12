@@ -19,6 +19,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import io.realm.RealmQuery;
+import java8.util.stream.Collectors;
 import java8.util.stream.StreamSupport;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
@@ -81,7 +82,7 @@ public class NewBillPresenter implements IPresenter<INewBill> {
                     throw new IOException(msg);
                 }
                 return personResponse.body();
-            }).start()));
+            }).start()).collect(Collectors.toList()));
         }).uiConsume(callback
         ).start();
     }
