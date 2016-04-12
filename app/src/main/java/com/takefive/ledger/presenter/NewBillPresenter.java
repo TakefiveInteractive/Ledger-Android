@@ -18,6 +18,7 @@ import java.util.Objects;
 import javax.inject.Inject;
 
 import io.realm.RealmQuery;
+import java8.util.stream.StreamSupport;
 import retrofit2.Response;
 import zyu19.libs.action.chain.AbstractActionChain;
 import zyu19.libs.action.chain.ActionChain;
@@ -57,36 +58,29 @@ public class NewBillPresenter implements IPresenter<INewBill> {
     }
 
     public void loadBoardMembers(Consumer<List<RawPerson>> callback) {
-        chainFactory.get(fail -> fail.getCause().printStackTrace())
-                .netThen(() -> {
-                    Response<RawBoardSimple> response =
-                            service.getBoardByIdSimple(SessionStore.getDefault().activeBoardId).execute();
+        chainFactory.get(fail -> fail.getCause().printStackTrace()
+        ).netThen(() -> {
+            Response<RawBoardSimple> response =
+                    service.getBoardByIdSimple(SessionStore.getDefault().activeBoardId).execute();
 
-                    if (!response.isSuccessful()) {
-                        String msg = response.errorBody().string();
-                        response.errorBody().close();
-                        throw new IOException(msg);
-                    }
+            if (!response.isSuccessful()) {
+                String msg = response.errorBody().string();
+                response.errorBody().close();
+                throw new IOException(msg);
+            }
 
-                    List<ReadOnlyChain> c = new ArrayList<>();
-                    for (String member : response.body().members) {
-                        ReadOnlyChain roc = chainFactory.get(fail -> fail.getCause().printStackTrace())
-                                .netThen(() -> {
-                                    Response<RawPerson> personResponse = service.getPerson(member).execute();
-                                    if (!response.isSuccessful()) {
-                                        String msg = response.errorBody().string();
-                                        response.errorBody().close();
-                                        throw new IOException(msg);
-                                    }
-                                    return personResponse.body();
-                                })
-                                .start();
-                        c.add(roc);
-                    }
-
-                    return ActionChain.all(c);
-                })
-                .uiConsume(callback)
-                .start();
+            return ActionChain.all(StreamSupport.stream(response.body().members
+            ).map(member -> chainFactory.get(fail -> fail.getCause().printStackTrace()
+            ).netThen(() -> {
+                Response<RawPerson> personResponse = service.getPerson(member).execute();
+                if (!response.isSuccessful()) {
+                    String msg = response.errorBody().string();
+                    response.errorBody().close();
+                    throw new IOException(msg);
+                }
+                return personResponse.body();
+            }).start()));
+        }).uiConsume(callback
+        ).start();
     }
 }
