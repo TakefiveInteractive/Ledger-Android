@@ -181,7 +181,7 @@ public class CommonTasks {
                     if (person == null)
                         return ans;
                     ans.recipientAvatarUrl = person.getAvatarUrl();
-                    ans.recipientName = null; // this is not going to be used anyway.
+                    ans.recipientName = person.getName(); // this is not going to be used anyway.
                 } else {
                     if (person != null && person.getName() != null && person.getAvatarUrl() != null) {
                         ans.recipientName = person.getName();

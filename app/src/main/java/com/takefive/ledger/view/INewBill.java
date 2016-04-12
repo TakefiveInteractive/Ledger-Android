@@ -7,7 +7,6 @@ import com.takefive.ledger.IView;
  */
 public interface INewBill extends IView {
 
-    void nextSlide();
-    void prevSlide();
+    void doneAndClose();
 
 }

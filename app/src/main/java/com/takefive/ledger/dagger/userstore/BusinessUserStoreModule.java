@@ -3,6 +3,7 @@ package com.takefive.ledger.dagger.userstore;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.MainActivity;
 import com.takefive.ledger.view.MainNavFrag;
+import com.takefive.ledger.view.NewBillMembersFragment;
 import com.takefive.ledger.view.WelcomeActivity;
 
 import dagger.Module;
@@ -15,7 +16,7 @@ import dagger.Provides;
 @Module(
         complete = false,
         library = true,
-        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class}
+        injects = {WelcomeActivity.class, MainActivity.class, MainNavFrag.class, NewBillMembersFragment.class}
 )
 public class BusinessUserStoreModule {
 

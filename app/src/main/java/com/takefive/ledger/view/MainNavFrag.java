@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapButton;
@@ -31,6 +31,7 @@ import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.DotMark;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class MainNavFrag extends Fragment {
     @Bind(R.id.chosen_account_view)
     FrameLayout mSideImgLayout;
     @Bind(R.id.chosen_account_content_view)
-    RelativeLayout mSideImgContent;
+    LinearLayout mSideImgContent;
     @Bind(R.id.boardList)
     ListView mList;
     @Bind(R.id.newBoard)
@@ -75,8 +76,6 @@ public class MainNavFrag extends Fragment {
     @Inject
     ActionChainFactory chainFactory;
 
-    boolean isInitialized;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -93,8 +92,6 @@ public class MainNavFrag extends Fragment {
 
             Helpers.setMargins(mSideImgContent, Helpers.getStatusBarHeight(getResources()), null, null, null);
         }
-
-        isInitialized = false;
 
         // TODO: provide a graphical interface to refresh (That logic is ready, though)
 
@@ -152,9 +149,9 @@ public class MainNavFrag extends Fragment {
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mListAdapter = adapter;
-        if (!isInitialized) {
+        if (!SessionStore.getDefault().initialized) {
             onClickItem(0);
-            isInitialized = true;
+            SessionStore.getDefault().initialized = true;
         }
     }
 

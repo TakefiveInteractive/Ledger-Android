@@ -2,4 +2,19 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
       tools:context="com.takefive.ledger.view.NewBillActivity">
+
+    <item
+            android:id="@+id/action_prev_slide"
+            android:background="?selectableItemBackground"
+            android:title="Cancel"
+            android:textColor="@android:color/white"
+            app:showAsAction="always"/>
+
+    <item
+            android:id="@+id/action_next_slide"
+            android:background="?selectableItemBackground"
+            android:title="Submit"
+            android:textColor="@android:color/white"
+            app:showAsAction="always"/>
+
 </menu>

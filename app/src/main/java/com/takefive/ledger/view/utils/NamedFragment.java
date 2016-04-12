@@ -16,4 +16,5 @@ public class NamedFragment extends Fragment {
     public String getTitle() {
         return mTitle;
     }
+
 }

@@ -18,11 +18,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
+import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.midData.ledger.RawPerson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -36,20 +42,39 @@ public class NewBillMembersFragment extends DialogFragment {
     @Bind(R.id.newBillMembersView)
     RecyclerView mRecyclerView;
 
+    @Inject
+    UserStore userStore;
+
     private NewBillMembersAdapter adapter;
 
     private OnSelectionCompleteListener listener;
 
+    private List<String> selection;
+
+    public NewBillMembersFragment() {
+        this.selection = null;
+    }
+
+    public interface OnSelectionCompleteListener {
+        void onSelectionComplete(List<RawPerson> selection);
+    }
+
+    public void setSelection(List<String> selection) {
+        this.selection = selection;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ((MyApplication) getActivity().getApplication()).inject(this);
         View root = inflater.inflate(R.layout.fragment_new_bill_members, container, false);
         ButterKnife.bind(this, root);
 
-        adapter = new NewBillMembersAdapter(getContext(), new ArrayList<>());
+        adapter = new NewBillMembersAdapter(getContext(), new ArrayList<>(), selection);
         getDialog().setCanceledOnTouchOutside(true);
         ((NewBillActivity) getActivity()).presenter.loadBoardMembers((List<RawPerson> members) -> {
-            adapter = new NewBillMembersAdapter(getContext(), members);
+
+            adapter = new NewBillMembersAdapter(getContext(), members, selection);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
         });
@@ -63,7 +88,7 @@ public class NewBillMembersFragment extends DialogFragment {
 
     @OnClick(R.id.newBillMembersSubmit)
     public void onSubmit() {
-        listener.onSelectionComplete(adapter.mSelected);
+        listener.onSelectionComplete(adapter.getSelected());
         this.dismiss();
     }
 
@@ -84,15 +109,11 @@ public class NewBillMembersFragment extends DialogFragment {
         this.listener = listener;
     }
 
-    public interface OnSelectionCompleteListener {
-        void onSelectionComplete(List<RawPerson> selection);
-    }
-
     class NewBillMembersAdapter extends RecyclerView.Adapter<NewBillMembersAdapter.ViewHolder> {
 
         Context mContext;
         List<RawPerson> mInfoList;
-        List<RawPerson> mSelected;
+        Map<String, Integer> mSelected;
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -101,10 +122,14 @@ public class NewBillMembersFragment extends DialogFragment {
             return new ViewHolder(v);
         }
 
-        public NewBillMembersAdapter(Context context, List<RawPerson> infoList) {
+        public NewBillMembersAdapter(Context context, List<RawPerson> infoList, List<String> selected) {
             mContext = context;
             mInfoList = infoList;
-            mSelected = new ArrayList<>();
+            mSelected = new HashMap<>();
+
+            for (String selectionId : selected) {
+                mSelected.put(selectionId, -1);
+            }
         }
 
         @Override
@@ -114,12 +139,14 @@ public class NewBillMembersFragment extends DialogFragment {
                 return;
             holder.mName.setText(person.name);
             Picasso.with(mContext).load(person.avatarUrl).into(holder.mAvatar);
-
+            if (mSelected.containsKey(person._id))
+                mSelected.put(person._id, position);
+            holder.mCheck.setChecked(mSelected.containsKey(person._id));
             holder.mCheck.setOnCheckedChangeListener((v, isChecked) -> {
                 if (isChecked)
-                    mSelected.add(mInfoList.get(position));
+                    mSelected.put(person._id, position);
                 else
-                    mSelected.remove(mInfoList.get(position));
+                    mSelected.remove(person._id);
             });
             holder.mLayout.setOnClickListener(layout -> holder.mCheck.setChecked(!holder.mCheck.isChecked()));
         }
@@ -130,7 +157,11 @@ public class NewBillMembersFragment extends DialogFragment {
         }
 
         public List<RawPerson> getSelected() {
-            return mSelected;
+            List<RawPerson> retval = new ArrayList<>();
+            for (Integer index : mSelected.values()) {
+                retval.add(mInfoList.get(index));
+            }
+            return retval;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {

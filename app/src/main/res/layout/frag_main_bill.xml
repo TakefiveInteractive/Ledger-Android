@@ -19,7 +19,9 @@
                     android:id="@+id/billList"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    tools:layout="@layout/item_bill_list"/>
+                    tools:layout="@layout/item_bill_list"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="9sp"/>
 
             <ScrollView
                     android:id="@+id/billNone"

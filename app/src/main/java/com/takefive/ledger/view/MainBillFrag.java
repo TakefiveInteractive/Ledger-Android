@@ -2,8 +2,14 @@ package com.takefive.ledger.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +31,7 @@ import com.takefive.ledger.midData.ledger.RawBill;
 import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.RealmAccess;
+import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.ExtendedSwipeRefreshLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
@@ -39,10 +46,15 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import zyu19.libs.action.chain.ActionChainFactory;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * Created by zyu on 2/3/16.
  */
 public class MainBillFrag extends NamedFragment {
+
+    public static final int NEW_BILL_REQUEST = 0;
 
     @Bind(R.id.billList)
     ListView mList;
@@ -65,8 +77,6 @@ public class MainBillFrag extends NamedFragment {
 
     BillDetailFragment mBillDetail;
 
-    String currentBoardId = "";
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -87,7 +97,7 @@ public class MainBillFrag extends NamedFragment {
         mNew.attachToListView(mList);
 
         mSwipeLayout.setListView(mList);
-        mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(currentBoardId));
+        mSwipeLayout.setOnRefreshListener(() -> ((MainActivity) getActivity()).presenter.loadBills(SessionStore.getDefault().activeBoardId));
 
         return root;
     }
@@ -102,21 +112,38 @@ public class MainBillFrag extends NamedFragment {
         intent.putExtra("revealLocation", location);
         intent.putExtra("revealStartRadius", radius);
 
-        startActivity(intent);
+        startActivityForResult(intent, NEW_BILL_REQUEST);
     }
 
-    public String getCurrentBoardId() {
-        return currentBoardId;
-    }
-
-    public void setCurrentBoardId(String currentBoardId) {
-        this.currentBoardId = currentBoardId;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case NEW_BILL_REQUEST:
+                switch (resultCode) {
+                    case RESULT_OK:
+                        ((MainActivity) getActivity()).presenter.loadBills(SessionStore.getDefault().activeBoardId);
+                        mSwipeLayout.setRefreshing(true);
+                        break;
+                    case RESULT_CANCELED:
+                    default:
+                        break;
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+                break;
+        }
     }
 
     public void showBillsList(List<ShownBill> bills) {
         MainBillAdapter adapter = new MainBillAdapter(getContext(), bills);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+    }
+
+    public void startRefreshing() {
+        if (!mSwipeLayout.isRefreshing())
+            mSwipeLayout.setRefreshing(true);
     }
 
     public void stopRefreshing() {
@@ -141,29 +168,41 @@ public class MainBillFrag extends NamedFragment {
             RawBill rawBill = data.rawBill;
 
             BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
-            TextView whoPaid = ButterKnife.findById(convertView, R.id.payer);
-            TextView paidAmount = ButterKnife.findById(convertView, R.id.paidAmount);
-            TextView desc1 = ButterKnife.findById(convertView, R.id.desc1);
-            TextView desc2 = ButterKnife.findById(convertView, R.id.desc2);
-            AwesomeTextView desc2icon = ButterKnife.findById(convertView, R.id.desc2icon);
+            TextView summary = ButterKnife.findById(convertView, R.id.payerSummary);
+            TextView amount= ButterKnife.findById(convertView, R.id.amount);
+            TextView description = ButterKnife.findById(convertView, R.id.description);
             TextView time = ButterKnife.findById(convertView, R.id.time);
 
+            // Begin building string
+            StringBuilder builder = new StringBuilder();
             if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
-                whoPaid.setText("You paid:");
-                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
+                builder.append("<b>You</b>");
             } else {
-                whoPaid.setText(data.recipientName + "\npaid:");
-                if (data.recipientAvatarUrl != null)
-                    Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
+                builder.append("<b>" + data.recipientName + "</b>");
             }
+            builder.append(" paid for <b>" + rawBill.title + "</b>");
+            // Set String
+            summary.setText(Html.fromHtml(builder.toString()));
 
-            paidAmount.setText("$" + rawBill.getTotalAmount());
-            desc1.setText(rawBill.title);
+            // Set avatar
+            if (data.recipientAvatarUrl != null)
+                Picasso.with(getContext()).load(data.recipientAvatarUrl).fit().into(avatar);
 
-            desc2icon.setBootstrapText(new BootstrapText.Builder(getContext())
-                    .addFontAwesomeIcon(FontAwesome.FA_CREDIT_CARD).build());
-            desc2.setText(" " + rawBill.description);
+            // Set amount
+            amount.setText("$" + rawBill.getTotalAmount());
 
+            // Set description
+            if (rawBill.description != null && !rawBill.description.isEmpty()) {
+                SpannableStringBuilder descriptionBuilder = new SpannableStringBuilder(rawBill.description);
+                descriptionBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),
+                        0, descriptionBuilder.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                description.setVisibility(View.VISIBLE);
+                description.setText(descriptionBuilder.toString());
+            }
+            else
+                description.setVisibility(View.GONE);
+
+            // Set time
             try {
                 time.setText(Helpers.shortDate(DateFormat.SHORT, rawBill.getTime()));
             } catch (ParseException e) {

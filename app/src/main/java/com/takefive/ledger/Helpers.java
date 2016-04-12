@@ -3,12 +3,17 @@ package com.takefive.ledger;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Typeface;
 import android.os.StrictMode;
 import android.text.format.DateUtils;
+import android.text.style.StyleSpan;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.math.RoundingMode;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -27,6 +32,18 @@ import zyu19.libs.action.chain.config.ThreadPolicy;
  * Created by zyu on 1/30/16.
  */
 public class Helpers {
+
+    public static final StyleSpan SPAN_BOLD = new StyleSpan(Typeface.BOLD);
+    public static final StyleSpan SPAN_ITALIC = new StyleSpan(Typeface.ITALIC);
+    public static final StyleSpan SPAN_BOLD_ITALIC = new StyleSpan(Typeface.BOLD_ITALIC);
+
+    public static String currencyText(String s, Locale locale) {
+        return currencyText(Double.parseDouble(s), locale);
+    }
+
+    public static String currencyText(double amount, Locale locale) {
+        return NumberFormat.getCurrencyInstance(locale).format(amount);
+    }
 
     // This method does not rely on any injection, thus static.
     public static void setMargins(View v, Integer t, Integer b, Integer l, Integer r) {

@@ -79,8 +79,7 @@ public class NewBoardFragment extends DialogFragment {
             showAlert(getString(R.string.new_board_no_name));
             mBoardName.requestFocus();
             return;
-        }
-        else if (adapter.getSelected().size() == 0) {
+        } else if (adapter.getSelected().size() == 0) {
             showAlert(getString(R.string.new_board_no_friends_set));
             return;
         }
@@ -92,9 +91,8 @@ public class NewBoardFragment extends DialogFragment {
         ((MainActivity) getActivity()).presenter.createBoard(request, r -> {
             if (r.isSuccessful()) {
                 Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        getString(R.string.new_board_success), Snackbar.LENGTH_SHORT).show();
-            }
-            else {
+                        R.string.new_board_success, Snackbar.LENGTH_SHORT).show();
+            } else {
                 Log.e("create board", String.format("code: %d, response: %s", r.code(), r.errorBody().string()));
                 showAlert(getString(R.string.network_failure));
             }
@@ -114,66 +112,65 @@ public class NewBoardFragment extends DialogFragment {
         Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
-}
+    private class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHolder> {
 
-class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHolder> {
+        Context mContext;
+        List<FbUserInfo> mInfoList;
+        List<String> mSelected;
 
-    Context mContext;
-    List<FbUserInfo> mInfoList;
-    List<String> mSelected;
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.item_friends_list, parent, false);
+            return new ViewHolder(v);
+        }
 
-    @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_friends_list, parent, false);
-        return new ViewHolder(v);
-    }
+        public FriendsListAdapter(Context context, List<FbUserInfo> infoList) {
+            mContext = context;
+            mInfoList = infoList;
+            mSelected = new ArrayList<>();
+        }
 
-    public FriendsListAdapter(Context context, List<FbUserInfo> infoList) {
-        mContext = context;
-        mInfoList = infoList;
-        mSelected = new ArrayList<>();
-    }
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            FbUserInfo info = mInfoList.get(position);
+            if (info.id == null || info.avatarUrl == null || info.name == null)
+                return;
+            holder.mName.setText(mInfoList.get(position).name);
+            Picasso.with(mContext).load(info.avatarUrl).into(holder.mAvatar);
 
-    @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
-        FbUserInfo info = mInfoList.get(position);
-        if (info.id == null || info.avatarUrl == null || info.name == null)
-            return;
-        holder.mName.setText(mInfoList.get(position).name);
-        Picasso.with(mContext).load(info.avatarUrl).into(holder.mAvatar);
+            holder.mCheck.setOnCheckedChangeListener((v, isChecked) -> {
+                if (isChecked)
+                    mSelected.add(mInfoList.get(position).id);
+                else
+                    mSelected.remove(mInfoList.get(position).id);
+            });
+            holder.mLayout.setOnClickListener(layout -> holder.mCheck.setChecked(!holder.mCheck.isChecked()));
+        }
 
-        holder.mCheck.setOnCheckedChangeListener((v, isChecked) -> {
-            if (isChecked)
-                mSelected.add(mInfoList.get(position).id);
-            else
-                mSelected.remove(mInfoList.get(position).id);
-        });
-        holder.mLayout.setOnClickListener(layout -> holder.mCheck.setChecked(!holder.mCheck.isChecked()));
-    }
+        @Override
+        public int getItemCount() {
+            return mInfoList.size();
+        }
 
-    @Override
-    public int getItemCount() {
-        return mInfoList.size();
-    }
+        public List<String> getSelected() {
+            return mSelected;
+        }
 
-    public List<String> getSelected() {
-        return mSelected;
-    }
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            public View mLayout;
+            public CheckBox mCheck;
+            public ImageView mAvatar;
+            public TextView mName;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public View mLayout;
-        public CheckBox mCheck;
-        public ImageView mAvatar;
-        public TextView mName;
-
-        public ViewHolder(View layout) {
-            super(layout);
-            mLayout = layout;
-            mCheck = (CheckBox) mLayout.findViewById(R.id.friendSelect);
-            mAvatar = (ImageView) mLayout.findViewById(R.id.friendAvatar);
-            mName = (TextView) mLayout.findViewById(R.id.friendName);
+            public ViewHolder(View layout) {
+                super(layout);
+                mLayout = layout;
+                mCheck = (CheckBox) mLayout.findViewById(R.id.friendSelect);
+                mAvatar = (ImageView) mLayout.findViewById(R.id.friendAvatar);
+                mName = (TextView) mLayout.findViewById(R.id.friendName);
+            }
         }
     }
-}
 
+}

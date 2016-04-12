@@ -13,9 +13,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
-import com.facebook.FacebookSdk;
-import com.facebook.login.LoginManager;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
@@ -84,6 +83,35 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 balanceFrag.setTitle(getString(R.string.title_main_balance)));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
+        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        ((ListView) billFrag.getView().findViewById(R.id.billList))
+                                .setSelectionAfterHeaderView();
+                        break;
+                    case 1:
+                    default:
+                        break;
+                }
+            }
+        });
+    }
+
+    @Override
+    public void startRefreshing() {
+        billFrag.startRefreshing();
     }
 
     @Override
@@ -93,13 +121,12 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void setCurrentBoardId(String id) {
-        billFrag.setCurrentBoardId(id);
         SessionStore.getDefault().activeBoardId = id;
     }
 
     @Override
     public void setBoardTitle(String boardName) {
-        mToolbar.setTitle("Ledger - " + boardName);
+        mToolbar.setTitle(boardName);
         SessionStore.getDefault().activeBoardName = boardName;
     }
 
@@ -113,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public void showBillsList(List<ShownBill> bills) {
+        billFrag.stopRefreshing();
         billFrag.showBillsList(bills);
     }
 
@@ -137,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     public void closeDrawers() {
         mDrawerLayout.closeDrawers();
     }
+
 }
 
 class StaticPagerAdapter extends FragmentPagerAdapter {

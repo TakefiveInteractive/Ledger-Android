@@ -2,6 +2,7 @@ package com.takefive.ledger.presenter;
 
 import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.dagger.ILedgerService;
+import com.takefive.ledger.midData.ledger.NewBillRequest;
 import com.takefive.ledger.midData.ledger.RawBoard;
 import com.takefive.ledger.midData.ledger.RawBoardSimple;
 import com.takefive.ledger.midData.ledger.RawPerson;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 
 import io.realm.RealmQuery;
 import java8.util.stream.StreamSupport;
+import okhttp3.ResponseBody;
 import retrofit2.Response;
 import zyu19.libs.action.chain.AbstractActionChain;
 import zyu19.libs.action.chain.ActionChain;
@@ -82,5 +84,20 @@ public class NewBillPresenter implements IPresenter<INewBill> {
             }).start()));
         }).uiConsume(callback
         ).start();
+    }
+
+    public void createBill(NewBillRequest request) {
+        chainFactory.get(fail -> fail.getCause().printStackTrace())
+                .netThen(() -> {
+                    Response<ResponseBody> response = service.createBill(request).execute();
+                    if (!response.isSuccessful()) {
+                        String msg = response.errorBody().string();
+                        response.errorBody().close();
+                        throw new IOException(msg);
+                    }
+                    return null;
+                })
+                .uiConsume(r -> view.doneAndClose())
+                .start();
     }
 }

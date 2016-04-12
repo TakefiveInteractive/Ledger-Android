@@ -1,11 +1,26 @@
 package com.takefive.ledger.view.database;
 
 /**
- * Created by @tourbillon on 3/25/16.
+ * Application Session Storage
+ *
+ * This class stores the session state (since last time it is open).
+ * Must call {@code initialize} a user logs in.
+ *
+ * <bf>Note:</bf> User information is stored using Android's
+ * native persistent storage. See {@link com.takefive.ledger.dagger.UserStore}.
  */
 public class SessionStore {
 
     private static SessionStore instance = null;
+
+    // Whether the app has completed UI initialization
+    public boolean initialized;
+
+    // Currently active (displayed) board's ID
+    public String activeBoardId;
+
+    // Currently active (displayed) board's name
+    public String activeBoardName;
 
     public synchronized static SessionStore getDefault() {
         if (instance == null)
@@ -13,8 +28,16 @@ public class SessionStore {
         return instance;
     }
 
-    public boolean initialized = false;
-    public String activeBoardId = null;
-    public String activeBoardName = null;
+    public synchronized static SessionStore initialize() {
+        instance = new SessionStore();
+        return instance;
+    }
+
+    // Initialize all variables
+    private SessionStore() {
+        initialized = false;
+        activeBoardId = null;
+        activeBoardName = null;
+    }
 
 }

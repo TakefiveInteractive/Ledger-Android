@@ -2,11 +2,10 @@ package com.takefive.ledger.view;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,17 +16,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.animation.Animation;
-import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.midData.ledger.NewBillRequest;
+import com.takefive.ledger.midData.ledger.PersonAmountPair;
 import com.takefive.ledger.presenter.NewBillPresenter;
+import com.takefive.ledger.view.database.SessionStore;
+import com.takefive.ledger.view.utils.ConfirmableFragment;
+import com.takefive.ledger.view.utils.ControllableViewPager;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -35,23 +36,26 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NewBillActivity extends AppCompatActivity implements INewBill {
+public class NewBillActivity extends AppCompatActivity implements INewBill,
+        NewBillTitleFragment.OnConfirmListener,
+        NewBillAmountFragment.OnConfirmListener {
 
     @Bind(R.id.newBillContent)
     LinearLayout mContent;
     @Bind(R.id.newBillToolbar)
     Toolbar mToolbar;
     @Bind(R.id.newBillPager)
-    ViewPager mPager;
-    @Bind(R.id.newBillSubmit)
-    Button mNext;
-    @Bind(R.id.newBillCancel)
-    Button mCancel;
+    ControllableViewPager mPager;
+
+    MenuItem mNext;
+    MenuItem mCancel;
 
     @Inject
     NewBillPresenter presenter;
 
     boolean isAnimating;
+
+    NewBillRequest request;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +71,20 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
 
         isAnimating = false;
 
+        request = new NewBillRequest();
+        request.boardId = SessionStore.getDefault().activeBoardId;
+
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("New Bill");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(v -> close());
+        mToolbar.setNavigationOnClickListener(v -> close(false));
 
+        mPager.setSwipeEnabled(false);
         mPager.setAdapter(new NewBillPageAdapter(getSupportFragmentManager(),
+                new NewBillAmountFragment(),
                 new NewBillTitleFragment(),
-                new NewBillAmountFragment()));
+                new NewBillSubmitFragment()));
+        // Change action bar buttons when appropriate
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -91,8 +101,6 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
 
             }
         });
-
-        setupButtons(0);
 
         if (savedInstanceState == null) {
 
@@ -117,10 +125,15 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
     }
 
     private void setupButtons(int position) {
-        String nextText = position == mPager.getAdapter().getCount() - 1 ? "Submit" : "Next";
+        if (position == mPager.getAdapter().getCount() - 1) {
+            mCancel.setVisible(false);
+            mNext.setVisible(false);
+            return;
+        }
+        String nextText = position == mPager.getAdapter().getCount() - 2 ? "Submit" : "Next";
         String prevText = position == 0 ? "Cancel" : "Back";
-        mNext.setText(nextText);
-        mCancel.setText(prevText);
+        mNext.setTitle(nextText);
+        mCancel.setTitle(prevText);
     }
 
     private void expandCircle() {
@@ -145,7 +158,12 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
         anim.start();
     }
 
-    private void close() {
+    @Override
+    public void doneAndClose() {
+        nextSlide();
+    }
+
+    private void close(boolean successful) {
         if (isAnimating)
             return;
 
@@ -180,23 +198,34 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
                 isAnimating = false;
             }
         });
+        Intent intent = getIntent();
+        int resultCode = successful ? RESULT_OK : RESULT_CANCELED;
+        setResult(resultCode, intent);
         anim.start();
         overridePendingTransition(0, 0);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_new_bill, menu);
+        mCancel = menu.findItem(R.id.action_prev_slide);
+        mNext = menu.findItem(R.id.action_next_slide);
+
+        setupButtons(0);
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.action_next_slide:
+                nextSlide();
+                return true;
+            case R.id.action_prev_slide:
+                prevSlide();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -208,31 +237,32 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
     }
 
     private void submit() {
-        // TODO: Connect to server
+        presenter.createBill(request);
     }
 
-    @Override
-    @OnClick(R.id.newBillSubmit)
     public void nextSlide() {
         int currentItem = mPager.getCurrentItem();
-        if (currentItem != mPager.getAdapter().getCount() - 1) {
-            mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+        if (!((NewBillPageAdapter) mPager.getAdapter()).getItem(currentItem).confirm())
+            return;
+        if (currentItem < mPager.getAdapter().getCount() - 2) {
+            mPager.setCurrentItem(currentItem + 1);
+        }
+        else if (currentItem == mPager.getAdapter().getCount() - 2) {
+            mPager.setCurrentItem(currentItem + 1);
+            submit();
         }
         else {
-            submit();
-            close();
+            new Handler().postDelayed(() -> close(true), 1500);
         }
     }
 
-    @Override
-    @OnClick(R.id.newBillCancel)
     public void prevSlide() {
         int currentItem = mPager.getCurrentItem();
         if (currentItem != 0) {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
         else {
-            close();
+            close(false);
         }
     }
 
@@ -246,17 +276,33 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
+    @Override
+    public void onConfirmTitle(String title, String description) {
+        Log.d("NewBillActivity", "Title fragment confirmed with title " + title + " and description " + description);
+        request.title = title;
+        request.description = description;
+    }
+
+    @Override
+    public void onConfirmAmount(double total, Map<String, Double> amounts) {
+        Log.d("NewBillActivity", "Amount fragment confirmed");
+        request.amounts = new ArrayList<>();
+        for (Map.Entry<String, Double> entry : amounts.entrySet()) {
+            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue()));
+        }
+    }
+
     private class NewBillPageAdapter extends FragmentPagerAdapter {
 
-        Fragment[] mFragments;
+        ConfirmableFragment[] mFragments;
 
-        public NewBillPageAdapter(FragmentManager fm, Fragment... fragments) {
+        public NewBillPageAdapter(FragmentManager fm, ConfirmableFragment... fragments) {
             super(fm);
             mFragments = fragments;
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public ConfirmableFragment getItem(int position) {
             return mFragments[position];
         }
 
@@ -265,4 +311,5 @@ public class NewBillActivity extends AppCompatActivity implements INewBill {
             return mFragments.length;
         }
     }
+
 }

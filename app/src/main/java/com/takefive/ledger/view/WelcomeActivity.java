@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.presenter.WelcomePresenter;
+import com.takefive.ledger.view.database.SessionStore;
 
 import java.util.Arrays;
 
@@ -63,12 +65,13 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
             finish();
             return;
         }
-
         ((MyApplication) getApplication()).inject(this);
         presenter.attachView(this);
 
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
+
+        SessionStore.initialize();
 
         mFBCallbackManager = CallbackManager.Factory.create();
         LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
