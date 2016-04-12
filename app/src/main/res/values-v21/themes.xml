@@ -12,18 +12,6 @@
     </style>
 
 
-    <style name="MainTheme" parent="MyTheme">
-        <!-- <item name="android:navigationBarColor">#fff</item> -->
-    </style>
-    <style name="WelcomeTheme" parent="MyTheme">
-        <!-- <item name="android:navigationBarColor">#000</item> -->
-    </style>
-    <style name="NewBillTheme" parent="MyTheme">
-        <!-- <item name="android:navigationBarColor">#000</item> -->
-        <item name="actionMenuTextColor">@android:color/white</item>
-        <item name="android:actionMenuTextColor">@android:color/white</item>
-    </style>
-
     <style name="Theme.AppCompat.Translucent">
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>

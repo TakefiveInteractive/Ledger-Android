@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#fff</item> -->
+    </style>
+    <style name="WelcomeTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#000</item> -->
+        <item name="android:windowFullscreen">false</item>
+    </style>
+    <style name="NewBillTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#000</item> -->
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+    </style>
+
+</resources>
