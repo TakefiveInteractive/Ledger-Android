@@ -10,6 +10,14 @@
     <style name="NewBillTheme" parent="MyTheme">
         <item name="actionMenuTextColor">@android:color/white</item>
         <item name="android:actionMenuTextColor">@android:color/white</item>
+
+        <!-- transparent, so that reveal animation looks much better -->
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+
+        <!-- prevent Android default animations to bother with our reveal animations -->
+        <item name="android:windowAnimationStyle">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
     </style>
     <style name="MyDialogTheme">
         <item name="android:windowIsFloating">true</item>

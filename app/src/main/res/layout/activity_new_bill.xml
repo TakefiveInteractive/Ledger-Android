@@ -1,33 +1,34 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                tools:context="com.takefive.ledger.view.NewBillActivity"
-                android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:context="com.takefive.ledger.view.NewBillActivity">
 
     <LinearLayout
-            android:id="@+id/newBillContent"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:background="@color/colorPrimary"
-            android:orientation="vertical">
+        android:id="@+id/newBillContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary"
+        android:orientation="vertical">
 
         <android.support.v7.widget.Toolbar
-                android:fitsSystemWindows="true"
-                app:layout_scrollFlags="scroll|enterAlways"
-                android:id="@+id/newBillToolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:title="New Bill"
-                android:focusable="true"/>
+            android:id="@+id/newBillToolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:fitsSystemWindows="true"
+            android:focusable="true"
+            android:title="New Bill"
+            app:layout_scrollFlags="scroll|enterAlways" />
 
         <com.takefive.ledger.view.utils.ControllableViewPager
-                android:id="@+id/newBillPager"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"/>
+            android:id="@+id/newBillPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
 
     </LinearLayout>
 

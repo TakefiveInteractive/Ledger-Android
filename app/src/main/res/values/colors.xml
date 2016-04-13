@@ -31,6 +31,8 @@
     <color name="section_title">#40bbd5</color>
     <color name="vertical_divider">#E3E3E3</color>
 
+    <color name="grey_backgroud">#EAEAEA</color>
+
 
     <color name="myDialogBackground">#ffaaffaa</color>
 </resources>

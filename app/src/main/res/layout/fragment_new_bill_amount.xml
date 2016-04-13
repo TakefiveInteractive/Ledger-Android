@@ -5,7 +5,7 @@
              tools:context="com.takefive.ledger.view.NewBillAmountFragment"
              android:padding="@dimen/general_padding"
              android:orientation="vertical"
-             android:background="@android:color/white"
+             android:background="@color/grey_backgroud"
              android:gravity="center">
 
     <TextView
