@@ -2,6 +2,7 @@ package com.takefive.ledger.view;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -18,6 +19,7 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
+import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.NewBillRequest;
@@ -188,8 +190,15 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         int resultCode = successful ? RESULT_OK : RESULT_CANCELED;
         setResult(resultCode, intent);
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Point screen = new Point();
+            getWindowManager().getDefaultDisplay().getSize(screen);
+            int screenMaxRadius;
+            if(screen.x > screen.y)
+                screenMaxRadius = screen.x / 2;
+            else screenMaxRadius = screen.y / 2;
+
             Animator anim = ViewAnimationUtils.createCircularReveal(
-                    findViewById(android.R.id.content), location[0], location[1], 2000, 0);
+                    findViewById(android.R.id.content), location[0], location[1], screenMaxRadius, 0);
             anim.setDuration(550);
             anim.addListener(new Animator.AnimatorListener() {
                 @Override
