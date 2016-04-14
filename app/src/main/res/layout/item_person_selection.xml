@@ -21,7 +21,7 @@
             android:layout_weight=".5"
             android:background="?selectableItemBackground"
             android:drawableStart="@drawable/ic_add_black_24dp"
-            android:text="Add New"
+            android:text="Recipient"
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="@dimen/general_text_size" />
@@ -64,6 +64,7 @@
 
         <com.beardedhen.androidbootstrap.AwesomeTextView
             xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/autoSplit"
             android:paddingLeft="@dimen/general_padding"
             android:paddingRight="@dimen/general_padding"
             android:layout_width="wrap_content"

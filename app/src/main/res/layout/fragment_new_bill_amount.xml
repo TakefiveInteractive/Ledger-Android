@@ -15,7 +15,7 @@
             android:textSize="@dimen/header_text_size"
             android:textColor="@android:color/black"
             android:gravity="center_horizontal"
-            android:layout_marginTop="80dp"/>
+            android:layout_marginTop="@dimen/noticable_padding"/>
 
     <com.takefive.ledger.view.utils.MoneyEdit
             android:id="@+id/newBillAmount"
@@ -23,18 +23,10 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/general_text_size"
             android:textColor="@android:color/black"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="@dimen/noticable_padding"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:textAlignment="center"/>
-
-    <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="to"
-            android:textSize="@dimen/general_text_size"
-            android:textColor="@android:color/black"
-            android:layout_marginTop="@dimen/general_margin"/>
 
     <android.support.v7.widget.RecyclerView
             android:id="@+id/newBillMembersRecyclerView"
