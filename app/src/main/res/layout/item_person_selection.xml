@@ -1,75 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="@dimen/noticable_padding"
-              android:orientation="horizontal">
+    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/noticable_padding">
 
     <LinearLayout
-            android:id="@+id/personEmptyLayout"
-            android:layout_width="match_parent"
+        android:id="@+id/personEmptyLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:visibility="gone">
+
+        <Button
+            android:id="@+id/personAdd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:background="?selectableItemBackground"
+            android:drawableStart="@drawable/ic_add_black_24dp"
+            android:text="Add New"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/general_text_size" />
+
+        <Button
+            android:id="@+id/personReset"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-        <Button
-                android:id="@+id/personAdd"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight=".5"
-                android:text="Add New"
-                android:drawableStart="@drawable/ic_add_black_24dp"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/general_text_size"
-                android:background="?selectableItemBackground"
-                android:textAlignment="center"/>
-
-        <Button
-                android:id="@+id/personReset"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="Reset"
-                android:textColor="@color/colorPrimary"
-                android:textSize="@dimen/general_text_size"
-                android:background="?selectableItemBackground"
-                android:drawableStart="@drawable/ic_refresh_white_24dp"
-                android:layout_weight=".5"
-                android:textAlignment="center"/>
+            android:layout_weight=".5"
+            android:background="?selectableItemBackground"
+            android:drawableStart="@drawable/ic_refresh_white_24dp"
+            android:text="Reset"
+            android:textAlignment="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="@dimen/general_text_size" />
 
     </LinearLayout>
 
     <LinearLayout
-            android:id="@+id/personContentLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+        android:id="@+id/personContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
 
         <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-                android:id="@+id/personAvatar"
-                android:layout_height="30dp"
-                android:layout_width="30dp"
-                android:src="@drawable/person_image_empty"
-                bootstrap:hasBorder="false"/>
+            android:id="@+id/personAvatar"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/person_image_empty"
+            bootstrap:hasBorder="false" />
 
         <TextView
-                android:id="@+id/personName"
-                android:layout_height="match_parent"
-                android:layout_width="0dp"
-                android:layout_marginLeft="10dp"
-                android:layout_weight=".5"
-                android:textSize="@dimen/general_text_size"/>
+            android:id="@+id/personName"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight=".5"
+            android:textSize="@dimen/general_text_size" />
+
+        <com.beardedhen.androidbootstrap.AwesomeTextView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:paddingLeft="@dimen/general_padding"
+            android:paddingRight="@dimen/general_padding"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/general_text_size"
+            android:textColor="@android:color/black"
+            android:background="?attr/selectableItemBackground"
+            app:fontAwesomeIcon="fa_magic" />
 
         <com.takefive.ledger.view.utils.MoneyEdit
-                android:id="@+id/personAmount"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/general_text_size"
-                android:textColor="@android:color/black"
-                android:layout_marginLeft="10dp"
-                android:layout_weight=".5"/>
+            android:id="@+id/personAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:paddingLeft="@dimen/general_padding"
+            android:paddingRight="@dimen/general_padding"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/general_text_size" />
 
     </LinearLayout>
 </LinearLayout>
