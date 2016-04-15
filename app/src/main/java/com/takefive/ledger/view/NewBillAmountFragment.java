@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.R;
@@ -118,7 +119,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
     @Override
     public void updateAmountForPerson(String id, Money amount) {
-        ((MoneyEdit)adapter.getPersonHandle(id).findViewById(R.id.personAmount)).setText(amount.toString());
+        adapter.getPersonAmountEdit(id).setText(amount.toString());
     }
 
     @Override
@@ -144,9 +145,9 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         private Context mContext;
         private List<RawPerson> mInfoList;
-        private HashMap<String, View> idToItemView = new HashMap<>();
+        private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
 
-        public View getPersonHandle(String byId) {
+        public MoneyEdit getPersonAmountEdit(String byId) {
             if(!idToItemView.containsKey(byId))
                 return null;
             return idToItemView.get(byId);
@@ -197,15 +198,29 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
             } else {
                 --position;
                 RawPerson person = mInfoList.get(position);
-                holder.mAmount.setOnAmountChangeListener(amount -> {
+                final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
-                });
+                };
+                holder.mAmount.setOnAmountChangeListener(amountChangeListener);
                 holder.mName.setText(person.name);
                 Picasso.with(mContext).load(person.avatarUrl).into(holder.mAvatar);
                 holder.emptyLayout.setVisibility(View.GONE);
                 holder.contentLayout.setVisibility(View.VISIBLE);
+                holder.mAutoSplit.setOnClickListener(v -> {
+                    synchronized (adapter) {
+                        if(holder.mAmount.isEnabled()) {
+                            holder.mAmount.setEnabled(false);
+                            holder.mAmount.setOnAmountChangeListener(null);
+                            presenter.enableAutomaticAmountFor(person._id);
+                        } else {
+                            holder.mAmount.setEnabled(true);
+                            presenter.disableAutomaticAmountFor(person._id);
+                            holder.mAmount.setOnAmountChangeListener(amountChangeListener);
+                        }
+                    }
+                });
 
-                idToItemView.put(person._id, holder.itemView);
+                idToItemView.put(person._id, holder.mAmount);
             }
         }
 
@@ -224,6 +239,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
             View contentLayout;
             Button mNewPerson;
             Button mReset;
+            AwesomeTextView mAutoSplit;
             BootstrapCircleThumbnail mAvatar;
             TextView mName;
             MoneyEdit mAmount;
@@ -237,6 +253,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 mAvatar = (BootstrapCircleThumbnail) itemView.findViewById(R.id.personAvatar);
                 mName = (TextView) itemView.findViewById(R.id.personName);
                 mAmount = (MoneyEdit) itemView.findViewById(R.id.personAmount);
+                mAutoSplit = ButterKnife.findById(itemView, R.id.autoSplit);
             }
 
         }

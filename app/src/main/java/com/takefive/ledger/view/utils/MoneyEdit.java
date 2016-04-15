@@ -63,7 +63,7 @@ public class MoneyEdit extends EditText {
         parsingText = false;
         format = NumberFormat.getCurrencyInstance(getTextLocale());
         format.setRoundingMode(RoundingMode.DOWN);
-        listener = amount -> {};
+        listener = null;
         setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
         setRawInputType(Configuration.KEYBOARD_QWERTY);
         addTextChangedListener(new MoneyFormatListener());
@@ -105,7 +105,8 @@ public class MoneyEdit extends EditText {
         public void afterTextChanged(Editable s) {
             if (parsingText) {
                 parsingText = false;
-                listener.onAmountChange(getAmount());
+                if(listener != null)
+                    listener.onAmountChange(getAmount());
                 return;
             }
 
