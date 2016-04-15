@@ -72,6 +72,7 @@
             android:textSize="@dimen/general_text_size"
             android:textColor="@android:color/black"
             android:background="?attr/selectableItemBackground"
+            app:bootstrapBrand="regular"
             app:fontAwesomeIcon="fa_magic" />
 
         <com.takefive.ledger.view.utils.MoneyEdit

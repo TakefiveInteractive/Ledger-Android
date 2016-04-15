@@ -15,6 +15,8 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
+import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
+import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.R;
 import com.takefive.ledger.midData.Money;
@@ -210,6 +212,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     synchronized (adapter) {
                         if(holder.mAmount.isEnabled()) {
                             // the order of function calls are important
+                            holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
                             holder.mAmount.setEnabled(false);
                             holder.mAmount.setOnAmountChangeListener(null);
                             presenter.enableAutomaticAmountFor(person._id);
@@ -218,6 +221,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                             presenter.disableAutomaticAmountFor(person._id);
                             holder.mAmount.setOnAmountChangeListener(amountChangeListener);
                             holder.mAmount.setEnabled(true);
+                            holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
                         }
                     }
                 });
