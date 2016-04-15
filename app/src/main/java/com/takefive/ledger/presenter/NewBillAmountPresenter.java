@@ -101,15 +101,19 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
     }
 
     // Use a string rather than list position as id. Safer.
-    // After disabling, the automatically assigned amount will NOT disappear
-    synchronized public void disableAutomaticAmountFor(String id) {
+    // if transformToHandInput = true: After disabling, the automatically assigned amount will NOT disappear
+    // otherwise: the data will be cleared and no record for this person is left,
+    //   In this case, view will not be called, because the data has become undefined.
+    synchronized public void disableAutomaticAmountFor(String id, boolean transformToHandInput) {
         if (!autoSplit.containsKey(id))
             return;
 
-        Money hisShare = autoSplit.get(id);
-        hisShare = hisShare == null ? zero : hisShare;
-        handInput.put(id, hisShare);
-        view.updateAmountForPerson(id, hisShare);
+        if(transformToHandInput) {
+            Money hisShare = autoSplit.get(id);
+            hisShare = hisShare == null ? zero : hisShare;
+            handInput.put(id, hisShare);
+            view.updateAmountForPerson(id, hisShare);
+        }
 
         autoSplit.remove(id);
         update();
@@ -120,6 +124,22 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
         ans.putAll(handInput);
         ans.putAll(autoSplit);
         return ans;
+    }
+
+    // re-enable disabled data.
+    synchronized public void reattachData(String id) {
+        ;
+    }
+
+    // Temporarily disable data
+    synchronized public void detachData(String id) {
+        ;
+    }
+
+    synchronized public String debugString() {
+        return "# auto pay = " + autoSplit.size()
+                + "\n # hand input = " + handInput.size()
+                + "\n total of hand input = " + getTotalOfHandInput().toString();
     }
 
     //----------- helpers ------------

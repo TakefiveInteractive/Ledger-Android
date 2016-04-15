@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
-import com.beardedhen.androidbootstrap.api.attributes.BootstrapBrand;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.R;
@@ -102,8 +102,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         super.onAttach(context);
         try {
             listener = (OnConfirmListener) context;
-        }
-        catch (ClassCastException e) {
+        } catch (ClassCastException e) {
             e.printStackTrace();
         }
     }
@@ -150,7 +149,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
 
         public MoneyEdit getPersonAmountEdit(String byId) {
-            if(!idToItemView.containsKey(byId))
+            if (!idToItemView.containsKey(byId))
                 return null;
             return idToItemView.get(byId);
         }
@@ -176,7 +175,6 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     fragment.setSelection(StreamSupport.stream(mInfoList
                     ).map(person -> person._id).collect(Collectors.toList()));
                     fragment.setOnSelectionCompleteListener(selection -> {
-                        presenter.clearExceptTotalAmount();
                         mInfoList = selection;
                         notifyDataSetChanged();
                     });
@@ -190,6 +188,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
                 };
+                holder.mPersonId = person._id;
                 holder.mAmount.setOnAmountChangeListener(amountChangeListener);
                 holder.mName.setText(person.name);
                 Picasso.with(mContext).load(person.avatarUrl).into(holder.mAvatar);
@@ -197,7 +196,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 holder.contentLayout.setVisibility(View.VISIBLE);
                 holder.mAutoSplit.setOnClickListener(v -> {
                     synchronized (adapter) {
-                        if(holder.mAmount.isEnabled()) {
+                        if (holder.mAmount.isEnabled()) {
                             // the order of function calls are important
                             holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
                             holder.mAmount.setEnabled(false);
@@ -205,7 +204,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                             presenter.enableAutomaticAmountFor(person._id);
                         } else {
                             // the order of function calls are important
-                            presenter.disableAutomaticAmountFor(person._id);
+                            presenter.disableAutomaticAmountFor(person._id, true);
                             holder.mAmount.setOnAmountChangeListener(amountChangeListener);
                             holder.mAmount.setEnabled(true);
                             holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
@@ -219,6 +218,42 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         public List<RawPerson> getSelection() {
             return mInfoList;
+        }
+
+        @Override
+        public void onViewAttachedToWindow(ViewHolder holder) {
+            Log.d("NewBillRecycle", "Attach " + holder.mName.getText() + " with id " + holder.mPersonId);
+            MoneyEdit edit = holder.mAmount;
+            String personId = holder.mPersonId;
+            Log.d("NewBillRecycle", "isEnabled = " + edit.isEnabled());
+            if(edit.isEnabled())
+                presenter.inputAmountForPerson(personId, edit.getAmount());
+            else presenter.enableAutomaticAmountFor(personId);
+            Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
+            super.onViewAttachedToWindow(holder);
+        }
+
+        @Override
+        public void onViewDetachedFromWindow(ViewHolder holder) {
+            Log.d("NewBillRecycle", "Detach " + holder.mName.getText() + " with id " + holder.mPersonId);
+            MoneyEdit edit = holder.mAmount;
+            String personId = holder.mPersonId;
+            Log.d("NewBillRecycle", "isEnabled = " + edit.isEnabled());
+            if(edit.isEnabled())
+                presenter.inputAmountForPerson(personId, zero);
+            else presenter.disableAutomaticAmountFor(personId, false);
+            Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
+            super.onViewDetachedFromWindow(holder);
+        }
+
+        @Override
+        public boolean onFailedToRecycleView(ViewHolder holder) {
+            return super.onFailedToRecycleView(holder);
+        }
+
+        @Override
+        public void onViewRecycled(ViewHolder holder) {
+            super.onViewRecycled(holder);
         }
 
         @Override
@@ -236,9 +271,11 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
             BootstrapCircleThumbnail mAvatar;
             TextView mName;
             MoneyEdit mAmount;
+            String mPersonId;
 
             public ViewHolder(View itemView) {
                 super(itemView);
+                this.mPersonId = null;
                 emptyLayout = itemView.findViewById(R.id.personEmptyLayout);
                 contentLayout = itemView.findViewById(R.id.personContentLayout);
                 mNewPerson = (Button) itemView.findViewById(R.id.personAdd);
@@ -248,6 +285,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 mAmount = (MoneyEdit) itemView.findViewById(R.id.personAmount);
                 mAutoSplit = ButterKnife.findById(itemView, R.id.autoSplit);
             }
+
 
         }
 

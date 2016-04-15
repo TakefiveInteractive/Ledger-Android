@@ -80,10 +80,6 @@ public class Money {
         builder.append('.');
         builder.append(value % powered);
 
-        Log.d("Money", "Default Fraction Digits === " + type.getDefaultFractionDigits());
-        Log.d("Money", "int part == " + value/powered);
-        Log.d("Money", "frac part == " + value%powered);
-
         return Helpers.currencyText(builder.toString(), locale);
     }
 
