@@ -176,22 +176,9 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     fragment.setSelection(StreamSupport.stream(mInfoList
                     ).map(person -> person._id).collect(Collectors.toList()));
                     fragment.setOnSelectionCompleteListener(selection -> {
-                        /*
-                        Map<String, Double> newAmounts = new HashMap<>();
-                        collected = 0;
-                        for (RawPerson person : selection) {
-                            newAmounts.put(person._id, 0.0);
-                            if (amounts.containsKey(person._id)) {
-                                double value = amounts.get(person._id);
-                                newAmounts.put(person._id, value);
-                                collected += value;
-                            }
-                        }
-                        amounts = newAmounts;
-                        */
+                        presenter.clearExceptTotalAmount();
                         mInfoList = selection;
                         notifyDataSetChanged();
-                        // calculateAndSetAmountLeft();
                     });
                     fragment.show(getFragmentManager(), "fragment_new_bill_members");
                 });

@@ -69,6 +69,12 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
         update();
     }
 
+    synchronized public void clearExceptTotalAmount() {
+        handInput.clear();
+        autoSplit.clear();
+        update();
+    }
+
     private void update() {
         Money remainingAmount = totalAmount.minus(getTotalOfHandInput());
 
