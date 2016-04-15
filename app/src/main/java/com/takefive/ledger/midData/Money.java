@@ -1,5 +1,7 @@
 package com.takefive.ledger.midData;
 
+import com.takefive.ledger.Helpers;
+
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Collection;
@@ -58,7 +60,20 @@ public class Money {
 
     @Override
     public String toString() {
-        return formatter.format(value.longValue());
+        boolean negative = value < 0;
+        long value = negative ? -this.value : this.value;
+
+        int powered = 1;
+        for(int i=0; i<type.getDefaultFractionDigits(); i++)
+            powered = powered * 10;
+
+        StringBuilder builder = new StringBuilder();
+        if(negative)
+            builder.append('-');
+        builder.append(value / powered);
+        builder.append('.');
+        builder.append(value % powered);
+        return Helpers.currencyText(builder.toString(), locale);
     }
 
     public <K> Map<K, Money> fairSplit(Collection<K> keys) {
