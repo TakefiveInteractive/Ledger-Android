@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.midData.Money;
 import com.takefive.ledger.midData.ledger.NewBillRequest;
 import com.takefive.ledger.midData.ledger.PersonAmountPair;
 import com.takefive.ledger.presenter.NewBillPresenter;
@@ -310,10 +311,10 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
     }
 
     @Override
-    public void onConfirmAmount(double total, Map<String, Double> amounts) {
+    public void onConfirmAmount(Money total, Map<String, Money> amounts) {
         Log.d("NewBillActivity", "Amount fragment confirmed");
         request.amounts = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : amounts.entrySet()) {
+        for (Map.Entry<String, Money> entry : amounts.entrySet()) {
             request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue()));
         }
     }

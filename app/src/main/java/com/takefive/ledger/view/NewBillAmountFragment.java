@@ -3,6 +3,7 @@ package com.takefive.ledger.view;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,34 +11,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.squareup.picasso.Picasso;
-import com.takefive.ledger.Helpers;
 import com.takefive.ledger.R;
+import com.takefive.ledger.midData.Money;
 import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.presenter.NewBillAmountPresenter;
 import com.takefive.ledger.view.utils.ConfirmableFragment;
 import com.takefive.ledger.view.utils.MoneyEdit;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class NewBillAmountFragment extends ConfirmableFragment {
+public class NewBillAmountFragment extends ConfirmableFragment implements INewBillAmountView {
 
     @Bind(R.id.newBillAmount)
-    MoneyEdit mAmount;
+    MoneyEdit mTotalAmount;
     @Bind(R.id.newBillMembersRecyclerView)
     RecyclerView mRecyclerView;
     @Bind(R.id.newBillAmountLeft)
@@ -45,11 +47,13 @@ public class NewBillAmountFragment extends ConfirmableFragment {
 
     private MembersSelectionAdapter adapter;
 
-    private Map<String, Double> amounts;
+    private Money zero;
 
-    private double total, collected;
+    private Locale locale;
 
     OnConfirmListener listener;
+
+    NewBillAmountPresenter presenter = null;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -57,25 +61,33 @@ public class NewBillAmountFragment extends ConfirmableFragment {
         View root = inflater.inflate(R.layout.fragment_new_bill_amount, container, false);
         ButterKnife.bind(this, root);
 
-        amounts = new HashMap<>();
-        total = 0;
-        collected = 0;
-        mAmount.setOnAmountChangeListener(amount -> {
-            total = amount;
-            calculateAndSetAmountLeft();
-        });
+        locale = getResources().getConfiguration().locale;
+        zero = new Money(locale, 0);
+        presenter = new NewBillAmountPresenter(locale);
+
+        mTotalAmount.setOnAmountChangeListener(presenter::setTotalAmount);
         adapter = new MembersSelectionAdapter(getContext(), new ArrayList<>());
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mRecyclerView.setAdapter(adapter);
 
-        calculateAndSetAmountLeft();
+        // Initialize all texts
+        presenter.attachView(this);
+        presenter.setTotalAmount(zero);
 
         return root;
     }
 
-    private void calculateAndSetAmountLeft() {
-        mAmountLeft.setText(Helpers.currencyText(total - collected, getResources().getConfiguration().locale));
+    @Override
+    public void onStart() {
+        presenter.attachView(this);
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        presenter.detachView();
+        super.onStop();
     }
 
     public List<RawPerson> getSelection() {
@@ -95,22 +107,51 @@ public class NewBillAmountFragment extends ConfirmableFragment {
 
     @Override
     public boolean confirm() {
-        if (total - collected != 0)
+        if (!presenter.canConfirm())
             return false;
-        if (mAmount.getText().length() == 0 || adapter.getSelection().size() == 0 || amounts.size() == 0)
+        Map<String, Money> amounts = presenter.getAssignments();
+        if (mTotalAmount.getText().length() == 0 || adapter.getSelection().size() == 0 || amounts.size() == 0)
             return false;
-        listener.onConfirmAmount(mAmount.getAmount(), amounts);
+        listener.onConfirmAmount(mTotalAmount.getAmount(), amounts);
         return true;
     }
 
+    @Override
+    public void updateAmountForPerson(String id, Money amount) {
+        ((MoneyEdit)adapter.getPersonHandle(id).findViewById(R.id.personAmount)).setText(amount.toString());
+    }
+
+    @Override
+    public void updateRemainingAmount(Money amount) {
+        mAmountLeft.setText(amount.toString());
+    }
+
+    @Override
+    public void showAlert(String str) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), str, Snackbar.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void showAlert(int strId) {
+        Snackbar.make(getActivity().findViewById(android.R.id.content), strId, Snackbar.LENGTH_SHORT).show();
+    }
+
     public interface OnConfirmListener {
-        void onConfirmAmount(double total, Map<String, Double> amounts);
+        void onConfirmAmount(Money total, Map<String, Money> amounts);
     }
 
     private class MembersSelectionAdapter extends RecyclerView.Adapter<MembersSelectionAdapter.ViewHolder> {
 
         private Context mContext;
         private List<RawPerson> mInfoList;
+        private HashMap<String, View> idToItemView = new HashMap<>();
+
+        public View getPersonHandle(String byId) {
+            if(!idToItemView.containsKey(byId))
+                return null;
+            return idToItemView.get(byId);
+        }
+
 
         public MembersSelectionAdapter(Context context, List<RawPerson> infoList) {
             mContext = context;
@@ -129,8 +170,10 @@ public class NewBillAmountFragment extends ConfirmableFragment {
             if (position == 0) {
                 holder.mNewPerson.setOnClickListener(v -> {
                     NewBillMembersFragment fragment = new NewBillMembersFragment();
-                    fragment.setSelection(new ArrayList<>(amounts.keySet()));
+                    fragment.setSelection(StreamSupport.stream(mInfoList
+                    ).map(person -> person._id).collect(Collectors.toList()));
                     fragment.setOnSelectionCompleteListener(selection -> {
+                        /*
                         Map<String, Double> newAmounts = new HashMap<>();
                         collected = 0;
                         for (RawPerson person : selection) {
@@ -142,9 +185,10 @@ public class NewBillAmountFragment extends ConfirmableFragment {
                             }
                         }
                         amounts = newAmounts;
+                        */
                         mInfoList = selection;
                         notifyDataSetChanged();
-                        calculateAndSetAmountLeft();
+                        // calculateAndSetAmountLeft();
                     });
                     fragment.show(getFragmentManager(), "fragment_new_bill_members");
                 });
@@ -154,17 +198,14 @@ public class NewBillAmountFragment extends ConfirmableFragment {
                 --position;
                 RawPerson person = mInfoList.get(position);
                 holder.mAmount.setOnAmountChangeListener(amount -> {
-                    if (amounts.containsKey(person._id))
-                        collected += amount - amounts.get(person._id);
-                    else
-                        collected += amount;
-                    amounts.put(person._id, amount);
-                    calculateAndSetAmountLeft();
+                    presenter.inputAmountForPerson(person._id, amount);
                 });
                 holder.mName.setText(person.name);
                 Picasso.with(mContext).load(person.avatarUrl).into(holder.mAvatar);
                 holder.emptyLayout.setVisibility(View.GONE);
                 holder.contentLayout.setVisibility(View.VISIBLE);
+
+                idToItemView.put(person._id, holder.itemView);
             }
         }
 

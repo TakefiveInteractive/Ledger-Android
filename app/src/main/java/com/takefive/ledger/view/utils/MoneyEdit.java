@@ -11,10 +11,12 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.takefive.ledger.Helpers;
+import com.takefive.ledger.midData.Money;
 
 import java.math.RoundingMode;
 import java.text.NumberFormat;
 import java.util.Currency;
+import java.util.Locale;
 
 /**
  * Created by @tourbillon on 4/3/16.
@@ -27,19 +29,34 @@ public class MoneyEdit extends EditText {
 
     private NumberFormat format;
 
+    final private Locale locale;
+
+    final private Currency currency;
+
+    final private Money zero;
+
     public MoneyEdit(Context context) {
         super(context);
         init();
+        locale = context.getResources().getConfiguration().locale;
+        currency = Currency.getInstance(locale);
+        zero = new Money(locale, 0);
     }
 
     public MoneyEdit(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
+        locale = context.getResources().getConfiguration().locale;
+        currency = Currency.getInstance(locale);
+        zero = new Money(locale, 0);
     }
 
     public MoneyEdit(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+        locale = context.getResources().getConfiguration().locale;
+        currency = Currency.getInstance(locale);
+        zero = new Money(locale, 0);
     }
 
     private void init() {
@@ -59,12 +76,13 @@ public class MoneyEdit extends EditText {
         setSelection(getText().length());
     }
 
-    public double getAmount() {
+    public Money getAmount() {
         try {
-            return Double.valueOf(getText().toString().replaceAll("[^\\d.]", ""));
+            Money ans = new Money(locale, getText().toString());
+            return ans;
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
+            return zero;
         }
     }
 
@@ -118,7 +136,7 @@ public class MoneyEdit extends EditText {
     }
 
     public interface OnAmountChangeListener {
-        void onAmountChange(double amount);
+        void onAmountChange(Money amount);
     }
 
 }
