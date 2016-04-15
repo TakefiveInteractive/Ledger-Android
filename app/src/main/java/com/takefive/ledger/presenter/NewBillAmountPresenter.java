@@ -46,9 +46,16 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
 
     // can user press confirm button?
     synchronized public boolean canConfirm() {
-        if(autoSplit.size() > 0)
+        if (autoSplit.size() > 0) {
+            for (Money m : autoSplit.values())
+                if (m == null || m.isNegative())
+                    return false;
+            for (Money m : handInput.values())
+                if (m == null || m.isNegative())
+                    return false;
             return true;
-        if(totalAmount.equals(getTotalOfHandInput()))
+        }
+        if (totalAmount.equals(getTotalOfHandInput()))
             return true;
         return false;
     }
@@ -56,7 +63,7 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
     // Use a string rather than list position as id. Safer.
     synchronized public void inputAmountForPerson(String id, Money amount) {
         if (handInput.containsKey(id))
-            if(handInput.get(id).equals(amount))
+            if (handInput.get(id).equals(amount))
                 return;
         handInput.put(id, amount);
         update();
@@ -65,7 +72,7 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
     private void update() {
         Money remainingAmount = totalAmount.minus(getTotalOfHandInput());
 
-        if(autoSplit.size() == 0) {
+        if (autoSplit.size() == 0) {
             view.updateRemainingAmount(remainingAmount);
         } else {
             // calculate share of every people who want to auto split
@@ -90,7 +97,7 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
     // Use a string rather than list position as id. Safer.
     // After disabling, the automatically assigned amount will NOT disappear
     synchronized public void disableAutomaticAmountFor(String id) {
-        if(!autoSplit.containsKey(id))
+        if (!autoSplit.containsKey(id))
             return;
 
         Money hisShare = autoSplit.get(id);
@@ -114,7 +121,7 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
     // The total amount of people who do NOT automatically split.
     private Money getTotalOfHandInput() {
         Money ans = zero;
-        for(Money val : handInput.values())
+        for (Money val : handInput.values())
             ans = ans.plus(val);
         return ans;
     }

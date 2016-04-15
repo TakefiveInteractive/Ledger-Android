@@ -46,6 +46,10 @@ public class Money {
         this.value = Long.parseLong(value.replaceAll("[^\\d]", ""));
     }
 
+    public boolean isNegative() {
+        return value < 0;
+    }
+
     // Returns a NEW Money
     public Money plus(Money m) {
         if(m.locale != locale)
