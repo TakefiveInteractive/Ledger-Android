@@ -103,6 +103,10 @@ public class MoneyEdit extends EditText {
 
         @Override
         public void afterTextChanged(Editable s) {
+
+            if(!isEnabled())
+                return;
+
             if (parsingText) {
                 parsingText = false;
                 if(listener != null)

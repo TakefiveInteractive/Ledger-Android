@@ -209,13 +209,15 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 holder.mAutoSplit.setOnClickListener(v -> {
                     synchronized (adapter) {
                         if(holder.mAmount.isEnabled()) {
+                            // the order of function calls are important
                             holder.mAmount.setEnabled(false);
                             holder.mAmount.setOnAmountChangeListener(null);
                             presenter.enableAutomaticAmountFor(person._id);
                         } else {
-                            holder.mAmount.setEnabled(true);
+                            // the order of function calls are important
                             presenter.disableAutomaticAmountFor(person._id);
                             holder.mAmount.setOnAmountChangeListener(amountChangeListener);
+                            holder.mAmount.setEnabled(true);
                         }
                     }
                 });

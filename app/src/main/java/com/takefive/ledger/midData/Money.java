@@ -1,5 +1,7 @@
 package com.takefive.ledger.midData;
 
+import android.util.Log;
+
 import com.takefive.ledger.Helpers;
 
 import java.math.BigDecimal;
@@ -73,6 +75,11 @@ public class Money {
         builder.append(value / powered);
         builder.append('.');
         builder.append(value % powered);
+
+        Log.d("Money", "Default Fraction Digits === " + type.getDefaultFractionDigits());
+        Log.d("Money", "int part == " + value/powered);
+        Log.d("Money", "frac part == " + value%powered);
+
         return Helpers.currencyText(builder.toString(), locale);
     }
 
