@@ -25,5 +25,7 @@
         <item name="colorButtonNormal">#E9EBEE</item>
         <item name="android:textColor">#A9ABAE</item>
     </style>
+    <style name="WelcomeTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
+    <style name="WelcomeTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
 
 </resources>

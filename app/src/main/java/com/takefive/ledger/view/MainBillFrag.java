@@ -1,5 +1,6 @@
 package com.takefive.ledger.view;
 
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -89,9 +90,14 @@ public class MainBillFrag extends NamedFragment {
         // init list
         mList.setEmptyView(mNone);
         mList.setOnItemClickListener((AdapterView<?> parent, View view, int position, long id) -> {
+            /*
             // TODO: convert DetailFragment to use ShownBill
             mBillDetail.setContent(((ShownBill)mList.getItemAtPosition(position)).rawBill);
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
+            */
+            String transitionName = getString(R.string.bill_to_detail);
+            startActivity(new Intent(getActivity(), BillDetailActivity.class),
+                    ActivityOptions.makeSceneTransitionAnimation(this.getActivity(), view, transitionName).toBundle());
         });
 
         mNew.attachToListView(mList);
@@ -168,21 +174,18 @@ public class MainBillFrag extends NamedFragment {
             RawBill rawBill = data.rawBill;
 
             BootstrapCircleThumbnail avatar = ButterKnife.findById(convertView, R.id.avatar);
-            TextView summary = ButterKnife.findById(convertView, R.id.payerSummary);
-            TextView amount= ButterKnife.findById(convertView, R.id.amount);
-            TextView description = ButterKnife.findById(convertView, R.id.description);
+            TextView title = ButterKnife.findById(convertView, R.id.title);
+            TextView amount = ButterKnife.findById(convertView, R.id.amount);
             TextView time = ButterKnife.findById(convertView, R.id.time);
+            TextView recipient = ButterKnife.findById(convertView, R.id.recipient);
 
-            // Begin building string
-            StringBuilder builder = new StringBuilder();
-            if (rawBill.recipient.equals(userStore.getMostRecentUserId())) {
-                builder.append("<b>You</b>");
-            } else {
-                builder.append("<b>" + data.recipientName + "</b>");
-            }
-            builder.append(" paid for <b>" + rawBill.title + "</b>");
-            // Set String
-            summary.setText(Html.fromHtml(builder.toString()));
+            // Set title
+            title.setText(rawBill.title);
+
+            // Set recipient
+            String recipientName =
+                    rawBill._id.equals(userStore.getMostRecentUserId()) ? "you" : data.recipientName;
+            recipient.setText("paid by " + recipientName);
 
             // Set avatar
             if (data.recipientAvatarUrl != null)
@@ -190,17 +193,6 @@ public class MainBillFrag extends NamedFragment {
 
             // Set amount
             amount.setText("$" + rawBill.getTotalAmount());
-
-            // Set description
-            if (rawBill.description != null && !rawBill.description.isEmpty()) {
-                SpannableStringBuilder descriptionBuilder = new SpannableStringBuilder(rawBill.description);
-                descriptionBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),
-                        0, descriptionBuilder.length() - 1, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
-                description.setVisibility(View.VISIBLE);
-                description.setText(descriptionBuilder.toString());
-            }
-            else
-                description.setVisibility(View.GONE);
 
             // Set time
             try {

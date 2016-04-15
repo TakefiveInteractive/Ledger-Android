@@ -47,5 +47,6 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="title_activity_new_bill">NewBillActivity</string>
+    <string name="bill_to_detail">bill_to_detail</string>
 
 </resources>
