@@ -7,6 +7,7 @@ import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.takefive.ledger.Helpers;
 import com.takefive.ledger.midData.Money;
@@ -32,6 +33,18 @@ public class MoneyEdit extends EditText {
     final private Money zero;
 
     private Money amount;
+
+    /**
+     * do NOT use setText from outside this library!!!
+     * use setAmount instead.
+     * I could not override this as private...
+     * @param text
+     * @param type
+     */
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(text, type);
+    }
 
     public MoneyEdit(Context context) {
         super(context);

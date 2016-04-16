@@ -122,7 +122,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
     @Override
     public void updateAmountForPerson(String id, Money amount) {
-        adapter.getPersonAmountEdit(id).setText(amount.toString());
+        adapter.getPersonAmountEdit(id).setAmount(amount);
     }
 
     @Override
