@@ -1,47 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.takefive.ledger" >
+          package="com.takefive.ledger">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name=".MyApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:supportsRtl="true"
-        android:theme="@style/WelcomeTheme" >
-        <activity
-            android:name=".view.WelcomeActivity"
+            android:name=".MyApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
-            android:theme="@style/WelcomeTheme" >
+            android:supportsRtl="true"
+            android:theme="@style/WelcomeTheme">
+        <activity
+                android:name=".view.WelcomeActivity"
+                android:label="@string/app_name"
+                android:theme="@style/WelcomeTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"/>
+                android:name="com.facebook.FacebookActivity"
+                android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+                android:label="@string/app_name"/>
 
         <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+                android:name="com.facebook.sdk.ApplicationId"
+                android:value="@string/facebook_app_id"/>
 
         <activity
-            android:name=".view.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/MainTheme" />
+                android:name=".view.MainActivity"
+                android:label="@string/app_name"
+                android:theme="@style/MainTheme"/>
         <activity
-            android:name=".view.utils.TestViews"
-            android:label="@string/app_name" />
+                android:name=".view.utils.TestViews"
+                android:label="@string/app_name"/>
         <activity
-            android:name=".view.NewBillActivity"
-            android:label="@string/app_name"
-            android:launchMode="singleTask"
-            android:theme="@style/NewBillTheme"
-            android:windowSoftInputMode="adjustPan|stateHidden">
+                android:name=".view.NewBillActivity"
+                android:label="@string/app_name"
+                android:launchMode="singleTask"
+                android:theme="@style/NewBillTheme"
+                android:windowSoftInputMode="adjustPan|stateHidden">
+        </activity>
+        <activity
+                android:name=".view.BillDetailActivity"
+                android:label="@string/title_activity_bill_detail"
+                android:theme="@style/BillDetailTheme">
         </activity>
     </application>
 

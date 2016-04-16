@@ -6,7 +6,6 @@ dependencies {
     testCompile "junit:junit:4.10"
     testCompile "org.assertj:assertj-core:1.7.0"
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'io.realm:realm-android:0.87.4'
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.dagger:dagger-compiler:1.2.2'

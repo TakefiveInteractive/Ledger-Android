@@ -8,7 +8,7 @@
     <dimen name="noticable_padding">13dp</dimen>
 
     <dimen name="textview_bootstrap_vert_padding">3sp</dimen>
-    
+
     <!-- ELEVATIONS -->
     <dimen name="toolbar_elevation">40dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
@@ -63,7 +63,8 @@
     <dimen name="my_schedule_title_strip_padding">8dp</dimen>
     <dimen name="my_schedule_page_margin">@dimen/padding_normal</dimen>
     <dimen name="my_schedule_icon_size">24dp</dimen>
-    <dimen name="my_schedule_icon_horizontal_padding">24dp</dimen> <!-- center 24dp in @keyline_2 -->
+    <dimen name="my_schedule_icon_horizontal_padding">24dp
+    </dimen> <!-- center 24dp in @keyline_2 -->
     <dimen name="widget_schedule_time_width">72dp</dimen>
     <dimen name="widget_schedule_header_height">40dp</dimen>
     <dimen name="drawer_width">@dimen/match_parent</dimen>
@@ -240,6 +241,11 @@
     <!-- New Bill Amount Fragment -->
     <dimen name="new_bill_amount_textview_separation">30dp</dimen>
 
+    <!-- Bill Detail Activity -->
+    <dimen name="bill_detail_collapsing_layout_content_height">260dp</dimen>
+    <dimen name="bill_detail_name_margin">20dp</dimen>
+    <dimen name="bill_detail_content_text_margin">36dp</dimen>
+
     <!-- General values -->
     <dimen name="general_margin">10dp</dimen>
     <dimen name="small_text_size">12sp</dimen>
@@ -247,6 +253,17 @@
     <dimen name="large_text_size">20sp</dimen>
     <dimen name="header_text_size">30sp</dimen>
 
+    <dimen name="toolbar_title_margin">72dp</dimen>
+    <dimen name="toolbar_title_size">20sp</dimen>
+
+    <dimen name="appbar_layout_expanded_title_margin_start">50dp</dimen>
+    <dimen name="appbar_layout_expanded_title_margin_end">60dp</dimen>
+    <dimen name="collapse_height">300dp</dimen>
+
     <dimen name="icon_24dp">24dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="material_icon_36dp">36dp</dimen>
+    <dimen name="material_icon_24dp">24dp</dimen>
 
 </resources>

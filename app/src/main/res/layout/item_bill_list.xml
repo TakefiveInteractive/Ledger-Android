@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
-    xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:bootstrap="http://schemas.android.com/apk/res-auto"
+              xmlns:cardview="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content" xmlns:app="http://schemas.android.com/tools"
+              android:orientation="vertical">
 
     <android.support.v7.widget.CardView
         android:id="@+id/card"
@@ -14,73 +14,82 @@
         cardview:cardElevation="@dimen/card_elevation"
         cardview:cardPreventCornerOverlap="false">
 
-        <LinearLayout
+        <RelativeLayout
+                android:id="@+id/billDetailSummaryLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:padding="@dimen/noticable_padding">
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/content_padding_normal"
+                android:transitionName="@string/bill_to_detail">
+
+            <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                    android:id="@+id/avatar"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/person_image_empty"
+                    android:scaleType="centerCrop"
+                    bootstrap:hasBorder="false"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"/>
 
             <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:layout_toRightOf="@id/avatar"
+                    android:layout_toLeftOf="@+id/amountLayout"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/bill_detail_name_margin"
+                    android:layout_marginRight="@dimen/bill_detail_name_margin">
 
-                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-                        android:id="@+id/avatar"
-                        android:layout_width="50sp"
-                        android:layout_height="50dp"
-                        android:layout_marginRight="@dimen/general_padding"
-                        android:background="@drawable/person_image_empty"
-                        android:scaleType="centerCrop"
-                        bootstrap:hasBorder="false"
-                        android:layout_alignParentStart="true"/>
-
-                <LinearLayout
-                        android:layout_width="0dp"
+                <TextView
+                        android:id="@+id/title"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:text="Something really long"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large"/>
 
-                    <TextView
-                            android:id="@+id/payerSummary"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/textview_bootstrap_vert_padding"
-                            android:textColor="@android:color/black"
-                            android:text="You paid for something really long"
-                            android:textSize="@dimen/text_size_medium"/>
+                <TextView
+                        android:id="@+id/recipient"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="paid by Yu Wang"
+                        android:textSize="@dimen/text_size_medium"
+                        android:singleLine="true"
+                        android:textColor="@android:color/black"/>
 
-                    <TextView
-                            android:id="@+id/time"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="12:00 PM"
-                            android:textColor="@android:color/darker_gray"/>
+            </LinearLayout>
 
-                </LinearLayout>
+            <LinearLayout
+                    android:id="@+id/amountLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="end">
 
                 <TextView
                         android:id="@+id/amount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="top|right"
-                        android:layout_marginRight="@dimen/general_margin"
-                        android:textSize="@dimen/text_size_xlarge"
-                        android:text="$1.10"/>
+                        android:text="$12.11"
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large"/>
+
+                <TextView
+                        android:id="@+id/time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Jan 1"
+                        android:textSize="@dimen/text_size_medium"
+                        android:layout_gravity="end"
+                        android:textColor="@android:color/darker_gray"/>
 
             </LinearLayout>
 
-            <TextView
-                    android:id="@+id/description"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Lorem Ipsum"
-                    android:textSize="@dimen/text_size_medium"
-                    android:layout_marginTop="@dimen/general_margin"
-                    android:layout_marginLeft="@dimen/general_margin"
-                    android:layout_marginRight="@dimen/general_margin"/>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
