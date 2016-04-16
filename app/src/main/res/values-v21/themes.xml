@@ -4,13 +4,20 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:colorPrimary">@color/theme_main_accent</item>
-        <item name="android:colorPrimaryDark">@color/theme_accent_1</item>
+        <item name="android:colorPrimary">@color/colorPrimary</item>
+        <item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="android:textColorPrimary">@android:color/white</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
+    <style name="Theme.AppCompat.Translucent">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+    </style>
 
     <style name="MainTheme" parent="MyTheme">
         <!-- <item name="android:navigationBarColor">#fff</item> -->
@@ -18,17 +25,21 @@
         <item name="android:windowActivityTransitions">true</item>
 
         <!-- specify enter and exit transitions -->
-        <item name="android:windowReenterTransition">@android:transition/slide_top</item>
+        <item name="android:windowReenterTransition">@transition/slide_top_and_fade</item>
         <item name="android:windowExitTransition">@transition/slide_top_and_fade</item>
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">
-            @transition/change_bounds</item>
+            @transition/change_bounds
+        </item>
         <item name="android:windowSharedElementExitTransition">
-            @transition/change_bounds</item>
+            @transition/change_bounds
+        </item>
     </style>
+
     <style name="WelcomeTheme" parent="MyTheme">
     </style>
+
     <style name="NewBillTheme" parent="MyTheme">
         <!-- <item name="android:navigationBarColor">#000</item> -->
         <item name="actionMenuTextColor">@android:color/white</item>
@@ -41,27 +52,15 @@
 
         <!-- specify enter and exit transitions -->
         <item name="android:windowEnterTransition">@transition/slide_bottom_and_fade</item>
-        <item name="android:windowExitTransition">@android:transition/slide_bottom</item>
+        <item name="android:windowExitTransition">@transition/slide_bottom_and_fade</item>
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">
-            @transition/change_bounds</item>
+            @transition/change_bounds
+        </item>
         <item name="android:windowSharedElementExitTransition">
-            @transition/change_bounds</item>
-    </style>
-
-    <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
-        <item name="selectableItemBackground">?android:selectableItemBackground</item>
-        <item name="selectableItemBackgroundBorderless">?android:selectableItemBackground</item>
-        <item name="actionButtonStyle">@style/Widget.AppCompat.ActionButton</item>
-    </style>
-
-    <style name="Theme.AppCompat.Translucent">
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
-        <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowAnimationStyle">@android:style/Animation</item>
+            @transition/change_bounds
+        </item>
     </style>
 
 </resources>

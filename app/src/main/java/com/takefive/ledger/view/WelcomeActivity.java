@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,7 +14,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
@@ -34,7 +31,6 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import zyu19.libs.action.chain.config.NiceConsumer;
 
 public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
@@ -85,7 +81,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
             @Override
             public void onCancel() {
-
+                hideStatusBar();
             }
 
             @Override
@@ -109,6 +105,21 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
             animShowButton();
             animShowTitleName();
         }
+
+        // We change Status bar visibility when FB dialog shows up.
+        hideStatusBar();
+    }
+
+    private void showStatusBar() {
+        int tmp;
+        tmp = getWindow().getDecorView().getSystemUiVisibility();
+        getWindow().getDecorView().setSystemUiVisibility((~View.SYSTEM_UI_FLAG_FULLSCREEN) & tmp);
+    }
+
+    private void hideStatusBar() {
+        int tmp;
+        tmp = getWindow().getDecorView().getSystemUiVisibility();
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | tmp);
     }
 
     @Override
@@ -132,8 +143,11 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         ).start();
     }
 
+    private Integer originalSystemUIVisibility = null;
+
     @OnClick(R.id.login)
     public void login() {
+        showStatusBar();
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
     }
 
@@ -160,6 +174,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         progressView.setVisibility(View.GONE);
         if(mLogin.getAlpha() < 0.5f || mLogin.getVisibility() != View.VISIBLE)
             animShowButton();
+        hideStatusBar();
     }
 
     @Override

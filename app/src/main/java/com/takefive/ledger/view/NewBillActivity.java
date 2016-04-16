@@ -2,6 +2,7 @@ package com.takefive.ledger.view;
 
 import android.animation.Animator;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -18,8 +19,10 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 
+import com.takefive.ledger.Helpers;
 import com.takefive.ledger.MyApplication;
 import com.takefive.ledger.R;
+import com.takefive.ledger.midData.Money;
 import com.takefive.ledger.midData.ledger.NewBillRequest;
 import com.takefive.ledger.midData.ledger.PersonAmountPair;
 import com.takefive.ledger.presenter.NewBillPresenter;
@@ -77,7 +80,7 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         setSupportActionBar(mToolbar);
         mToolbar.setTitle("New Bill");
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
-        mToolbar.setNavigationOnClickListener(v -> close(false));
+        mToolbar.setNavigationOnClickListener(v -> close(false, getWidthHeight(v)));
 
         mPager.setSwipeEnabled(false);
         mPager.setAdapter(new NewBillPageAdapter(getSupportFragmentManager(),
@@ -151,58 +154,78 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         Log.d("NewBillActivity open", "Animation with location x: " + location[0]
                 + " y: " + location[1] + " ending: " + endingRadius);
 
-        Animator anim = ViewAnimationUtils.createCircularReveal(
-                mContent, location[0], location[1], 0, (float) endingRadius);
-        anim.setDuration(600);
-        mContent.setVisibility(View.VISIBLE);
-        anim.start();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Animator anim = ViewAnimationUtils.createCircularReveal(
+                    mContent, location[0], location[1], 0, (float) endingRadius);
+            anim.setDuration(600);
+            mContent.setVisibility(View.VISIBLE);
+            anim.start();
+        }
     }
 
     @Override
     public void doneAndClose() {
-        nextSlide();
+        nextSlide(null);
     }
 
-    private void close(boolean successful) {
+    private void close(boolean successful, int[] _sourceWH) {
         if (isAnimating)
             return;
 
-        int[] location = new int[2];
-        location[0] = mContent.getWidth() / 2;
-        location[1] = mContent.getHeight() / 2;
+        int[] location;
+
+        if(_sourceWH == null) {
+            location = new int[2];
+            location[0] = mContent.getWidth() / 2;
+            location[1] = mContent.getHeight() / 2;
+        } else {
+            location = _sourceWH;
+            location[0] = location[0] / 2;
+            location[1] = location[1] / 2;
+        }
+
         double startingRadius = Math.hypot(location[0], location[1]);
         Log.d("NewBillActivity close", "Animation with location x: " + location[0]
                 + " y: " + location[1] + " starting: " + startingRadius);
-        Animator anim = ViewAnimationUtils.createCircularReveal(
-                mContent, location[0], location[1], (float) startingRadius, 0);
-        anim.setDuration(550);
-        anim.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                isAnimating = true;
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mContent.setVisibility(View.INVISIBLE);
-                finish();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-                isAnimating = false;
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-                isAnimating = false;
-            }
-        });
         Intent intent = getIntent();
         int resultCode = successful ? RESULT_OK : RESULT_CANCELED;
         setResult(resultCode, intent);
-        anim.start();
-        overridePendingTransition(0, 0);
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            Point screen = new Point();
+            getWindowManager().getDefaultDisplay().getSize(screen);
+            int screenMaxRadius;
+            if(screen.x > screen.y)
+                screenMaxRadius = screen.x / 2;
+            else screenMaxRadius = screen.y / 2;
+
+            Animator anim = ViewAnimationUtils.createCircularReveal(
+                    findViewById(android.R.id.content), location[0], location[1], screenMaxRadius, 0);
+            anim.setDuration(550);
+            anim.addListener(new Animator.AnimatorListener() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    isAnimating = true;
+                }
+
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    findViewById(android.R.id.content).setVisibility(View.GONE);
+                    overridePendingTransition(0, 0);
+                    finish();
+                }
+
+                @Override
+                public void onAnimationCancel(Animator animation) {
+                    isAnimating = false;
+                }
+
+                @Override
+                public void onAnimationRepeat(Animator animation) {
+                    isAnimating = false;
+                }
+            });
+            anim.start();
+        }
     }
 
     @Override
@@ -216,15 +239,19 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         return true;
     }
 
+    public int[] getWidthHeight(View view) {
+        return new int[]{view.getWidth(), view.getHeight()};
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         switch (item.getItemId()) {
             case R.id.action_next_slide:
-                nextSlide();
+                nextSlide(getWidthHeight(mToolbar));
                 return true;
             case R.id.action_prev_slide:
-                prevSlide();
+                prevSlide(getWidthHeight(mToolbar));
                 return true;
         }
 
@@ -233,14 +260,14 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
 
     @Override
     public void onBackPressed() {
-        prevSlide();
+        prevSlide(null);
     }
 
     private void submit() {
         presenter.createBill(request);
     }
 
-    public void nextSlide() {
+    public void nextSlide(int[] sourceWH) {
         int currentItem = mPager.getCurrentItem();
         if (!((NewBillPageAdapter) mPager.getAdapter()).getItem(currentItem).confirm())
             return;
@@ -252,17 +279,17 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
             submit();
         }
         else {
-            new Handler().postDelayed(() -> close(true), 1500);
+            new Handler().postDelayed(() -> close(true, sourceWH), 1500);
         }
     }
 
-    public void prevSlide() {
+    public void prevSlide(int[] sourceWH) {
         int currentItem = mPager.getCurrentItem();
         if (currentItem != 0) {
             mPager.setCurrentItem(mPager.getCurrentItem() - 1);
         }
         else {
-            close(false);
+            close(false, sourceWH);
         }
     }
 
@@ -284,11 +311,11 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
     }
 
     @Override
-    public void onConfirmAmount(double total, Map<String, Double> amounts) {
+    public void onConfirmAmount(Money total, Map<String, Money> amounts) {
         Log.d("NewBillActivity", "Amount fragment confirmed");
         request.amounts = new ArrayList<>();
-        for (Map.Entry<String, Double> entry : amounts.entrySet()) {
-            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue()));
+        for (Map.Entry<String, Money> entry : amounts.entrySet()) {
+            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue().toDouble()));
         }
     }
 

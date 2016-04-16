@@ -7,33 +7,20 @@
     <color name="colorAccent">#FF4081</color>
     <color name="background">#f5f5f5</color>
     -->
-    <color name="transparent">#00000000</color>
 
-    <color name="theme_main_accent">#40bbd5</color>
-    <color name="theme_primary">@color/app_primary_accent</color>
-    <color name="theme_primary_dark">#00BCD4</color>
-    <color name="theme_primary_light">#7986cb</color>
-    <color name="theme_accent_1">#00b0ff</color>
-    <color name="theme_accent_1_light">#8ad4fa</color>
-    <color name="theme_accent_2">#e91e63</color>
-
-    <!-- App Primary View Colors (might be deprecated). -->
-    <color name="app_primary_accent">#FF26C6DA</color>
-    <color name="app_secondary_accent">#1A000000</color>
-    <color name="app_primary_text">#444444</color>
-    <color name="app_secondary_text">#444444</color>
-    <color name="app_white">#FFFEFEFE</color>
-    <color name="app_io_logo_tint">#FF26C6DA</color>
     <color name="divider">#1f000000</color>
 
 
     <!-- ::::: References ::::: -->
 
     <!-- THEME CONSTANTS -->
-    <color name="colorPrimary">@color/theme_main_accent</color>
+    <color name="colorPrimary">#40bbd5</color>
     <!-- The following does not have any value to refer to but are theme constants -->
-    <color name="colorPrimaryDark">#125688</color>
+    <color name="colorSecondary">#1497F2</color>
+    <color name="colorPrimaryDark">#00b0ff</color>
     <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorSecondary">#FFFFFF</color>
+    <color name="textHintColorSecondary">#EEEEEE</color>
     <color name="windowBackground">#FFFFFF</color>
     <!-- The following two haven't been decided yet -->
     <color name="navigationBarColor">#000000</color>
@@ -44,5 +31,8 @@
     <color name="section_title">#40bbd5</color>
     <color name="vertical_divider">#E3E3E3</color>
 
+    <color name="grey_backgroud">#EAEAEA</color>
 
+
+    <color name="myDialogBackground">#ffaaffaa</color>
 </resources>

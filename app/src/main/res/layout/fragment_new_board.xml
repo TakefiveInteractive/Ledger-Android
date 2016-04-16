@@ -1,98 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:bootstrap="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="@dimen/noticable_padding">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bootstrap="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/white">
 
-    <RelativeLayout
-            android:id="@+id/newBoardHeaderLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:id="@+id/newBoardHeader"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="New Board"
-                android:textColor="@color/section_title"
-                android:textSize="20sp"/>
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="end"
-                android:layout_alignTop="@id/newBoardHeader"
-                android:layout_alignBottom="@id/newBoardHeader"
-                android:layout_alignParentEnd="true"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-            <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-                    android:id="@+id/closePopup"
-                    android:src="@android:drawable/ic_notification_clear_all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    bootstrap:hasBorder="false"/>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <android.support.design.widget.TextInputLayout
-            android:id="@+id/newBoardNameLayout"
-            android:layout_below="@id/newBoardHeaderLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:errorEnabled="false"
-            android:layout_marginTop="@dimen/general_margin">
-        <android.support.design.widget.TextInputEditText
-                android:id="@+id/newBoardName"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:saveEnabled="false"
-                android:maxLength="52"
-                android:hint="Board Name"
-                android:textSize="@dimen/small_text_size"
-                android:textColor="@android:color/black"/>
-    </android.support.design.widget.TextInputLayout>
-
-    <TextView
-            android:id="@+id/newBoardFriendsHeader"
-            android:layout_below="@id/newBoardNameLayout"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:text="Add Friends"
-            android:textSize="@dimen/general_text_size"
-            android:layout_marginTop="@dimen/general_margin"/>
-
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/newBoardFriendsView"
-            android:layout_below="@id/newBoardFriendsHeader"
-            android:scrollbars="vertical"
-            android:layout_height="200dp"
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dp"/>
 
     <LinearLayout
-            android:id="@+id/newBoardActionButtonsLayout"
-            android:layout_below="@id/newBoardFriendsView"
-            android:layout_height="wrap_content"
+        android:id="@+id/newBoardNameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSecondary"
+        android:orientation="vertical"
+        android:padding="@dimen/noticable_padding">
+
+        <EditText
+            android:id="@+id/newBoardName"
             android:layout_width="match_parent"
-            android:layout_marginTop="@dimen/general_margin"
-            android:layout_marginBottom="1dp">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="Board Name"
+            android:maxLength="52"
+            android:saveEnabled="false"
+            android:textColor="@color/textColorSecondary"
+            android:textColorHint="@color/textHintColorSecondary"
+            android:textSize="@dimen/large_text_size" />
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/newBoardFriendsView"
+        android:layout_width="match_parent"
+        android:layout_height="300sp"
+        android:layout_below="@id/newBoardNameWrapper"
+        android:scrollbars="vertical" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/newBoardActionButtonsLayout"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:id="@+id/newBoardActionButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/newBoardFriendsView"
+        android:gravity="end"
+        android:orientation="horizontal">
+
         <Button
-                android:id="@+id/newBoardCancel"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight=".50"
-                android:text="@string/cancel"
-                android:theme="@style/ActionButtonSecondary"/>
+            android:id="@+id/newBoardCancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/colorSecondary" />
+
         <Button
-                android:id="@+id/newBoardSubmit"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                android:layout_weight=".50"
-                android:text="@string/ok"
-                android:theme="@style/ActionButtonPrimary"/>
+            android:id="@+id/newBoardSubmit"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:textColor="@color/colorSecondary" />
     </LinearLayout>
 
 </RelativeLayout>

@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"/>
-            <android.support.design.widget.TabLayout
+            <com.takefive.ledger.view.utils.CustomTabLayout
                 android:id="@+id/tabLayout"
                 android:background="@color/colorPrimary"
                 android:layout_width="match_parent"

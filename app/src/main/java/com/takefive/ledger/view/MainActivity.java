@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.midData.view.ShownBill;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.database.SessionStore;
+import com.takefive.ledger.view.utils.CustomTabLayout;
 import com.takefive.ledger.view.utils.NamedFragment;
 
 import java.util.List;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     @Bind(R.id.toolbar)
     Toolbar mToolbar;
     @Bind(R.id.tabLayout)
-    TabLayout mTabLayout;
+    CustomTabLayout mTabLayout;
     @Bind(R.id.viewPager)
     ViewPager mViewPager;
     @Bind(R.id.drawer_layout)
@@ -87,12 +89,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_testing:
-                startActivity(new Intent(this, BillDetailActivity.class));
-                return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -102,28 +98,11 @@ public class MainActivity extends AppCompatActivity implements IMainView {
                 balanceFrag.setTitle(getString(R.string.title_main_balance)));
         mViewPager.setAdapter(adapter);
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-                switch (tab.getPosition()) {
-                    case 0:
-                        ((ListView) billFrag.getView().findViewById(R.id.billList))
-                                .setSelectionAfterHeaderView();
-                        break;
-                    case 1:
-                    default:
-                        break;
-                }
+        mTabLayout.addOnTabReselectedListener(tab -> {
+            if(tab.getPosition() == 0) {
+                ((ListView) billFrag.getView().findViewById(R.id.billList)
+                ).smoothScrollToPosition(0);
+                //.setSelectionAfterHeaderView();
             }
         });
     }

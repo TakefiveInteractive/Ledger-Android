@@ -16,16 +16,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.facebook.AccessToken;
 import com.squareup.picasso.Picasso;
+import com.takefive.ledger.IPresenter;
 import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.midData.ledger.NewBoardRequest;
 import com.takefive.ledger.midData.fb.FbUserInfo;
+import com.takefive.ledger.presenter.MainPresenter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,11 +44,14 @@ import butterknife.OnClick;
 public class NewBoardFragment extends DialogFragment {
 
     @Bind(R.id.newBoardName)
-    TextInputEditText mBoardName;
+    EditText mBoardName;
     @Bind(R.id.newBoardFriendsView)
     RecyclerView mRecyclerView;
 
     FriendsListAdapter adapter;
+
+    IMainView mMainView;
+    MainPresenter mPresenter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +63,12 @@ public class NewBoardFragment extends DialogFragment {
 
         BusinessFbLoginResult fbLoginResult = new BusinessFbLoginResult();
         fbLoginResult.setToken(AccessToken.getCurrentAccessToken());
-        ((MainActivity) getActivity()).presenter.loadUserFriends(fbLoginResult, info -> {
+
+        // find mainView and mainPresenter
+        mMainView = (IMainView) getActivity();
+        mPresenter = ((MainActivity)getActivity()).presenter;
+
+        mPresenter.loadUserFriends(fbLoginResult, info -> {
             adapter = new FriendsListAdapter(getContext(), info);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
@@ -68,19 +80,14 @@ public class NewBoardFragment extends DialogFragment {
         return root;
     }
 
-    @OnClick({R.id.closePopup, R.id.newBoardCancel})
-    public void onCloseButtonClick() {
-        this.dismiss();
-    }
-
     @OnClick(R.id.newBoardSubmit)
     public void createBoard() {
         if (mBoardName.getText().toString().length() == 0) {
-            showAlert(getString(R.string.new_board_no_name));
+            mMainView.showAlert(R.string.new_board_no_name);
             mBoardName.requestFocus();
             return;
         } else if (adapter.getSelected().size() == 0) {
-            showAlert(getString(R.string.new_board_no_friends_set));
+            mMainView.showAlert(R.string.new_board_no_friends_set);
             return;
         }
         NewBoardRequest request = new NewBoardRequest();
@@ -88,28 +95,30 @@ public class NewBoardFragment extends DialogFragment {
         request.isActive = true;
         request.members = new ArrayList<>();
         request.members_fromfb = adapter.getSelected();
-        ((MainActivity) getActivity()).presenter.createBoard(request, r -> {
+        mPresenter.createBoard(request, r -> {
             if (r.isSuccessful()) {
-                Snackbar.make(getActivity().findViewById(android.R.id.content),
-                        R.string.new_board_success, Snackbar.LENGTH_SHORT).show();
+                mMainView.showAlert(R.string.new_board_success);
             } else {
                 Log.e("create board", String.format("code: %d, response: %s", r.code(), r.errorBody().string()));
-                showAlert(getString(R.string.network_failure));
+                mMainView.showAlert(R.string.network_failure);
             }
             this.dismiss();
         });
     }
 
+    @OnClick(R.id.newBoardCancel)
+    public void close() {
+        this.dismiss();
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        Dialog dialog = new Dialog(getContext(), R.style.MyDialogTheme);
+        Window window = dialog.getWindow();
+        // window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
+        window.requestFeature(Window.FEATURE_NO_TITLE);
         return dialog;
-    }
-
-    public void showAlert(String info) {
-        Snackbar.make(getActivity().findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
     }
 
     private class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHolder> {

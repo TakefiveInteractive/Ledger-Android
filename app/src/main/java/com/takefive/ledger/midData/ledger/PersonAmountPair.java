@@ -1,5 +1,7 @@
 package com.takefive.ledger.midData.ledger;
 
+import com.takefive.ledger.midData.Money;
+
 /**
  * Created by @tourbillon on 4/8/16.
  */

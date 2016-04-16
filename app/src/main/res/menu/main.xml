@@ -3,11 +3,4 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       tools:context=".view.MainActivity">
 
-    <item
-            android:id="@+id/action_testing"
-            android:background="?selectableItemBackground"
-            android:title="Testing"
-            android:textColor="@android:color/white"
-            app:showAsAction="ifRoom"/>
-
 </menu>

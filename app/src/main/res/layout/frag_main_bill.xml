@@ -53,6 +53,6 @@
             android:src="@drawable/ic_add_white_24dp"
             fab:fab_colorNormal="@color/colorPrimary"
             fab:fab_colorPressed="@color/colorPrimaryDark"
-            fab:fab_colorRipple="@color/transparent" />
+            fab:fab_colorRipple="@android:color/transparent" />
 
 </FrameLayout>
