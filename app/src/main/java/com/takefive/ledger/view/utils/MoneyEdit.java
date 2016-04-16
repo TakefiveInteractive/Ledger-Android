@@ -69,53 +69,6 @@ public class MoneyEdit extends EditText {
             setHint(Currency.getInstance(getTextLocale()).getSymbol());
             setAmount(zero);
             addTextChangedListener(new MoneyFormatListener());
-            /*
-            setOnKeyListener((v, keyCode, event) -> {
-                if(event.getAction() == KeyEvent.ACTION_DOWN) {
-                    switch (keyCode) {
-                        case KeyEvent.KEYCODE_0:
-                            amount = amount.appendDigit(0);
-                            break;
-                        case KeyEvent.KEYCODE_1:
-                            amount = amount.appendDigit(1);
-                            break;
-                        case KeyEvent.KEYCODE_2:
-                            amount = amount.appendDigit(2);
-                            break;
-                        case KeyEvent.KEYCODE_3:
-                            amount = amount.appendDigit(3);
-                            break;
-                        case KeyEvent.KEYCODE_4:
-                            amount = amount.appendDigit(4);
-                            break;
-                        case KeyEvent.KEYCODE_5:
-                            amount = amount.appendDigit(5);
-                            break;
-                        case KeyEvent.KEYCODE_6:
-                            amount = amount.appendDigit(6);
-                            break;
-                        case KeyEvent.KEYCODE_7:
-                            amount = amount.appendDigit(7);
-                            break;
-                        case KeyEvent.KEYCODE_8:
-                            amount = amount.appendDigit(8);
-                            break;
-                        case KeyEvent.KEYCODE_9:
-                            amount = amount.appendDigit(9);
-                            break;
-                        case KeyEvent.KEYCODE_DEL:
-                            amount = amount.removeDigits(1);
-                            break;
-                        default:
-                            break;
-                    }
-                    setAmount(amount);
-                    if (listener != null)
-                        listener.onAmountChange(amount);
-                }
-                return true;
-            });
-            */
         } catch (Exception err) {
             err.printStackTrace();
         }
