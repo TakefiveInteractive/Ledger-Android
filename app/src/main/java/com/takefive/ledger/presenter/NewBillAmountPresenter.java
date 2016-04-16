@@ -126,14 +126,25 @@ public class NewBillAmountPresenter implements IPresenter<INewBillAmountView> {
         return ans;
     }
 
-    // re-enable disabled data.
-    synchronized public void reattachData(String id) {
-        ;
+    public static class Info {
+        public boolean isAutoSplit;
+        public Money amount;
     }
 
-    // Temporarily disable data
-    synchronized public void detachData(String id) {
-        ;
+    synchronized public Info getPersonInfo(String id) {
+        if(autoSplit.containsKey(id)) {
+            Info info = new Info();
+            info.amount = autoSplit.get(id);
+            info.isAutoSplit = true;
+            return info;
+        } else if (handInput.containsKey(id)) {
+            Info info = new Info();
+            info.amount = handInput.get(id);
+            info.isAutoSplit = false;
+            return info;
+        } else {
+            return null;
+        }
     }
 
     synchronized public String debugString() {

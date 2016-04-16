@@ -11,8 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -150,14 +152,16 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         private Context mContext;
         private List<RawPerson> mInfoList;
+        private ViewGroup mListView;
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
-        private HashMap<String, Money> person2Amount = new HashMap<>();
-        private HashMap<String, Boolean> isAutoSplit = new HashMap<>();
 
         public void updatePersonAmountFromPresenter(String byId, Money amount) {
+            /*
             if (!idToItemView.containsKey(byId))
                 return;
             idToItemView.get(byId).setAmount(amount);
+            */
+            notifyDataSetChanged();
         }
 
         public MembersSelectionAdapter(Context context, List<RawPerson> mInfoList) {
@@ -168,6 +172,8 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
+            mListView = parent;
+
             if(convertView == null)
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_person_selection, parent, false);
 
@@ -188,8 +194,6 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     fragment.setOnSelectionCompleteListener(selection -> {
                         presenter.clearExceptTotalAmount();
                         idToItemView.clear();
-                        person2Amount.clear();
-                        isAutoSplit.clear();
                         mInfoList = selection;
                         notifyDataSetChanged();
                     });
@@ -202,17 +206,24 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 RawPerson person = mInfoList.get(position);
                 String personId = person._id;
 
-                // Force remove state of autoSplit and inputted value.
-                // Could also use a cache, but because Android destroy views as soon as invisible, not very viable.
-                if(isAutoSplit.containsKey(personId)) {
+                // Force using state of Presenter
+                NewBillAmountPresenter.Info info = presenter.getPersonInfo(personId);
+                if(info == null) {
                     mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
                     mAmount.setAmount(zero);
                     mAmount.setEnabled(true);
+                } else {
+                    mAmount.setAmount(info.amount);
+                    if (info.isAutoSplit) {
+                        mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
+                        mAmount.setEnabled(false);
+                    } else {
+                        mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                        mAmount.setEnabled(true);
+                    }
                 }
-                mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
-                mAmount.setAmount(zero);
-                mAmount.setEnabled(true);
 
+                mAmount.set
                 final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
                 };
@@ -227,12 +238,10 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                             // the order of function calls are important
                             mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
                             mAmount.setEnabled(false);
-                            mAmount.setOnAmountChangeListener(null);
                             presenter.enableAutomaticAmountFor(person._id);
                         } else {
                             // the order of function calls are important
                             presenter.disableAutomaticAmountFor(person._id, true);
-                            mAmount.setOnAmountChangeListener(amountChangeListener);
                             mAmount.setEnabled(true);
                             mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
                         }
