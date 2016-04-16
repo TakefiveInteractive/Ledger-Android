@@ -5,9 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,9 +19,7 @@ import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.squareup.picasso.Picasso;
-import com.takefive.ledger.Helpers;
 import com.takefive.ledger.R;
-import com.takefive.ledger.dagger.ledger.Helper;
 import com.takefive.ledger.midData.Money;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.presenter.NewBillAmountPresenter;
@@ -37,7 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.zip.Inflater;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -52,7 +45,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
     @Bind(R.id.newBillAmount)
     MoneyEdit mTotalAmount;
     @Bind(R.id.newBillMembersListView)
-    ListView mRecyclerView;
+    ListView mListView;
     @Bind(R.id.newBillAmountLeft)
     TextView mAmountLeft;
 
@@ -78,12 +71,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         mTotalAmount.setOnAmountChangeListener(presenter::setTotalAmount);
         adapter = new MembersSelectionAdapter(getContext(), new ArrayList<>());
-        /*
-        mRecyclerView.setHasFixedSize(false);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mRecyclerView.setAdapter(adapter);
-        */
-        mRecyclerView.setAdapter(adapter);
+        mListView.setAdapter(adapter);
 
         // Initialize all texts
         presenter.attachView(this);
@@ -157,11 +145,6 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
 
         public void updatePersonAmountFromPresenter(String byId, Money amount) {
-            /*
-            if (!idToItemView.containsKey(byId))
-                return;
-            idToItemView.get(byId).setAmount(amount);
-            */
             notifyDataSetChanged();
         }
 
@@ -244,12 +227,6 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                             return false;
                     }
                 });
-                /*
-                final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
-                    presenter.inputAmountForPerson(person._id, amount);
-                };
-                mAmount.setOnAmountChangeListener(amountChangeListener);
-                */
                 mName.setText(person.name);
                 Picasso.with(mContext).load(person.avatarUrl).into(mAvatar);
                 emptyLayout.setVisibility(View.GONE);
@@ -284,107 +261,5 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         public int getCount() {
             return mInfoList.size() + 1;
         }
-
-        /*
-        @Override
-        public void onViewAttachedToWindow(ViewHolder holder) {
-            Log.d("NewBillRecycle", "Attach " + holder.mName.getText() + " with id " + holder.mPersonId);
-
-            // Force NOT recycling data
-            String personId = holder.mPersonId;
-            if (cacheIsAutoSplit.containsKey(personId) && cacheIsAutoSplit.get(personId)) {
-                // force override view state.
-                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
-                holder.mAmount.setEnabled(false);
-
-                // This will help us override amount text
-                presenter.enableAutomaticAmountFor(personId);
-            } else if (cacheHandInput.containsKey(personId)) {
-                presenter.disableAutomaticAmountFor(personId, false);
-
-                // force override view state.
-                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
-                holder.mAmount.setEnabled(true);
-                holder.mAmount.setAmount(cacheHandInput.get(personId));
-                presenter.inputAmountForPerson(personId, cacheHandInput.get(personId));
-            } else {
-                // This should be the case where the attached item is a totally new data.
-                // We should clear all View states for it.
-                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
-                holder.mAmount.setEnabled(true);
-                holder.mAmount.setAmount(zero);
-            }
-
-            // Clear this person's cache because its mission has ended
-            cacheHandInput.remove(personId);
-            cacheIsAutoSplit.remove(personId);
-
-            Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
-            super.onViewAttachedToWindow(holder);
-        }
-
-        @Override
-        public void onViewDetachedFromWindow(ViewHolder holder) {
-            Log.d("NewBillRecycle", "Detach " + holder.mName.getText() + " with id " + holder.mPersonId);
-
-            // Prepare for: Force NOT recycling data
-            MoneyEdit edit = holder.mAmount;
-            String personId = holder.mPersonId;
-            if (edit.isEnabled()) {
-                cacheHandInput.put(personId, edit.getAmount());
-                cacheIsAutoSplit.put(personId, false);
-                presenter.inputAmountForPerson(personId, zero);
-            } else {
-                cacheIsAutoSplit.put(personId, true);
-                presenter.disableAutomaticAmountFor(personId, false);
-            }
-            Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
-            super.onViewDetachedFromWindow(holder);
-        }
-
-        @Override
-        public boolean onFailedToRecycleView(ViewHolder holder) {
-            return super.onFailedToRecycleView(holder);
-        }
-
-        @Override
-        public void onViewRecycled(ViewHolder holder) {
-            super.onViewRecycled(holder);
-        }
-
-        @Override
-        public int getItemCount() {
-            return mInfoList.size() + 1;
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-
-            View emptyLayout;
-            View contentLayout;
-            Button mNewPerson;
-            Button mReset;
-            AwesomeTextView mAutoSplit;
-            BootstrapCircleThumbnail mAvatar;
-            TextView mName;
-            MoneyEdit mAmount;
-            String mPersonId;
-
-            public ViewHolder(View itemView) {
-                super(itemView);
-                this.mPersonId = null;
-                emptyLayout = itemView.findViewById(R.id.personEmptyLayout);
-                contentLayout = itemView.findViewById(R.id.personContentLayout);
-                mNewPerson = (Button) itemView.findViewById(R.id.personAdd);
-                mReset = (Button) itemView.findViewById(R.id.personReset);
-                mAvatar = (BootstrapCircleThumbnail) itemView.findViewById(R.id.personAvatar);
-                mName = (TextView) itemView.findViewById(R.id.personName);
-                mAmount = (MoneyEdit) itemView.findViewById(R.id.personAmount);
-                mAutoSplit = ButterKnife.findById(itemView, R.id.autoSplit);
-            }
-
-
-        }
-        */
-
     }
 }

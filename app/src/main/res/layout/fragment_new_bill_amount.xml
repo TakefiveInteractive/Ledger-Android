@@ -19,6 +19,7 @@
 
     <com.takefive.ledger.view.utils.MoneyEdit
             android:id="@+id/newBillAmount"
+            android:imeOptions="actionDone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="@dimen/general_text_size"
