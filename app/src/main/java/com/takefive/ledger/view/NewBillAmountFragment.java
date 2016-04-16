@@ -11,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.beardedhen.androidbootstrap.AwesomeTextView;
@@ -32,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.zip.Inflater;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -45,8 +48,8 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
     @Bind(R.id.newBillAmount)
     MoneyEdit mTotalAmount;
-    @Bind(R.id.newBillMembersRecyclerView)
-    RecyclerView mRecyclerView;
+    @Bind(R.id.newBillMembersListView)
+    ListView mRecyclerView;
     @Bind(R.id.newBillAmountLeft)
     TextView mAmountLeft;
 
@@ -72,8 +75,11 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         mTotalAmount.setOnAmountChangeListener(presenter::setTotalAmount);
         adapter = new MembersSelectionAdapter(getContext(), new ArrayList<>());
+        /*
         mRecyclerView.setHasFixedSize(false);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.setAdapter(adapter);
+        */
         mRecyclerView.setAdapter(adapter);
 
         // Initialize all texts
@@ -93,10 +99,6 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
     public void onStop() {
         presenter.detachView();
         super.onStop();
-    }
-
-    public List<RawPerson> getSelection() {
-        return adapter.getSelection();
     }
 
     @Override
@@ -144,17 +146,11 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         void onConfirmAmount(Money total, Map<String, Money> amounts);
     }
 
-    private class MembersSelectionAdapter extends RecyclerView.Adapter<MembersSelectionAdapter.ViewHolder> {
+    private class MembersSelectionAdapter extends ArrayAdapter<RawPerson> {
 
         private Context mContext;
         private List<RawPerson> mInfoList;
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
-
-
-        // WRITE these ONLY when the view is detached
-        // READ/DELETE these ONLY when the view is reattached.
-        private HashMap<String, Boolean> cacheIsAutoSplit = new HashMap<>();
-        private HashMap<String, Money> cacheHandInput = new HashMap<>();
 
         public MoneyEdit getPersonAmountEdit(String byId) {
             if (!idToItemView.containsKey(byId))
@@ -162,72 +158,84 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
             return idToItemView.get(byId);
         }
 
-
-        public MembersSelectionAdapter(Context context, List<RawPerson> infoList) {
-            mContext = context;
-            mInfoList = infoList;
+        public MembersSelectionAdapter(Context context, List<RawPerson> mInfoList) {
+            super(context, R.layout.item_person_selection, mInfoList);
+            this.mInfoList = mInfoList;
+            this.mContext = context;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_person_selection, parent, false);
-            return new ViewHolder(v);
-        }
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_person_selection, parent, false);
 
-        @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            if (position == 0) {
-                holder.mNewPerson.setOnClickListener(v -> {
+            View emptyLayout = ButterKnife.findById(view, R.id.personEmptyLayout);
+            View contentLayout = ButterKnife.findById(view, R.id.personContentLayout);
+            Button mNewPerson = ButterKnife.findById(view, R.id.personAdd);
+            Button mReset = ButterKnife.findById(view, R.id.personReset);
+            AwesomeTextView mAutoSplit = ButterKnife.findById(view, R.id.autoSplit);
+            BootstrapCircleThumbnail mAvatar = ButterKnife.findById(view, R.id.personAvatar);
+            TextView mName = ButterKnife.findById(view, R.id.personName);
+            MoneyEdit mAmount = ButterKnife.findById(view, R.id.personAmount);
+
+            if(position == 0) {
+                mNewPerson.setOnClickListener(v -> {
                     NewBillMembersFragment fragment = new NewBillMembersFragment();
                     fragment.setSelection(StreamSupport.stream(mInfoList
                     ).map(person -> person._id).collect(Collectors.toList()));
                     fragment.setOnSelectionCompleteListener(selection -> {
+                        presenter.clearExceptTotalAmount();
                         mInfoList = selection;
                         notifyDataSetChanged();
                     });
                     fragment.show(getFragmentManager(), "fragment_new_bill_members");
                 });
-                holder.emptyLayout.setVisibility(View.VISIBLE);
-                holder.contentLayout.setVisibility(View.GONE);
+                emptyLayout.setVisibility(View.VISIBLE);
+                contentLayout.setVisibility(View.GONE);
             } else {
                 --position;
                 RawPerson person = mInfoList.get(position);
                 final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
                 };
-                holder.mPersonId = person._id;
-                holder.mAmount.setOnAmountChangeListener(amountChangeListener);
-                holder.mName.setText(person.name);
-                Picasso.with(mContext).load(person.avatarUrl).into(holder.mAvatar);
-                holder.emptyLayout.setVisibility(View.GONE);
-                holder.contentLayout.setVisibility(View.VISIBLE);
-                holder.mAutoSplit.setOnClickListener(v -> {
+                mAmount.setOnAmountChangeListener(amountChangeListener);
+                mName.setText(person.name);
+                Picasso.with(mContext).load(person.avatarUrl).into(mAvatar);
+                emptyLayout.setVisibility(View.GONE);
+                contentLayout.setVisibility(View.VISIBLE);
+                mAutoSplit.setOnClickListener(v -> {
                     synchronized (adapter) {
-                        if (holder.mAmount.isEnabled()) {
+                        if (mAmount.isEnabled()) {
                             // the order of function calls are important
-                            holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
-                            holder.mAmount.setEnabled(false);
-                            holder.mAmount.setOnAmountChangeListener(null);
+                            mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
+                            mAmount.setEnabled(false);
+                            mAmount.setOnAmountChangeListener(null);
                             presenter.enableAutomaticAmountFor(person._id);
                         } else {
                             // the order of function calls are important
                             presenter.disableAutomaticAmountFor(person._id, true);
-                            holder.mAmount.setOnAmountChangeListener(amountChangeListener);
-                            holder.mAmount.setEnabled(true);
-                            holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                            mAmount.setOnAmountChangeListener(amountChangeListener);
+                            mAmount.setEnabled(true);
+                            mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
                         }
                     }
                 });
 
-                idToItemView.put(person._id, holder.mAmount);
+                idToItemView.put(person._id, mAmount);
             }
+
+            return view;
         }
 
         public List<RawPerson> getSelection() {
             return mInfoList;
         }
 
+        @Override
+        public int getCount() {
+            return mInfoList.size() + 1;
+        }
+
+        /*
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             Log.d("NewBillRecycle", "Attach " + holder.mName.getText() + " with id " + holder.mPersonId);
@@ -247,8 +255,14 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 // force override view state.
                 holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
                 holder.mAmount.setEnabled(true);
-                holder.mAmount.setText(cacheHandInput.get(personId).toString());
+                holder.mAmount.setAmount(cacheHandInput.get(personId));
                 presenter.inputAmountForPerson(personId, cacheHandInput.get(personId));
+            } else {
+                // This should be the case where the attached item is a totally new data.
+                // We should clear all View states for it.
+                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                holder.mAmount.setEnabled(true);
+                holder.mAmount.setAmount(zero);
             }
 
             // Clear this person's cache because its mission has ended
@@ -320,6 +334,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
 
         }
+        */
 
     }
 }

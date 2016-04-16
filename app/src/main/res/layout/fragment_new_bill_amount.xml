@@ -28,8 +28,8 @@
             android:layout_marginRight="50dp"
             android:textAlignment="center"/>
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/newBillMembersRecyclerView"
+    <ListView
+            android:id="@+id/newBillMembersListView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/general_margin"
