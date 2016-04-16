@@ -41,7 +41,7 @@ public class Money {
         this.type = Currency.getInstance(locale);
         this.locale = locale;
         this.formatter = NumberFormat.getCurrencyInstance(locale);
-        this.value = Long.parseLong(value.replaceAll("[^\\d]", ""));
+        this.value = Long.parseLong(value.replaceAll("[^-\\d]", ""));
     }
 
     public boolean isNegative() {

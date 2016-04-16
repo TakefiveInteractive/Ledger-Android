@@ -124,7 +124,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
     @Override
     public void updateAmountForPerson(String id, Money amount) {
-        adapter.getPersonAmountEdit(id).setAmount(amount);
+        adapter.updatePersonAmountFromPresenter(id, amount);
     }
 
     @Override
@@ -151,11 +151,13 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         private Context mContext;
         private List<RawPerson> mInfoList;
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
+        private HashMap<String, Money> person2Amount = new HashMap<>();
+        private HashMap<String, Boolean> isAutoSplit = new HashMap<>();
 
-        public MoneyEdit getPersonAmountEdit(String byId) {
+        public void updatePersonAmountFromPresenter(String byId, Money amount) {
             if (!idToItemView.containsKey(byId))
-                return null;
-            return idToItemView.get(byId);
+                return;
+            idToItemView.get(byId).setAmount(amount);
         }
 
         public MembersSelectionAdapter(Context context, List<RawPerson> mInfoList) {
@@ -166,16 +168,17 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            View view = LayoutInflater.from(getContext()).inflate(R.layout.item_person_selection, parent, false);
+            if(convertView == null)
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_person_selection, parent, false);
 
-            View emptyLayout = ButterKnife.findById(view, R.id.personEmptyLayout);
-            View contentLayout = ButterKnife.findById(view, R.id.personContentLayout);
-            Button mNewPerson = ButterKnife.findById(view, R.id.personAdd);
-            Button mReset = ButterKnife.findById(view, R.id.personReset);
-            AwesomeTextView mAutoSplit = ButterKnife.findById(view, R.id.autoSplit);
-            BootstrapCircleThumbnail mAvatar = ButterKnife.findById(view, R.id.personAvatar);
-            TextView mName = ButterKnife.findById(view, R.id.personName);
-            MoneyEdit mAmount = ButterKnife.findById(view, R.id.personAmount);
+            View emptyLayout = ButterKnife.findById(convertView, R.id.personEmptyLayout);
+            View contentLayout = ButterKnife.findById(convertView, R.id.personContentLayout);
+            Button mNewPerson = ButterKnife.findById(convertView, R.id.personAdd);
+            Button mReset = ButterKnife.findById(convertView, R.id.personReset);
+            AwesomeTextView mAutoSplit = ButterKnife.findById(convertView, R.id.autoSplit);
+            BootstrapCircleThumbnail mAvatar = ButterKnife.findById(convertView, R.id.personAvatar);
+            TextView mName = ButterKnife.findById(convertView, R.id.personName);
+            MoneyEdit mAmount = ButterKnife.findById(convertView, R.id.personAmount);
 
             if(position == 0) {
                 mNewPerson.setOnClickListener(v -> {
@@ -184,6 +187,9 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     ).map(person -> person._id).collect(Collectors.toList()));
                     fragment.setOnSelectionCompleteListener(selection -> {
                         presenter.clearExceptTotalAmount();
+                        idToItemView.clear();
+                        person2Amount.clear();
+                        isAutoSplit.clear();
                         mInfoList = selection;
                         notifyDataSetChanged();
                     });
@@ -194,6 +200,19 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
             } else {
                 --position;
                 RawPerson person = mInfoList.get(position);
+                String personId = person._id;
+
+                // Force remove state of autoSplit and inputted value.
+                // Could also use a cache, but because Android destroy views as soon as invisible, not very viable.
+                if(isAutoSplit.containsKey(personId)) {
+                    mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                    mAmount.setAmount(zero);
+                    mAmount.setEnabled(true);
+                }
+                mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                mAmount.setAmount(zero);
+                mAmount.setEnabled(true);
+
                 final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
                 };
@@ -223,7 +242,7 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                 idToItemView.put(person._id, mAmount);
             }
 
-            return view;
+            return convertView;
         }
 
         public List<RawPerson> getSelection() {

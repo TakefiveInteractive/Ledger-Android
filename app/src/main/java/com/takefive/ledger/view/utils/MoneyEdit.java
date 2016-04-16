@@ -100,7 +100,7 @@ public class MoneyEdit extends EditText {
         amount = m;
         String newStr = m.toString();
         setText(newStr);
-        setSelection(newStr.length());
+        setSelection(getText().length());
     }
 
     public void setOnAmountChangeListener(OnAmountChangeListener listener) {
