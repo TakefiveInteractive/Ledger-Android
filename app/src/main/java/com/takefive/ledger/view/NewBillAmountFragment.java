@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -223,11 +224,32 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
                     }
                 }
 
-                mAmount.set
+                mAmount.setOnEditorActionListener((v2, actionId, event) -> {
+                    switch (actionId) {
+                        case EditorInfo.IME_ACTION_DONE:
+                        case EditorInfo.IME_ACTION_GO:
+                        case EditorInfo.IME_ACTION_NEXT:
+                        case EditorInfo.IME_ACTION_NONE:
+                        case EditorInfo.IME_ACTION_PREVIOUS:
+                        case EditorInfo.IME_ACTION_SEARCH:
+                        case EditorInfo.IME_ACTION_SEND:
+                        case EditorInfo.IME_ACTION_UNSPECIFIED:
+                            presenter.inputAmountForPerson(person._id, mAmount.getAmount());
+                            if(getActivity().getCurrentFocus() != null) {
+                                InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                                inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                            }
+                            return true;
+                        default:
+                            return false;
+                    }
+                });
+                /*
                 final MoneyEdit.OnAmountChangeListener amountChangeListener = amount -> {
                     presenter.inputAmountForPerson(person._id, amount);
                 };
                 mAmount.setOnAmountChangeListener(amountChangeListener);
+                */
                 mName.setText(person.name);
                 Picasso.with(mContext).load(person.avatarUrl).into(mAvatar);
                 emptyLayout.setVisibility(View.GONE);

@@ -83,6 +83,7 @@
             android:paddingLeft="@dimen/general_padding"
             android:paddingRight="@dimen/general_padding"
             android:textColor="@android:color/black"
+            android:imeOptions="actionGo"
             android:textSize="@dimen/general_text_size" />
 
     </LinearLayout>
