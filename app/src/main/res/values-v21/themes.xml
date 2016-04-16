@@ -19,13 +19,14 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
     </style>
 
-    <style name="BillDetailTheme" parent="MyTheme">
+    <style name="MainTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#fff</item> -->
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
 
         <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/explode</item>
-        <item name="android:windowExitTransition">@android:transition/explode</item>
+        <item name="android:windowReenterTransition">@transition/slide_top_and_fade</item>
+        <item name="android:windowExitTransition">@transition/slide_top_and_fade</item>
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">
@@ -37,12 +38,21 @@
     </style>
 
     <style name="WelcomeTheme" parent="MyTheme">
+    </style>
+
+    <style name="NewBillTheme" parent="MyTheme">
+        <!-- <item name="android:navigationBarColor">#000</item> -->
+        <item name="actionMenuTextColor">@android:color/white</item>
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="BillDetailTheme" parent="MyTheme">
         <!-- enable window content transitions -->
         <item name="android:windowActivityTransitions">true</item>
 
         <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/explode</item>
-        <item name="android:windowExitTransition">@android:transition/explode</item>
+        <item name="android:windowEnterTransition">@transition/slide_bottom_and_fade</item>
+        <item name="android:windowExitTransition">@transition/slide_bottom_and_fade</item>
 
         <!-- specify shared element transitions -->
         <item name="android:windowSharedElementEnterTransition">

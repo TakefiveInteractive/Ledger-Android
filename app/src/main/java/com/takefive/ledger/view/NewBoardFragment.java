@@ -106,6 +106,11 @@ public class NewBoardFragment extends DialogFragment {
         });
     }
 
+    @OnClick(R.id.newBoardCancel)
+    public void close() {
+        this.dismiss();
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

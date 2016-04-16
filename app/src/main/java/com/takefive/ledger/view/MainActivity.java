@@ -89,12 +89,6 @@ public class MainActivity extends AppCompatActivity implements IMainView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_testing:
-                startActivity(new Intent(this, BillDetailActivity.class));
-                return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

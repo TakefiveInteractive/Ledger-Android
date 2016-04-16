@@ -95,6 +95,7 @@ public class MainBillFrag extends NamedFragment {
             mBillDetail.setContent(((ShownBill)mList.getItemAtPosition(position)).rawBill);
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
             */
+            // Shared element is not used :(
             String transitionName = getString(R.string.bill_to_detail);
             startActivity(new Intent(getActivity(), BillDetailActivity.class),
                     ActivityOptions.makeSceneTransitionAnimation(this.getActivity(), view, transitionName).toBundle());

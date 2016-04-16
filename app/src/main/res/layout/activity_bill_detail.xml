@@ -26,90 +26,96 @@
                     android:id="@+id/billDetailImage"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/gradient_background"
                     app:layout_collapseMode="pin"
                     android:scaleType="centerCrop"/>
 
-            <RelativeLayout
-                    android:id="@+id/billDetailSummaryLayout"
+            <LinearLayout
+                    android:id="@+id/billDetailSummaryContainerLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/content_padding_normal"
+                    android:background="@color/colorPrimary"
                     app:layout_scrollFlags="scroll|exitUntilCollapsed"
                     android:layout_gravity="bottom"
-                    android:background="@color/colorPrimary"
-                    app:layout_collapseMode="none"
-                    android:transitionName="@string/bill_to_detail">
+                    app:layout_collapseMode="none">
 
-                <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
-                        android:id="@+id/billDetailAvatar"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:src="@drawable/person_image_empty"
-                        android:scaleType="centerCrop"
-                        bootstrap:hasBorder="false"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"/>
-
-                <LinearLayout
-                        android:layout_width="wrap_content"
+                <RelativeLayout
+                        android:id="@+id/billDetailSummaryLayout"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_toRightOf="@id/billDetailAvatar"
-                        android:layout_toLeftOf="@+id/billDetailAmountLayout"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/bill_detail_name_margin"
-                        android:layout_marginRight="@dimen/bill_detail_name_margin">
+                        android:orientation="horizontal"
+                        android:padding="@dimen/content_padding_normal"
+                        android:transitionName="@string/bill_to_detail">
 
-                    <TextView
-                            android:id="@+id/billDetailTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="Something really long"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_large"/>
+                    <com.beardedhen.androidbootstrap.BootstrapCircleThumbnail
+                            android:id="@+id/billDetailAvatar"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/person_image_empty"
+                            android:scaleType="centerCrop"
+                            bootstrap:hasBorder="false"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"/>
 
-                    <TextView
-                            android:id="@+id/billDetailRecipient"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="paid by Yu Wang"
-                            android:textSize="@dimen/text_size_medium"
-                            android:singleLine="true"
-                            android:textColor="@android:color/white"/>
-
-                </LinearLayout>
-
-                <LinearLayout
-                        android:id="@+id/billDetailAmountLayout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
-                        android:gravity="end">
-
-                    <TextView
-                            android:id="@+id/amount"
+                    <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="$12.11"
-                            android:textColor="@android:color/white"
-                            android:textSize="@dimen/text_size_large"/>
+                            android:orientation="vertical"
+                            android:layout_toRightOf="@id/billDetailAvatar"
+                            android:layout_toLeftOf="@+id/billDetailAmountLayout"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/bill_detail_name_margin"
+                            android:layout_marginRight="@dimen/bill_detail_name_margin">
 
-                    <TextView
-                            android:id="@+id/time"
+                        <TextView
+                                android:id="@+id/billDetailTitle"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Something really long"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/text_size_large"/>
+
+                        <TextView
+                                android:id="@+id/billDetailRecipient"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="paid by Yu Wang"
+                                android:textSize="@dimen/text_size_medium"
+                                android:singleLine="true"
+                                android:textColor="@android:color/white"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                            android:id="@+id/billDetailAmountLayout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Jan 1"
-                            android:textSize="@dimen/text_size_medium"
-                            android:layout_gravity="end"
-                            android:textColor="@android:color/white"/>
+                            android:orientation="vertical"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:gravity="end">
 
-                </LinearLayout>
+                        <TextView
+                                android:id="@+id/amount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="$12.11"
+                                android:textColor="@android:color/white"
+                                android:textSize="@dimen/text_size_large"/>
 
-            </RelativeLayout>
+                        <TextView
+                                android:id="@+id/time"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Jan 1"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_gravity="end"
+                                android:textColor="@android:color/white"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+            </LinearLayout>
 
             <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
