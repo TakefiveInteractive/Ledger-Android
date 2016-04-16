@@ -6,8 +6,6 @@ import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.view.View;
 import android.widget.EditText;
 
 import com.takefive.ledger.Helpers;
@@ -23,8 +21,6 @@ import java.util.Locale;
  */
 public class MoneyEdit extends EditText {
 
-    private boolean parsingText;
-
     private OnAmountChangeListener listener;
 
     private NumberFormat format;
@@ -35,40 +31,94 @@ public class MoneyEdit extends EditText {
 
     final private Money zero;
 
+    private Money amount;
+
     public MoneyEdit(Context context) {
         super(context);
-        init();
         locale = context.getResources().getConfiguration().locale;
         currency = Currency.getInstance(locale);
         zero = new Money(locale, 0);
+        init();
     }
 
     public MoneyEdit(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
         locale = context.getResources().getConfiguration().locale;
         currency = Currency.getInstance(locale);
         zero = new Money(locale, 0);
+        init();
     }
 
     public MoneyEdit(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init();
         locale = context.getResources().getConfiguration().locale;
         currency = Currency.getInstance(locale);
         zero = new Money(locale, 0);
+        init();
     }
 
     private void init() {
-        parsingText = false;
-        format = NumberFormat.getCurrencyInstance(getTextLocale());
-        format.setRoundingMode(RoundingMode.DOWN);
-        listener = null;
-        setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
-        setRawInputType(Configuration.KEYBOARD_QWERTY);
-        addTextChangedListener(new MoneyFormatListener());
-        setHint(Currency.getInstance(getTextLocale()).getSymbol());
-        setText("0.00");
+        try {
+            format = NumberFormat.getCurrencyInstance(getTextLocale());
+            format.setRoundingMode(RoundingMode.DOWN);
+            listener = null;
+            amount = zero;
+
+            setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
+            setRawInputType(Configuration.KEYBOARD_QWERTY);
+            setHint(Currency.getInstance(getTextLocale()).getSymbol());
+            setAmount(zero);
+            addTextChangedListener(new MoneyFormatListener());
+            /*
+            setOnKeyListener((v, keyCode, event) -> {
+                if(event.getAction() == KeyEvent.ACTION_DOWN) {
+                    switch (keyCode) {
+                        case KeyEvent.KEYCODE_0:
+                            amount = amount.appendDigit(0);
+                            break;
+                        case KeyEvent.KEYCODE_1:
+                            amount = amount.appendDigit(1);
+                            break;
+                        case KeyEvent.KEYCODE_2:
+                            amount = amount.appendDigit(2);
+                            break;
+                        case KeyEvent.KEYCODE_3:
+                            amount = amount.appendDigit(3);
+                            break;
+                        case KeyEvent.KEYCODE_4:
+                            amount = amount.appendDigit(4);
+                            break;
+                        case KeyEvent.KEYCODE_5:
+                            amount = amount.appendDigit(5);
+                            break;
+                        case KeyEvent.KEYCODE_6:
+                            amount = amount.appendDigit(6);
+                            break;
+                        case KeyEvent.KEYCODE_7:
+                            amount = amount.appendDigit(7);
+                            break;
+                        case KeyEvent.KEYCODE_8:
+                            amount = amount.appendDigit(8);
+                            break;
+                        case KeyEvent.KEYCODE_9:
+                            amount = amount.appendDigit(9);
+                            break;
+                        case KeyEvent.KEYCODE_DEL:
+                            amount = amount.removeDigits(1);
+                            break;
+                        default:
+                            break;
+                    }
+                    setAmount(amount);
+                    if (listener != null)
+                        listener.onAmountChange(amount);
+                }
+                return true;
+            });
+            */
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
     }
 
     @Override
@@ -77,13 +127,14 @@ public class MoneyEdit extends EditText {
     }
 
     public Money getAmount() {
-        try {
-            Money ans = new Money(locale, getText().toString());
-            return ans;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return zero;
-        }
+        return amount;
+    }
+
+    public void setAmount(Money m) {
+        amount = m;
+        String newStr = m.toString();
+        setText(newStr);
+        setSelection(newStr.length());
     }
 
     public void setOnAmountChangeListener(OnAmountChangeListener listener) {
@@ -103,40 +154,28 @@ public class MoneyEdit extends EditText {
 
         @Override
         public void afterTextChanged(Editable s) {
+            removeTextChangedListener(this);
 
-            if(!isEnabled())
-                return;
+            try {
+                Money newAmount = new Money(locale, s.toString());
+                boolean amountChange = !newAmount.equals(amount);
+                amount = newAmount;
 
-            if (parsingText) {
-                parsingText = false;
-                if(listener != null)
-                    listener.onAmountChange(getAmount());
-                return;
-            }
+                String newStr = newAmount.toString();
+                setText(newStr);
+                setSelection(newStr.length());
 
-            parsingText = true;
-            String str = s.toString().replaceAll("[^\\d.]", "");
-            String newStr;
-
-            int dotIndex = str.indexOf('.');
-            if (dotIndex != -1) {
-                if (dotIndex >= str.length() - 2)
-                    newStr = str.substring(0, dotIndex - 1) + "." + str.substring(dotIndex - 1, dotIndex) + str.substring(dotIndex + 1);
-                else {
-                    if (str.charAt(0) == '0')
-                        newStr = "";
-                    else
-                        newStr = str.substring(0, dotIndex);
-                    newStr += str.substring(dotIndex + 1, dotIndex + 2) + "." + str.substring(dotIndex + 2);
+                if (amountChange && listener != null) {
+                    amount = newAmount;
+                    listener.onAmountChange(newAmount);
                 }
-            } else {
-                Log.d("Formatting", "Mysterious condition where there isn't a dot");
-                newStr = "0.00";
+            } catch (NumberFormatException err) {
+                err.printStackTrace();
+                // make sure we use the last valid value.
+                setAmount(amount);
             }
 
-            String formatted = format.format(Double.valueOf(newStr));
-            setText(formatted);
-            setSelection(formatted.length());
+            addTextChangedListener(this);
         }
     }
 

@@ -1,7 +1,5 @@
 package com.takefive.ledger.midData;
 
-import android.util.Log;
-
 import com.takefive.ledger.Helpers;
 
 import java.math.BigDecimal;
@@ -29,7 +27,7 @@ public class Money {
     final Random r = new Random();
 
     // value includes fraction part as integer
-    final Long value;
+    final long value;
     final NumberFormat formatter;
 
     public Money(Locale locale, long value) {
@@ -48,6 +46,19 @@ public class Money {
 
     public boolean isNegative() {
         return value < 0;
+    }
+
+    public Money appendDigit(int digit) {
+        if(digit > 9 || digit < 0)
+            return null;
+        return new Money(locale, value * 10 + digit);
+    }
+
+    public Money removeDigits(int numDigits) {
+        long ans = value;
+        for(int i=0; i<numDigits; i++)
+            ans = ans / 10;
+        return new Money(locale, ans);
     }
 
     // Returns a NEW Money
@@ -78,7 +89,12 @@ public class Money {
             builder.append('-');
         builder.append(value / powered);
         builder.append('.');
-        builder.append(value % powered);
+
+        String fracString = Long.toString(value % powered);
+        int needZeros = type.getDefaultFractionDigits() - fracString.length();
+        for(int i=0; i<needZeros; i++)
+            builder.append(0);
+        builder.append(fracString);
 
         return Helpers.currencyText(builder.toString(), locale);
     }

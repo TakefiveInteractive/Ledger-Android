@@ -18,7 +18,9 @@ import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
 import com.beardedhen.androidbootstrap.api.defaults.DefaultBootstrapBrand;
 import com.squareup.picasso.Picasso;
+import com.takefive.ledger.Helpers;
 import com.takefive.ledger.R;
+import com.takefive.ledger.dagger.ledger.Helper;
 import com.takefive.ledger.midData.Money;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.presenter.NewBillAmountPresenter;
@@ -148,6 +150,12 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         private List<RawPerson> mInfoList;
         private HashMap<String, MoneyEdit> idToItemView = new HashMap<>();
 
+
+        // WRITE these ONLY when the view is detached
+        // READ/DELETE these ONLY when the view is reattached.
+        private HashMap<String, Boolean> cacheIsAutoSplit = new HashMap<>();
+        private HashMap<String, Money> cacheHandInput = new HashMap<>();
+
         public MoneyEdit getPersonAmountEdit(String byId) {
             if (!idToItemView.containsKey(byId))
                 return null;
@@ -223,12 +231,30 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         @Override
         public void onViewAttachedToWindow(ViewHolder holder) {
             Log.d("NewBillRecycle", "Attach " + holder.mName.getText() + " with id " + holder.mPersonId);
-            MoneyEdit edit = holder.mAmount;
+
+            // Force NOT recycling data
             String personId = holder.mPersonId;
-            Log.d("NewBillRecycle", "isEnabled = " + edit.isEnabled());
-            if(edit.isEnabled())
-                presenter.inputAmountForPerson(personId, edit.getAmount());
-            else presenter.enableAutomaticAmountFor(personId);
+            if (cacheIsAutoSplit.containsKey(personId) && cacheIsAutoSplit.get(personId)) {
+                // force override view state.
+                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.WARNING);
+                holder.mAmount.setEnabled(false);
+
+                // This will help us override amount text
+                presenter.enableAutomaticAmountFor(personId);
+            } else if (cacheHandInput.containsKey(personId)) {
+                presenter.disableAutomaticAmountFor(personId, false);
+
+                // force override view state.
+                holder.mAutoSplit.setBootstrapBrand(DefaultBootstrapBrand.REGULAR);
+                holder.mAmount.setEnabled(true);
+                holder.mAmount.setText(cacheHandInput.get(personId).toString());
+                presenter.inputAmountForPerson(personId, cacheHandInput.get(personId));
+            }
+
+            // Clear this person's cache because its mission has ended
+            cacheHandInput.remove(personId);
+            cacheIsAutoSplit.remove(personId);
+
             Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
             super.onViewAttachedToWindow(holder);
         }
@@ -236,12 +262,18 @@ public class NewBillAmountFragment extends ConfirmableFragment implements INewBi
         @Override
         public void onViewDetachedFromWindow(ViewHolder holder) {
             Log.d("NewBillRecycle", "Detach " + holder.mName.getText() + " with id " + holder.mPersonId);
+
+            // Prepare for: Force NOT recycling data
             MoneyEdit edit = holder.mAmount;
             String personId = holder.mPersonId;
-            Log.d("NewBillRecycle", "isEnabled = " + edit.isEnabled());
-            if(edit.isEnabled())
+            if (edit.isEnabled()) {
+                cacheHandInput.put(personId, edit.getAmount());
+                cacheIsAutoSplit.put(personId, false);
                 presenter.inputAmountForPerson(personId, zero);
-            else presenter.disableAutomaticAmountFor(personId, false);
+            } else {
+                cacheIsAutoSplit.put(personId, true);
+                presenter.disableAutomaticAmountFor(personId, false);
+            }
             Log.d("NewBillRecycle", "Presenter = " + presenter.debugString());
             super.onViewDetachedFromWindow(holder);
         }
