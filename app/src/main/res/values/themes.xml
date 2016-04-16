@@ -2,18 +2,7 @@
 <resources>
 
     <style name="BillDetailTheme" parent="MyTheme">
-        <!-- enable window content transitions -->
-        <item name="android:windowActivityTransitions">true</item>
-
-        <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/explode</item>
-        <item name="android:windowExitTransition">@android:transition/explode</item>
-
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_bounds</item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_bounds</item>
+        <!-- define general rules (version insensitive) here -->
     </style>
 
     <style name="ToolbarTheme" parent="Widget.AppCompat.Toolbar">
@@ -26,18 +15,7 @@
     <style name="MainTheme" parent="MyTheme">
     </style>
     <style name="WelcomeTheme" parent="MyTheme">
-        <!-- enable window content transitions -->
-        <item name="android:windowActivityTransitions">true</item>
-
-        <!-- specify enter and exit transitions -->
-        <item name="android:windowEnterTransition">@android:transition/explode</item>
-        <item name="android:windowExitTransition">@android:transition/explode</item>
-
-        <!-- specify shared element transitions -->
-        <item name="android:windowSharedElementEnterTransition">
-            @transition/change_bounds</item>
-        <item name="android:windowSharedElementExitTransition">
-            @transition/change_bounds</item>
+        <!-- define general rules (version insensitive) here -->
         <!-- <item name="android:navigationBarColor">#000</item> -->
         <item name="android:windowFullscreen">false</item>
     </style>
