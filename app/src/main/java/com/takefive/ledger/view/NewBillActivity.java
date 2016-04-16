@@ -315,7 +315,7 @@ public class NewBillActivity extends AppCompatActivity implements INewBill,
         Log.d("NewBillActivity", "Amount fragment confirmed");
         request.amounts = new ArrayList<>();
         for (Map.Entry<String, Money> entry : amounts.entrySet()) {
-            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue()));
+            request.amounts.add(new PersonAmountPair(entry.getKey(), entry.getValue().toDouble()));
         }
     }
 

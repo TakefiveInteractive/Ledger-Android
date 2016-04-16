@@ -9,9 +9,9 @@ public class PersonAmountPair {
 
     public String person;
 
-    public Money balance;
+    public double balance;
 
-    public PersonAmountPair(String person, Money balance) {
+    public PersonAmountPair(String person, double balance) {
         this.person = person;
         this.balance = balance;
     }

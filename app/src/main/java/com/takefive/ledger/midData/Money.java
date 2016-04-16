@@ -80,7 +80,7 @@ public class Money {
         boolean negative = value < 0;
         long value = negative ? -this.value : this.value;
 
-        int powered = 1;
+        long powered = 1;
         for(int i=0; i<type.getDefaultFractionDigits(); i++)
             powered = powered * 10;
 
@@ -97,6 +97,13 @@ public class Money {
         builder.append(fracString);
 
         return Helpers.currencyText(builder.toString(), locale);
+    }
+
+    public double toDouble() {
+        long powered = 1;
+        for(int i=0; i<type.getDefaultFractionDigits(); i++)
+            powered = powered * 10;
+        return (double) value / powered;
     }
 
     public <K> Map<K, Money> fairSplit(Collection<K> keys) {
