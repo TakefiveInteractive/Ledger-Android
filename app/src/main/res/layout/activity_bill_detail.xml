@@ -95,7 +95,7 @@
                             android:gravity="end">
 
                         <TextView
-                                android:id="@+id/amount"
+                                android:id="@+id/billDetailAmount"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="$12.11"
@@ -103,7 +103,7 @@
                                 android:textSize="@dimen/text_size_large"/>
 
                         <TextView
-                                android:id="@+id/time"
+                                android:id="@+id/billDetailTime"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Jan 1"
@@ -155,6 +155,12 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
+                <android.support.v7.widget.RecyclerView
+                        android:id="@+id/billDetailAmounts"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center_horizontal"/>
+
                 <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
@@ -170,7 +176,7 @@
                             android:src="@drawable/ic_comment_black_36dp" />
 
                     <TextView
-                            android:id="@+id/billDescription"
+                            android:id="@+id/billDetailDescription"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Lorem ipsum"
@@ -193,7 +199,7 @@
                             android:src="@drawable/ic_alarm_black_36dp" />
 
                     <TextView
-                            android:id="@+id/billTime"
+                            android:id="@+id/billDetailTime"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="11:59 pm\nJan 6th, 2016"

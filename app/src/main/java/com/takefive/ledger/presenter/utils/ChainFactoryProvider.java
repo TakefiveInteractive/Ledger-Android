@@ -3,6 +3,7 @@ package com.takefive.ledger.presenter.utils;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.takefive.ledger.view.BillDetailActivity;
 import com.takefive.ledger.view.MainActivity;
 import com.takefive.ledger.view.MainBillFrag;
 import com.takefive.ledger.view.MainNavFrag;
@@ -29,12 +30,13 @@ import zyu19.libs.action.chain.config.ThreadPolicy;
         complete = false,
         library = true,
         injects = {
-                WelcomeActivity.class,
-                MainActivity.class,
-                MainNavFrag.class,
-                MainBillFrag.class,
-                NewBoardFragment.class,
-                NewBillActivity.class
+            WelcomeActivity.class,
+            MainActivity.class,
+            MainNavFrag.class,
+            MainBillFrag.class,
+            NewBoardFragment.class,
+            NewBillActivity.class,
+            BillDetailActivity.class
         }
 )
 public class ChainFactoryProvider {

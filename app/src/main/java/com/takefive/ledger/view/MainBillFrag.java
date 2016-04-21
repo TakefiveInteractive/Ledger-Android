@@ -78,6 +78,8 @@ public class MainBillFrag extends NamedFragment {
 
     BillDetailFragment mBillDetail;
 
+    List<ShownBill> mBills;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -95,10 +97,21 @@ public class MainBillFrag extends NamedFragment {
             mBillDetail.setContent(((ShownBill)mList.getItemAtPosition(position)).rawBill);
             mBillDetail.show(getFragmentManager(), "fragment_bill_detail");
             */
-            // Shared element is not used :(
-            String transitionName = getString(R.string.bill_to_detail);
-            startActivity(new Intent(getActivity(), BillDetailActivity.class),
+
+            Intent intent = new Intent(getActivity(), BillDetailActivity.class);
+            intent.putExtra("billId", mBills.get(position).rawBill._id);
+            // Shared element is not used.
+            /*
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                String transitionName = getString(R.string.bill_to_detail);
+                startActivity(intent,
                     ActivityOptions.makeSceneTransitionAnimation(this.getActivity(), view, transitionName).toBundle());
+            }
+            else {
+                startActivity(intent);
+            }
+            */
+            startActivity(intent);
         });
 
         mNew.attachToListView(mList);
@@ -143,7 +156,8 @@ public class MainBillFrag extends NamedFragment {
     }
 
     public void showBillsList(List<ShownBill> bills) {
-        MainBillAdapter adapter = new MainBillAdapter(getContext(), bills);
+        mBills = bills;
+        MainBillAdapter adapter = new MainBillAdapter(getContext(), mBills);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
     }
@@ -185,7 +199,7 @@ public class MainBillFrag extends NamedFragment {
 
             // Set recipient
             String recipientName =
-                    rawBill._id.equals(userStore.getMostRecentUserId()) ? "you" : data.recipientName;
+                    rawBill.recipient.equals(userStore.getMostRecentUserId()) ? "you" : data.recipientName;
             recipient.setText("paid by " + recipientName);
 
             // Set avatar
