@@ -1,16 +1,9 @@
 package com.takefive.ledger.view;
 
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,10 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.beardedhen.androidbootstrap.AwesomeTextView;
 import com.beardedhen.androidbootstrap.BootstrapCircleThumbnail;
-import com.beardedhen.androidbootstrap.BootstrapText;
-import com.beardedhen.androidbootstrap.font.FontAwesome;
 import com.melnykov.fab.FloatingActionButton;
 import com.squareup.picasso.Picasso;
 import com.takefive.ledger.Helpers;
@@ -53,7 +43,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by zyu on 2/3/16.
  */
-public class MainBillFrag extends NamedFragment {
+public class MainBillFragment extends NamedFragment {
 
     public static final int NEW_BILL_REQUEST = 0;
 
@@ -83,7 +73,7 @@ public class MainBillFrag extends NamedFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.frag_main_bill, container, false);
+        View root = inflater.inflate(R.layout.fragment_main_bill, container, false);
         ((MyApplication) getActivity().getApplication()).inject(this);
         ButterKnife.bind(this, root);
 
