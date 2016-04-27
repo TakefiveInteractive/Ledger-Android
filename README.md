@@ -1,8 +1,13 @@
 ### Build requirements
 You must have a debug key registered for Facebook Developement. Our groups share the same Facebook Developer account. You will need to specify the location of you debug key in ```local.properties```:
+
 ```
-keys.ledgerGroupDebug=XXX
+keys.ledgerGroupDebug=/home/user/XXX.keystore
 keys.ledgerGroupDebug.password=XXX
+
+// The following line is optional, and not effective for the 'Release' build variant.
+// But be aware that the url is quoted.
+debug.server.url="http://abc.com/"
 ```
 
 JDK 8, and Build tools with version precisely equal to "23.0.2" are required.

@@ -62,6 +62,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "DEBUG_SERVER_URL", "null"
+        }
+        debug {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+            // the url must be escaped and contained in a quote
+            def debugServerURL = properties.getProperty('debug.server.url')
+            buildConfigField "String", "DEBUG_SERVER_URL", debugServerURL == null ? "null" : debugServerURL
         }
     }
     lintOptions {

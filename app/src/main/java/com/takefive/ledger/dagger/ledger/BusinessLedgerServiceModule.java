@@ -2,6 +2,7 @@ package com.takefive.ledger.dagger.ledger;
 
 import android.content.Context;
 
+import com.takefive.ledger.BuildConfig;
 import com.takefive.ledger.R;
 import com.takefive.ledger.view.WelcomeActivity;
 import com.takefive.ledger.dagger.ILedgerService;
@@ -34,10 +35,16 @@ public class BusinessLedgerServiceModule {
                 .addInterceptor(logging)
                 .build();
         return new Retrofit.Builder()
-                .baseUrl(context.getString(R.string.base_url) + context.getString(R.string.api_version) + "/")
+                .baseUrl(getServerRootUrl(context) + context.getString(R.string.api_version) + "/")
                 .client(client)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
                 .create(ILedgerService.class);
+    }
+
+    public static String getServerRootUrl(Context context) {
+        if(BuildConfig.DEBUG_SERVER_URL != null)
+            return BuildConfig.DEBUG_SERVER_URL;
+        else return context.getString(R.string.base_url);
     }
 }
