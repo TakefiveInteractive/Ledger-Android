@@ -245,6 +245,8 @@
     <dimen name="bill_detail_collapsing_layout_content_height">260dp</dimen>
     <dimen name="bill_detail_name_margin">20dp</dimen>
     <dimen name="bill_detail_content_text_margin">36dp</dimen>
+    <dimen name="bill_detail_amount_item_avatar_size">50dp</dimen>
+    <dimen name="bill_detail_amount_recycler_height">50dp</dimen>
 
     <!-- General values -->
     <dimen name="general_margin">10dp</dimen>

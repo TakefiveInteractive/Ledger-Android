@@ -1,11 +1,15 @@
 package com.takefive.ledger.presenter;
 
+import android.support.v4.util.Pair;
+
 import com.takefive.ledger.midData.ledger.RawBill;
 import com.takefive.ledger.midData.ledger.RawBoard;
 import com.takefive.ledger.midData.ledger.RawBoardSimple;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.midData.view.ShownAmount;
 import com.takefive.ledger.midData.view.ShownBill;
+import com.takefive.ledger.midData.view.ShownBillInflated;
 import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Entry;
 import com.takefive.ledger.model.MyBoards;
@@ -27,8 +31,12 @@ import javax.inject.Inject;
 
 import io.realm.RealmList;
 import io.realm.RealmResults;
+import java8.util.stream.Collectors;
+import java8.util.stream.StreamSupport;
 import okhttp3.ResponseBody;
+import retrofit2.Call;
 import retrofit2.Response;
+import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.ReadOnlyChain;
 
@@ -97,6 +105,7 @@ public class CommonTasks {
         });
     }
 
+    /*
     ReadOnlyChain syncSimpleBoardInfo(RawBoardSimple board) {
         return realmAccess.process(realm -> {
             Board target = new Board();
@@ -120,7 +129,7 @@ public class CommonTasks {
             return target;
         });
     }
-
+    */
 
     ReadOnlyChain syncBoardInfo(RawBoard board) {
         return realmAccess.process(realm -> {
@@ -199,6 +208,90 @@ public class CommonTasks {
                 ansList.add(ans);
             }
             return ansList;
+        });
+    }
+
+    ReadOnlyChain billToBillInflated(RawBill bill) {
+        ShownBillInflated shownBill = new ShownBillInflated();
+        shownBill.rawBill = bill;
+
+        return chainFactory.get(fail -> fail.getCause().printStackTrace())
+            .netThen(() -> realmAccess.process(realm -> {
+                Person person = realm.where(Person.class).equalTo("personId", bill.recipient).findFirst();
+                if (person != null) {
+                    shownBill.recipientAvatarUrl = person.getAvatarUrl();
+                    shownBill.recipientName = person.getName();
+                } else {
+                    Response<RawPerson> personResponse = service.getPerson(bill.recipient).execute();
+                    if (!personResponse.isSuccessful()) {
+                        String msg = personResponse.errorBody().string();
+                        personResponse.errorBody().close();
+                        throw new IOException(msg);
+                    }
+                    RawPerson rawPerson = personResponse.body();
+                    shownBill.recipientAvatarUrl = rawPerson.avatarUrl;
+                    shownBill.recipientName = rawPerson.name;
+                    syncUserInfo(rawPerson);
+                }
+                return null;
+            }))
+            .netThen(() -> {
+                return ActionChain.all(StreamSupport.stream(bill.amounts).map(amount ->
+                    realmAccess.process(realm -> {
+                        String personId = amount.person;
+                        Person person = realm.where(Person.class).equalTo("personId", personId).findFirst();
+                        ShownAmount shownAmount = new ShownAmount();
+                        shownAmount.amount = amount.balance;
+                        if (person != null) {
+                            shownAmount.personAvatarUrl = person.getAvatarUrl();
+                            shownAmount.personName = person.getName();
+                        } else {
+                            Response<RawPerson> personResponse = service.getPerson(personId).execute();
+                            if (!personResponse.isSuccessful()) {
+                                String msg = personResponse.errorBody().string();
+                                personResponse.errorBody().close();
+                                throw new IOException(msg);
+                            }
+                            RawPerson rawPerson = personResponse.body();
+                            shownAmount.personAvatarUrl = rawPerson.avatarUrl;
+                            shownAmount.personName = rawPerson.name;
+                            syncUserInfo(rawPerson);
+                        }
+                        return shownAmount;
+                    })
+                ).collect(Collectors.toList()));
+            })
+            .netThen((List<ShownAmount> amounts) -> {
+                shownBill.amounts = amounts;
+                return shownBill;
+            }).start();
+    }
+
+    ReadOnlyChain getPersonFromCacheOrServer(String personId) {
+        return realmAccess.process(realm -> {
+            Person person = realm.where(Person.class).equalTo("personId", personId).findFirst();
+            if (person != null)
+                return person;
+            else {
+                Response<RawPerson> response = service.getPerson(personId).execute();
+                if (!response.isSuccessful()) {
+                    String msg = response.errorBody().string();
+                    response.errorBody().close();
+                    throw new IOException(msg);
+                }
+                RawPerson rawPerson = response.body();
+
+                realm.beginTransaction();
+                person = new Person();
+                person.setAvatarUrl(rawPerson.avatarUrl);
+                person.setCreatedAt(DateTimeConverter.fromISOString(rawPerson.createdAt).getTime());
+                person.setFacebookId(rawPerson.facebookId);
+                person.setName(rawPerson.name);
+                person.setPersonId(rawPerson._id);
+                realm.commitTransaction();
+
+                return person;
+            }
         });
     }
 
