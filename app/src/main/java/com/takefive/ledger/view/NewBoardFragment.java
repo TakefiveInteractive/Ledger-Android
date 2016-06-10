@@ -63,7 +63,6 @@ public class NewBoardFragment extends DialogFragment {
         ButterKnife.bind(this, root);
         adapter = new FriendsListAdapter(getContext(), new ArrayList<>());
         getDialog().setCanceledOnTouchOutside(false);
-        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.MyFullscreenDialogTheme);
 
         BusinessFbLoginResult fbLoginResult = new BusinessFbLoginResult();
         fbLoginResult.setToken(AccessToken.getCurrentAccessToken());
@@ -118,11 +117,16 @@ public class NewBoardFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog = new Dialog(getContext(), R.style.MyDialogTheme);
-        Window window = dialog.getWindow();
-        // window.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
-        window.requestFeature(Window.FEATURE_NO_TITLE);
+        Dialog dialog = new Dialog(getContext(), R.style.MyFullscreenDialogTheme);
         return dialog;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if(dialog != null)
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     private class FriendsListAdapter extends RecyclerView.Adapter<FriendsListAdapter.ViewHolder> {
