@@ -48,6 +48,9 @@ public class NewBoardFragment extends DialogFragment {
     @Bind(R.id.newBoardFriendsView)
     RecyclerView mRecyclerView;
 
+    @Bind(R.id.remindNoPeople)
+    TextView mRemindNoPeople;
+
     FriendsListAdapter adapter;
 
     IMainView mMainView;
@@ -71,10 +74,17 @@ public class NewBoardFragment extends DialogFragment {
         mMainView = (IMainView) getActivity();
         mPresenter = ((MainActivity)getActivity()).presenter;
 
+        mRecyclerView.setVisibility(View.INVISIBLE);
+        mRemindNoPeople.setVisibility(View.VISIBLE);
+
         mPresenter.loadUserFriends(fbLoginResult, info -> {
             adapter = new FriendsListAdapter(getContext(), info);
             mRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+            if(info.size() != 0) {
+                mRecyclerView.setVisibility(View.VISIBLE);
+                mRemindNoPeople.setVisibility(View.INVISIBLE);
+            }
         });
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
