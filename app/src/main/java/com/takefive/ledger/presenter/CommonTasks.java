@@ -90,6 +90,7 @@ public class CommonTasks {
                 person.setPersonId(userId);
                 person.setName("Me");
                 realm.commitTransaction();
+                userStore.setUserId(userId);
                 return Observable.just(realm.copyFromRealm(person));
                 // TODO: update userId in userStore
             } else {

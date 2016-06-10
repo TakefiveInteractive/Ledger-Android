@@ -21,6 +21,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.midData.view.ShownBill;
+import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.database.SessionStore;
@@ -33,6 +34,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import io.realm.RealmList;
 
 public class MainActivity extends AppCompatActivity implements IMainView {
 
@@ -142,7 +144,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public void showMyBoards(RawMyBoards boards) {
+    public void showMyBoards(RealmList<Board> boards) {
         navFrag.showMyBoards(boards);
     }
 

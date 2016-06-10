@@ -1,5 +1,6 @@
 package com.takefive.ledger.model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -19,6 +20,26 @@ public class Person extends RealmObject {
     private String facebookId;
     private String avatarUrl;
     private long createdAt;
+    private RealmList<Board> boards;
+
+    public RealmList<Board> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(RealmList<Board> boards) {
+        this.boards = boards;
+    }
+
+    public RealmList<Bill> getBills() {
+
+        return bills;
+    }
+
+    public void setBills(RealmList<Bill> bills) {
+        this.bills = bills;
+    }
+
+    private RealmList<Bill> bills;
 
     public String getPersonId() {
         return personId;

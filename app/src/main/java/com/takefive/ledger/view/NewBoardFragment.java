@@ -53,13 +53,17 @@ public class NewBoardFragment extends DialogFragment {
     IMainView mMainView;
     MainPresenter mPresenter;
 
+    @Bind(R.id.snackBarContainer)
+    ViewGroup mSnackBarContainer;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_new_board, container, false);
         ButterKnife.bind(this, root);
         adapter = new FriendsListAdapter(getContext(), new ArrayList<>());
-        getDialog().setCanceledOnTouchOutside(true);
+        getDialog().setCanceledOnTouchOutside(false);
+        setStyle(DialogFragment.STYLE_NO_FRAME, R.style.MyFullscreenDialogTheme);
 
         BusinessFbLoginResult fbLoginResult = new BusinessFbLoginResult();
         fbLoginResult.setToken(AccessToken.getCurrentAccessToken());
@@ -83,11 +87,11 @@ public class NewBoardFragment extends DialogFragment {
     @OnClick(R.id.newBoardSubmit)
     public void createBoard() {
         if (mBoardName.getText().toString().length() == 0) {
-            mMainView.showAlert(R.string.new_board_no_name);
+            showAlert(R.string.new_board_no_name);
             mBoardName.requestFocus();
             return;
         } else if (adapter.getSelected().size() == 0) {
-            mMainView.showAlert(R.string.new_board_no_friends_set);
+            showAlert(R.string.new_board_no_friends_set);
             return;
         }
         NewBoardRequest request = new NewBoardRequest();
@@ -97,10 +101,10 @@ public class NewBoardFragment extends DialogFragment {
         request.members_fromfb = adapter.getSelected();
         mPresenter.createBoard(request, r -> {
             if (r.isSuccessful()) {
-                mMainView.showAlert(R.string.new_board_success);
+                showAlert(R.string.new_board_success);
             } else {
                 Log.e("create board", String.format("code: %d, response: %s", r.code(), r.errorBody().string()));
-                mMainView.showAlert(R.string.network_failure);
+                showAlert(R.string.network_failure);
             }
             this.dismiss();
         });
@@ -180,6 +184,14 @@ public class NewBoardFragment extends DialogFragment {
                 mName = (TextView) mLayout.findViewById(R.id.friendName);
             }
         }
+    }
+
+    public void showAlert(String info) {
+        Snackbar.make(mSnackBarContainer, info, Snackbar.LENGTH_SHORT).show();
+    }
+
+    public void showAlert(int info) {
+        Snackbar.make(mSnackBarContainer, info, Snackbar.LENGTH_SHORT).show();
     }
 
 }

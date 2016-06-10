@@ -63,7 +63,9 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
     public void ledgerLogin() {
         try {
             RealmAccess.enableAccess();
-        } catch (Exception err) {err.printStackTrace();}
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
 
         Observable.<Void>just(null
         ).flatMap(obj -> RxRealmAccess.enableAccess()
@@ -72,6 +74,9 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
         ).subscribe(person -> {
             Realm.getInstance(startRealmConf.get().build());
             view.onLoginSuccess(person.getName());
-        }, throwable -> throwable.printStackTrace());
+        }, throwable -> {
+            throwable.printStackTrace();
+            view.showAlert(R.string.ex_cannot_load_realm);
+        });
     }
 }

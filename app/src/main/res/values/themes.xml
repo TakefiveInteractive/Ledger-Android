@@ -14,4 +14,13 @@
         <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
         <item name="android:background">@android:color/white</item>
     </style>
+
+    <style name="MyFullscreenDialogTheme">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowBackground">@color/myDialogBackground</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:background">@android:color/white</item>
+    </style>
 </resources>

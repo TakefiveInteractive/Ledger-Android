@@ -30,6 +30,7 @@ import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.dagger.UserStore;
+import com.takefive.ledger.model.Board;
 import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.view.database.SessionStore;
@@ -43,6 +44,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import io.realm.RealmList;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
@@ -145,8 +147,8 @@ public class MainNavFrag extends Fragment {
         mUserName.setText(me.getName());
     }
 
-    void showMyBoards(RawMyBoards myBoards) {
-        MainNavAdapter adapter = new MainNavAdapter(getContext(), myBoards.boards);
+    void showMyBoards(RealmList<Board> myBoards) {
+        MainNavAdapter adapter = new MainNavAdapter(getContext(), myBoards);
         mList.setAdapter(adapter);
         adapter.notifyDataSetChanged();
         mListAdapter = adapter;
@@ -157,10 +159,14 @@ public class MainNavFrag extends Fragment {
     }
 
     void onClickItem(int pos) {
-        MainActivity mainActivity = (MainActivity) getActivity();
-        mainActivity.presenter.loadBills(mListAdapter.getItem(pos).id);
-        mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
-        mainActivity.closeDrawers();
+        if(mListAdapter.getCount() == 0) {
+            mNewBoard.callOnClick();
+        } else {
+            MainActivity mainActivity = (MainActivity) getActivity();
+            mainActivity.presenter.loadBills(mListAdapter.getItem(pos).getBoardId());
+            mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
+            mainActivity.closeDrawers();
+        }
     }
 
     @OnClick(R.id.logout)
@@ -168,9 +174,9 @@ public class MainNavFrag extends Fragment {
         ((MainActivity) getActivity()).presenter.logout(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
     }
 
-    class MainNavAdapter extends ArrayAdapter<RawMyBoards.Entry> {
+    class MainNavAdapter extends ArrayAdapter<Board> {
 
-        public MainNavAdapter(Context context, List<RawMyBoards.Entry> objects) {
+        public MainNavAdapter(Context context, List<Board> objects) {
             super(context, R.layout.item_board_list, objects);
         }
 
@@ -182,13 +188,13 @@ public class MainNavFrag extends Fragment {
 
             convertView.setOnClickListener(v -> ((MainActivity) getActivity()).closeDrawers());
 
-            RawMyBoards.Entry data = getItem(position);
+            Board data = getItem(position);
             TextView boardName = ButterKnife.findById(convertView, R.id.boardName);
             DotMark dotMark = ButterKnife.findById(convertView, R.id.dotMark);
 
             //dotMark.setImageDrawable(new ColorDrawable(data.dotColor));
             dotMark.setImageDrawable(new ColorDrawable(Color.BLUE));
-            boardName.setText(data.name);
+            boardName.setText(data.getName());
 
             convertView.setOnClickListener(v -> onClickItem(position));
             return convertView;

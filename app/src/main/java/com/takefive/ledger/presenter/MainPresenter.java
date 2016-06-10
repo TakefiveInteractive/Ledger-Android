@@ -11,8 +11,11 @@ import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.midData.ledger.NewBoardRequest;
 import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.midData.view.ShownBill;
+import com.takefive.ledger.model.Board;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
+import com.takefive.ledger.presenter.utils.RxRealmAccess;
 import com.takefive.ledger.view.IMainView;
 
 
@@ -87,6 +90,15 @@ public class MainPresenter implements IPresenter<IMainView> {
     }
 
     public void loadMyBoards() {
+        tasks.getAndSyncMyUserInfo(
+        ).map(Person::getBoards
+        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).subscribe(view::showMyBoards, err -> {
+            err.printStackTrace();
+            view.showAlert(R.string.ex_cannot_load_realm);
+        });
+
+        /**
         chainFactory.get(errorHolder -> {
             view.showAlert("Cannot get boards: " + errorHolder.getCause().toString());
             errorHolder.getCause().printStackTrace();
@@ -100,12 +112,16 @@ public class MainPresenter implements IPresenter<IMainView> {
             tasks.syncMyBoardsInfo(resp.body());
             return resp.body();
         }).uiConsume(view::showMyBoards).start();
+         **/
     }
 
     public void loadMyUserInfo() {
         tasks.getAndSyncMyUserInfo(
         ).subscribeOn(AndroidSchedulers.mainThread()
-        ).subscribe(view::showMyUserInfo);
+        ).subscribe(view::showMyUserInfo, err -> {
+            err.printStackTrace();
+            view.showAlert(R.string.ex_cannot_load_realm);
+        });
     }
 
     /**
@@ -144,10 +160,10 @@ public class MainPresenter implements IPresenter<IMainView> {
         ).start();
     }
 
-    public void refreshBoardInfo(RawMyBoards.Entry entry) {
+    public void refreshBoardInfo(Board entry) {
         // TODO: actually reload board? Otherwise why is this in Presenter?
-        view.setBoardTitle(entry.name);
-        view.setCurrentBoardId(entry.id);
+        view.setBoardTitle(entry.getName());
+        view.setCurrentBoardId(entry.getBoardId());
     }
 
     public void logout(IFbLoginResult loginResult) {

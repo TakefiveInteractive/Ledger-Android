@@ -1,70 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bootstrap="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@android:color/white">
+    android:layout_height="match_parent">
 
-
-    <LinearLayout
-        android:id="@+id/newBoardNameWrapper"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorSecondary"
-        android:orientation="vertical"
-        android:padding="@dimen/noticable_padding">
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
 
-        <EditText
-            android:id="@+id/newBoardName"
+
+        <LinearLayout
+            android:id="@+id/newBoardNameWrapper"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/transparent"
-            android:hint="Board Name"
-            android:maxLength="52"
-            android:saveEnabled="false"
-            android:textColor="@color/textColorSecondary"
-            android:textColorHint="@color/textHintColorSecondary"
-            android:textSize="@dimen/large_text_size" />
+            android:background="@color/colorSecondary"
+            android:orientation="vertical"
+            android:padding="@dimen/noticable_padding">
 
-    </LinearLayout>
+            <EditText
+                android:id="@+id/newBoardName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:hint="(Name of this new board)"
+                android:maxLength="52"
+                android:saveEnabled="false"
+                android:textColor="@color/textColorSecondary"
+                android:textColorHint="@color/textHintColorSecondary"
+                android:textSize="@dimen/large_text_size" />
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/newBoardFriendsView"
-        android:layout_width="match_parent"
-        android:layout_height="300sp"
-        android:layout_below="@id/newBoardNameWrapper"
-        android:scrollbars="vertical" />
+        </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/newBoardActionButtonsLayout"
-        android:background="@color/divider" />
+        <FrameLayout
+            android:id="@+id/newBoardFriendsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/divider"
+            android:layout_below="@id/newBoardNameWrapper">
 
-    <LinearLayout
-        android:id="@+id/newBoardActionButtonsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/newBoardFriendsView"
-        android:gravity="end"
-        android:orientation="horizontal">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/newBoardFriendsView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollbars="vertical" />
 
-        <Button
-            android:id="@+id/newBoardCancel"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Please go back and add some people."
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_above="@+id/newBoardActionButtonsLayout"
+            android:background="@color/divider" />
+
+        <LinearLayout
+            android:id="@+id/newBoardActionButtonsLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:textColor="@color/colorSecondary" />
+            android:layout_alignParentBottom="true"
+            android:gravity="end"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/newBoardSubmit"
-            style="?android:attr/borderlessButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/ok"
-            android:textColor="@color/colorSecondary" />
-    </LinearLayout>
+            <Button
+                android:id="@+id/newBoardCancel"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cancel"
+                android:textColor="@color/colorSecondary" />
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/newBoardSubmit"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/ok"
+                android:textColor="@color/colorSecondary" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/snackBarContainer"
+        android:layout_gravity="bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    </RelativeLayout>
+
+</FrameLayout>
