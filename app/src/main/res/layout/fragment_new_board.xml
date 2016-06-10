@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/colorSecondary"
             android:orientation="vertical"
+            android:elevation="@dimen/headerbar_elevation"
             android:padding="@dimen/noticable_padding">
 
             <EditText
