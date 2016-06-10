@@ -72,7 +72,6 @@ public class RealmAccess implements PureAction<PureAction<Realm, ?>, ReadOnlyCha
             Realm realm = null;
             try {
                 realm = Realm.getInstance(startRealmConf.get()          // the name is configured inside Provider
-                        .deleteRealmIfMigrationNeeded()
                         .build());
                 Object result = editor.process(realm);
                 if (!realm.isClosed())

@@ -29,7 +29,10 @@ import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import java8.util.stream.Collectors;
@@ -37,6 +40,7 @@ import java8.util.stream.StreamSupport;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
+import rx.Observable;
 import zyu19.libs.action.chain.ActionChain;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.ReadOnlyChain;
@@ -51,6 +55,9 @@ public class CommonTasks {
 
     @Inject
     UserStore userStore;
+
+    @Inject
+    Provider<RealmConfiguration.Builder> startRealmConf;
 
     @Inject
     RealmAccess realmAccess;
@@ -69,23 +76,23 @@ public class CommonTasks {
         return ans;
     }
 
-    ReadOnlyChain getAndSyncMyUserInfo() {
-        return realmAccess.process(realm -> {
-            String userId = userStore.getMostRecentUserId();
-            if(userId == null) {
-                userId = UUID.randomUUID().toString();
-                realm.beginTransaction();
-                Person person = realm.createObject(Person.class);
-                person.setPersonId(userId);
-                person.setName("Me");
-                realm.commitTransaction();
-                return realm.copyFromRealm(person);
-            } else {
-                return realm.copyFromRealm(realm.where(Person.class
-                ).equalTo("personId", userId
-                ).findFirst());
-            }
-        });
+    Observable<Person> getAndSyncMyUserInfo() {
+        String userId = userStore.getMostRecentUserId();
+        Realm realm = Realm.getInstance(startRealmConf.get().build());
+        if (userId == null) {
+            userId = UUID.randomUUID().toString();
+            realm.beginTransaction();
+            Person person = realm.createObject(Person.class);
+            person.setPersonId(userId);
+            person.setName("Me");
+            realm.commitTransaction();
+            return Observable.just(realm.copyFromRealm(person));
+            // TODO: update userId in userStore
+        } else {
+            return Observable.just(realm.copyFromRealm(realm.where(Person.class
+            ).equalTo("personId", userId
+            ).findFirst()));
+        }
     }
 
     ReadOnlyChain syncUserInfo(RawPerson person) {

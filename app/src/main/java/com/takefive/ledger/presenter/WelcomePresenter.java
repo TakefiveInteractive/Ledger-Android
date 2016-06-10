@@ -13,7 +13,11 @@ import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IWelcomeView;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import rx.android.schedulers.AndroidSchedulers;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
@@ -40,6 +44,9 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
     @Inject
     IFbFactory fbFactory;
 
+    @Inject
+    Provider<RealmConfiguration.Builder> startRealmConf;
+
     @Override
     public void attachView(IWelcomeView view) {
         this.view = view;
@@ -52,15 +59,11 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
 
     // TODO: decide how to separate Facebook API from Presenters. Maybe another layer of abstraction?
     public void ledgerLogin() {
-        chainFactory.get(errorHolder -> {
-            view.showAlert(R.string.network_failure);
-            view.afterLoginFailure();
-            errorHolder.getCause().printStackTrace();
-        }).netConsume(obj -> realmAccess.enableAccess()
-        ).netThen(obj -> tasks.getAndSyncMyUserInfo()
-        ).uiThen((Person person) -> {
+        tasks.getAndSyncMyUserInfo(
+        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).subscribe(person -> {
+            Realm.getInstance(startRealmConf.get().build());
             view.onLoginSuccess(person.getName());
-            return null;
-        }).start(null);
+        });
     }
 }

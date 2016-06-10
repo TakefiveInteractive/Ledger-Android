@@ -23,6 +23,7 @@ public class BusinessRealmModule {
     @Provides
     public RealmConfiguration.Builder providerBuilder(Context context) {
         return new RealmConfiguration.Builder(context)
-                .name(context.getString(R.string.realm_filename));
+                .name(context.getString(R.string.realm_filename))
+                .deleteRealmIfMigrationNeeded();
     }
 }
