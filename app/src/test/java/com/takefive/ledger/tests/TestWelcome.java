@@ -78,7 +78,7 @@ public class TestWelcome {
         presenter.attachView(view);
         pPresenter[0] = presenter;
 
-        presenter.ledgerLogin(null);
+        presenter.ledgerLogin();
         while(!finished.get()) {
             try {
                 Thread.sleep(100);

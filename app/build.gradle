@@ -25,6 +25,11 @@ dependencies {
     compile 'com.android.support:support-v4:23.2.1'
     compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'net.sourceforge.streamsupport:streamsupport:1.4.2'
+
+    // RxJava
+    compile 'io.reactivex:rxjava:1.1.5'
+    compile 'io.reactivex:rxandroid:1.2.0'
+    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
 }
 
 retrolambda {
@@ -62,6 +67,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            buildConfigField "String", "DEBUG_SERVER_URL", "null"
+        }
+        debug {
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+            // the url must be escaped and contained in a quote
+            def debugServerURL = properties.getProperty('debug.server.url')
+            buildConfigField "String", "DEBUG_SERVER_URL", debugServerURL == null ? "null" : debugServerURL
         }
     }
     lintOptions {
