@@ -8,7 +8,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/transparent">
+        android:background="@android:color/white">
 
 
         <LinearLayout
@@ -88,11 +88,11 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:id="@+id/snackBarContainer"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-    </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
 </FrameLayout>
