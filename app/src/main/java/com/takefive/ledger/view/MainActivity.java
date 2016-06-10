@@ -21,6 +21,7 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.midData.view.ShownBill;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.MainPresenter;
 import com.takefive.ledger.view.database.SessionStore;
 import com.takefive.ledger.view.utils.CustomTabLayout;
@@ -146,7 +147,7 @@ public class MainActivity extends AppCompatActivity implements IMainView {
     }
 
     @Override
-    public void showMyUserInfo(RawPerson me) {
+    public void showMyUserInfo(Person me) {
         navFrag.showMyUserInfo(me);
     }
 

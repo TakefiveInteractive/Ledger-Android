@@ -6,6 +6,7 @@ import com.takefive.ledger.midData.ledger.RawMyBoards;
 import com.takefive.ledger.midData.ledger.RawPerson;
 import com.takefive.ledger.IView;
 import com.takefive.ledger.midData.view.ShownBill;
+import com.takefive.ledger.model.Person;
 
 /**
  * Created by zyu on 3/19/16.
@@ -15,7 +16,7 @@ public interface IMainView extends IView {
     // TODO: convert all RAW types to SHOWN types
     void showBillsList(List<ShownBill> bills);
     void showMyBoards(RawMyBoards boards);
-    void showMyUserInfo(RawPerson me);
+    void showMyUserInfo(Person me);
     void startRefreshing();
     void stopRefreshing();
     void setCurrentBoardId(String id);

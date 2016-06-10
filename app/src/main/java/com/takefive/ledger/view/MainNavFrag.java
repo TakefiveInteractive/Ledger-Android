@@ -141,8 +141,8 @@ public class MainNavFrag extends Fragment {
         }
     }
 
-    public void showMyUserInfo(RawPerson me) {
-        mUserName.setText(me.name);
+    public void showMyUserInfo(Person me) {
+        mUserName.setText(me.getName());
     }
 
     void showMyBoards(RawMyBoards myBoards) {

@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Response;
+import rx.android.schedulers.AndroidSchedulers;
 import zyu19.libs.action.chain.ActionChainFactory;
 import zyu19.libs.action.chain.config.Consumer;
 
@@ -102,9 +103,9 @@ public class MainPresenter implements IPresenter<IMainView> {
     }
 
     public void loadMyUserInfo() {
-        chainFactory.get(fail -> fail.getCause().printStackTrace()
-        ).netThen(tasks::getAndSyncMyUserInfo
-        ).uiConsume(view::showMyUserInfo).start();
+        tasks.getAndSyncMyUserInfo(
+        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).subscribe(view::showMyUserInfo);
     }
 
     /**

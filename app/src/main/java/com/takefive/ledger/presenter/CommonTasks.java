@@ -19,6 +19,7 @@ import com.takefive.ledger.dagger.ledger.JSONRequestBody;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.presenter.utils.DateTimeConverter;
+import com.takefive.ledger.presenter.utils.RxRealmAccess;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,23 +77,27 @@ public class CommonTasks {
         return ans;
     }
 
+    @Inject
+    RxRealmAccess rxRealmAccess;
+
     Observable<Person> getAndSyncMyUserInfo() {
-        String userId = userStore.getMostRecentUserId();
-        Realm realm = Realm.getInstance(startRealmConf.get().build());
-        if (userId == null) {
-            userId = UUID.randomUUID().toString();
-            realm.beginTransaction();
-            Person person = realm.createObject(Person.class);
-            person.setPersonId(userId);
-            person.setName("Me");
-            realm.commitTransaction();
-            return Observable.just(realm.copyFromRealm(person));
-            // TODO: update userId in userStore
-        } else {
-            return Observable.just(realm.copyFromRealm(realm.where(Person.class
-            ).equalTo("personId", userId
-            ).findFirst()));
-        }
+        return rxRealmAccess.access(realm -> {
+            String userId = userStore.getMostRecentUserId();
+            if (userId == null) {
+                userId = UUID.randomUUID().toString();
+                realm.beginTransaction();
+                Person person = realm.createObject(Person.class);
+                person.setPersonId(userId);
+                person.setName("Me");
+                realm.commitTransaction();
+                return Observable.just(realm.copyFromRealm(person));
+                // TODO: update userId in userStore
+            } else {
+                return Observable.just(realm.copyFromRealm(realm.where(Person.class
+                ).equalTo("personId", userId
+                ).findFirst()));
+            }
+        });
     }
 
     ReadOnlyChain syncUserInfo(RawPerson person) {
