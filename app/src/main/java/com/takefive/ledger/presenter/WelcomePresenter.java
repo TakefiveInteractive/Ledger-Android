@@ -6,6 +6,8 @@ import com.takefive.ledger.dagger.IFbFactory;
 import com.takefive.ledger.dagger.IFbLoginResult;
 import com.takefive.ledger.dagger.ILedgerService;
 import com.takefive.ledger.midData.fb.FbUserInfo;
+import com.takefive.ledger.midData.ledger.RawPerson;
+import com.takefive.ledger.model.Person;
 import com.takefive.ledger.presenter.utils.RealmAccess;
 import com.takefive.ledger.dagger.UserStore;
 import com.takefive.ledger.view.IWelcomeView;
@@ -49,24 +51,15 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
     }
 
     // TODO: decide how to separate Facebook API from Presenters. Maybe another layer of abstraction?
-    public void ledgerLogin(final IFbLoginResult fbLoginResult) {
+    public void ledgerLogin() {
         chainFactory.get(errorHolder -> {
-            view.showAlert(R.string.error_contact_facebook);
-            view.afterLoginFailure();
-            errorHolder.getCause().printStackTrace();
-        }).netThen(obj -> {
-            realmAccess.enableAccess();
-            return fbFactory.newRequest(fbLoginResult).getMe();
-        }).fail(errorHolder -> {
             view.showAlert(R.string.network_failure);
             view.afterLoginFailure();
             errorHolder.getCause().printStackTrace();
-        }).netThen((FbUserInfo info) -> {
-            tasks.getAndSaveAccessToken(fbLoginResult.getTokenString());
-            tasks.getAndSyncMyUserInfo();
-            return info.name;
-        }).uiThen((String username) -> {
-            view.onLoginSuccess(username);
+        }).netConsume(obj -> realmAccess.enableAccess()
+        ).netThen(obj -> tasks.getAndSyncMyUserInfo()
+        ).uiThen((Person person) -> {
+            view.onLoginSuccess(person.getName());
             return null;
         }).start(null);
     }

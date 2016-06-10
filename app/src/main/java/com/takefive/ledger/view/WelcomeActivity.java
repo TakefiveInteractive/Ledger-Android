@@ -5,6 +5,7 @@ import android.graphics.Point;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -76,7 +77,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
                 progressView.setVisibility(View.VISIBLE);
                 BusinessFbLoginResult businessFbLoginResult = new BusinessFbLoginResult();
                 businessFbLoginResult.setToken(loginResult.getAccessToken());
-                presenter.ledgerLogin(businessFbLoginResult);
+                presenter.ledgerLogin();
             }
 
             @Override
@@ -100,7 +101,7 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         if(AccessToken.getCurrentAccessToken() != null) {
             animShowTitleName();
             progressView.setVisibility(View.VISIBLE);
-            presenter.ledgerLogin(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
+            presenter.ledgerLogin();
         } else {
             animShowButton();
             animShowTitleName();
@@ -148,11 +149,13 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
     @OnClick(R.id.login)
     public void login() {
         showStatusBar();
-        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("public_profile", "user_friends"));
+        progressView.setVisibility(View.VISIBLE);
+        presenter.ledgerLogin();
     }
 
     @Override
     public void onLoginSuccess(String username) {
+        Log.d("Username", username);
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.putExtra("username", username);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);

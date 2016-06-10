@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -68,14 +69,23 @@ public class CommonTasks {
         return ans;
     }
 
-    RawPerson getAndSyncMyUserInfo() throws Exception {
-        // TODO: let Retrofit cache for us
-        Response<RawPerson> me = service.getCurrentPerson().execute();
-        if(!me.isSuccessful())
-            throw new IOException(me.errorBody().string());
-        userStore.setUserId(me.body()._id);
-        syncUserInfo(me.body());
-        return me.body();
+    ReadOnlyChain getAndSyncMyUserInfo() {
+        return realmAccess.process(realm -> {
+            String userId = userStore.getMostRecentUserId();
+            if(userId == null) {
+                userId = UUID.randomUUID().toString();
+                realm.beginTransaction();
+                Person person = realm.createObject(Person.class);
+                person.setPersonId(userId);
+                person.setName("Me");
+                realm.commitTransaction();
+                return realm.copyFromRealm(person);
+            } else {
+                return realm.copyFromRealm(realm.where(Person.class
+                ).equalTo("personId", userId
+                ).findFirst());
+            }
+        });
     }
 
     ReadOnlyChain syncUserInfo(RawPerson person) {
