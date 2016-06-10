@@ -7,5 +7,4 @@ import com.takefive.ledger.IView;
  */
 public interface IWelcomeView extends IView {
     void onLoginSuccess(String username);
-    void afterLoginFailure();
 }

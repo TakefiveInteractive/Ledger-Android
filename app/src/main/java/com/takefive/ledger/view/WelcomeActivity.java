@@ -1,5 +1,6 @@
 package com.takefive.ledger.view;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -35,14 +36,8 @@ import butterknife.OnClick;
 
 public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
-    @Bind(R.id.backgroundImage)
-    ImageView mBgImg;
-
     @Bind(R.id.progress_view)
     CircularProgressView progressView;
-
-    @Bind(R.id.login)
-    BootstrapButton mLogin;
 
     @Bind(R.id.nameTag)
     TextView mNameTag;
@@ -70,57 +65,34 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
         SessionStore.initialize();
 
-        mFBCallbackManager = CallbackManager.Factory.create();
-        LoginManager.getInstance().registerCallback(mFBCallbackManager, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(final LoginResult loginResult) {
-                progressView.setVisibility(View.VISIBLE);
-                BusinessFbLoginResult businessFbLoginResult = new BusinessFbLoginResult();
-                businessFbLoginResult.setToken(loginResult.getAccessToken());
-                presenter.ledgerLogin();
-            }
-
-            @Override
-            public void onCancel() {
-                hideStatusBar();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                error.printStackTrace();
-                showAlert(R.string.error_contact_facebook);
-            }
-        });
-
         // Prepare for animations
         screenSize = new Point();
         getWindowManager().getDefaultDisplay().getSize(screenSize);
         Helpers.setMargins(mNameTag, screenSize.y / 3, null, null, null);
-        mLogin.setAlpha(0);
 
-        if(AccessToken.getCurrentAccessToken() != null) {
-            animShowTitleName();
-            progressView.setVisibility(View.VISIBLE);
-            presenter.ledgerLogin();
-        } else {
-            animShowButton();
-            animShowTitleName();
-        }
+        // show title, then login.
+        animShowTitleName(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
 
-        // We change Status bar visibility when FB dialog shows up.
-        hideStatusBar();
-    }
+            }
 
-    private void showStatusBar() {
-        int tmp;
-        tmp = getWindow().getDecorView().getSystemUiVisibility();
-        getWindow().getDecorView().setSystemUiVisibility((~View.SYSTEM_UI_FLAG_FULLSCREEN) & tmp);
-    }
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                progressView.setVisibility(View.VISIBLE);
+                presenter.ledgerLogin();
+            }
 
-    private void hideStatusBar() {
-        int tmp;
-        tmp = getWindow().getDecorView().getSystemUiVisibility();
-        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | tmp);
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
     }
 
     @Override
@@ -129,28 +101,13 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
         super.onDestroy();
     }
 
-    void animShowButton() {
-        mLogin.animate(
-        ).alpha(1
-        ).setDuration(1000
-        ).start();
-    }
-
-    void animShowTitleName() {
+    void animShowTitleName(Animator.AnimatorListener listener) {
         mNameTag.animate(
         ).translationYBy(screenSize.y / 5 - screenSize.y / 3
         ).alpha(1
         ).setDuration(1000
+        ).setListener(listener
         ).start();
-    }
-
-    private Integer originalSystemUIVisibility = null;
-
-    @OnClick(R.id.login)
-    public void login() {
-        showStatusBar();
-        progressView.setVisibility(View.VISIBLE);
-        presenter.ledgerLogin();
     }
 
     @Override
@@ -169,15 +126,6 @@ public class WelcomeActivity extends AppCompatActivity implements IWelcomeView {
 
     public void showAlert(int info) {
         Snackbar.make(findViewById(android.R.id.content), info, Snackbar.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void afterLoginFailure() {
-        // We need to check whether the spinner is still spinning, and whether buttons are still visible
-        progressView.setVisibility(View.GONE);
-        if(mLogin.getAlpha() < 0.5f || mLogin.getVisibility() != View.VISIBLE)
-            animShowButton();
-        hideStatusBar();
     }
 
     @Override

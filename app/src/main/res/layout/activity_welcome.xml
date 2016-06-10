@@ -40,20 +40,6 @@
             android:textStyle="bold" />
 
 
-        <com.beardedhen.androidbootstrap.BootstrapButton
-            android:id="@+id/login"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:alpha="1"
-            app:bootstrapBrand="success"
-            app:bootstrapSize="lg"
-            app:buttonMode="regular"
-            app:showOutline="true"
-            app:roundedCorners="true"
-            android:text="Facebook Quick Login" />
-
     </RelativeLayout>
 
     <com.github.rahatarmanahmed.cpv.CircularProgressView
