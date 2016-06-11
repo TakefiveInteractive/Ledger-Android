@@ -118,6 +118,19 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/addPeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:drawableLeft="@drawable/ic_add_black_24dp"
+            android:drawablePadding="@dimen/navdrawer_action_text_margin"
+            android:padding="@dimen/navdrawer_action_layout_padding"
+            android:text="Add People"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textColor="@android:color/black" />
+
+        <Button
             android:id="@+id/newBoard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -138,19 +151,6 @@
             android:drawablePadding="@dimen/navdrawer_action_text_margin"
             android:padding="@dimen/navdrawer_action_layout_padding"
             android:text="Settings"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black" />
-
-        <Button
-            android:id="@+id/logout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:drawableLeft="@drawable/ic_exit_to_app_black_24dp"
-            android:drawablePadding="@dimen/navdrawer_action_text_margin"
-            android:padding="@dimen/navdrawer_action_layout_padding"
-            android:text="Logout"
             android:textAlignment="textStart"
             android:textAllCaps="false"
             android:textColor="@android:color/black" />

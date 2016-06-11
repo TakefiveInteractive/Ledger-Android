@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +39,7 @@ import com.takefive.ledger.view.utils.DotMark;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -45,6 +47,8 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.RealmList;
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
 import zyu19.libs.action.chain.ActionChainFactory;
 
 /**
@@ -159,19 +163,16 @@ public class MainNavFrag extends Fragment {
     }
 
     void onClickItem(int pos) {
+        MainActivity mainActivity = (MainActivity) getActivity();
         if(mListAdapter.getCount() == 0) {
-            mNewBoard.callOnClick();
+            Observable.timer(1, TimeUnit.SECONDS
+            ).observeOn(AndroidSchedulers.mainThread()
+            ).subscribe(obj -> mainActivity.mDrawerLayout.openDrawer(Gravity.LEFT));
         } else {
-            MainActivity mainActivity = (MainActivity) getActivity();
             mainActivity.presenter.loadBills(mListAdapter.getItem(pos).getBoardId());
             mainActivity.presenter.refreshBoardInfo(mListAdapter.getItem(pos));
             mainActivity.closeDrawers();
         }
-    }
-
-    @OnClick(R.id.logout)
-    void logout() {
-        ((MainActivity) getActivity()).presenter.logout(new BusinessFbLoginResult(AccessToken.getCurrentAccessToken()));
     }
 
     class MainNavAdapter extends ArrayAdapter<Board> {

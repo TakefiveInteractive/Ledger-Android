@@ -38,7 +38,7 @@
     <!-- New Board Fragment -->
     <string name="new_board_success">Board created.</string>
     <string name="new_board_no_name">Please specify a name.</string>
-    <string name="new_board_no_friends_set">Please add at least a friend.</string>
+    <string name="new_board_no_friends_set">Please add at least one friend.</string>
 
     <!-- Network related -->
     <string name="network_failure">Oops&#8230; Can\'t connect to server.</string>

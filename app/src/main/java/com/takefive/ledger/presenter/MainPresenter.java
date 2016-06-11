@@ -92,7 +92,7 @@ public class MainPresenter implements IPresenter<IMainView> {
     public void loadMyBoards() {
         tasks.getAndSyncMyUserInfo(
         ).map(Person::getBoards
-        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).observeOn(AndroidSchedulers.mainThread()
         ).subscribe(view::showMyBoards, err -> {
             err.printStackTrace();
             view.showAlert(R.string.ex_cannot_load_realm);
@@ -117,7 +117,7 @@ public class MainPresenter implements IPresenter<IMainView> {
 
     public void loadMyUserInfo() {
         tasks.getAndSyncMyUserInfo(
-        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).observeOn(AndroidSchedulers.mainThread()
         ).subscribe(view::showMyUserInfo, err -> {
             err.printStackTrace();
             view.showAlert(R.string.ex_cannot_load_realm);

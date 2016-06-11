@@ -70,7 +70,7 @@ public class WelcomePresenter implements IPresenter<IWelcomeView> {
         Observable.<Void>just(null
         ).flatMap(obj -> RxRealmAccess.enableAccess()
         ).flatMap(obj -> tasks.getAndSyncMyUserInfo()
-        ).subscribeOn(AndroidSchedulers.mainThread()
+        ).observeOn(AndroidSchedulers.mainThread()
         ).subscribe(person -> {
             Realm.getInstance(startRealmConf.get().build());
             view.onLoginSuccess(person.getName());
