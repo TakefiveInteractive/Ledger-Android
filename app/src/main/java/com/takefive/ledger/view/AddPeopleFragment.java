@@ -110,7 +110,6 @@ public class AddPeopleFragment extends DialogFragment {
 
         Context mContext;
         List<String> mNameList;
-        List<String> mSelected;
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -122,7 +121,6 @@ public class AddPeopleFragment extends DialogFragment {
         public TheAdapter(Context context, List<String> infoList) {
             mContext = context;
             mNameList = infoList;
-            mSelected = new ArrayList<>();
         }
 
         @Override
@@ -154,10 +152,6 @@ public class AddPeopleFragment extends DialogFragment {
         @Override
         public int getItemCount() {
             return mNameList.size();
-        }
-
-        public List<String> getSelected() {
-            return mSelected;
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
