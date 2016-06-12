@@ -10,6 +10,8 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,7 +58,7 @@ public class AddPeopleFragment extends DialogFragment {
 
         // find mainView and mainPresenter
         mMainView = (IMainView) getActivity();
-        mPresenter = ((MainActivity)getActivity()).presenter;
+        mPresenter = ((MainActivity) getActivity()).presenter;
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -100,7 +102,7 @@ public class AddPeopleFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         Dialog dialog = getDialog();
-        if(dialog != null)
+        if (dialog != null)
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
@@ -126,10 +128,22 @@ public class AddPeopleFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
             holder.mName.setText(mNameList.get(position));
-            holder.mName.setOnClickListener(view -> {
-                String name = holder.mName.getText().toString();
-                mNameList.set(position, name);
-                notifyDataSetChanged();
+            holder.mName.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    String name = s.toString();
+                    mNameList.set(position, name);
+                }
             });
             holder.mRemoveItem.setOnClickListener(view -> {
                 mNameList.remove(position);
