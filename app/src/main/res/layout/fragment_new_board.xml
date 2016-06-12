@@ -1,99 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
 
-    <RelativeLayout
+
+    <LinearLayout
+        android:id="@+id/newBoardNameWrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSecondary"
+        android:elevation="@dimen/headerbar_elevation"
+        android:orientation="vertical"
+        android:padding="@dimen/noticable_padding">
+
+        <EditText
+            android:id="@+id/newBoardName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:hint="(Name of this new board)"
+            android:maxLength="52"
+            android:saveEnabled="false"
+            android:textColor="@color/textColorSecondary"
+            android:textColorHint="@color/textHintColorSecondary"
+            android:textSize="@dimen/large_text_size" />
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/newBoardFriendsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_above="@+id/divider"
+        android:layout_below="@id/newBoardNameWrapper">
 
-
-        <LinearLayout
-            android:id="@+id/newBoardNameWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorSecondary"
-            android:orientation="vertical"
-            android:elevation="@dimen/headerbar_elevation"
-            android:padding="@dimen/noticable_padding">
-
-            <EditText
-                android:id="@+id/newBoardName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:hint="(Name of this new board)"
-                android:maxLength="52"
-                android:saveEnabled="false"
-                android:textColor="@color/textColorSecondary"
-                android:textColorHint="@color/textHintColorSecondary"
-                android:textSize="@dimen/large_text_size" />
-
-        </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/newBoardFriendsLayout"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/newBoardFriendsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/divider"
-            android:layout_below="@id/newBoardNameWrapper">
+            android:scrollbars="vertical"
+            tools:listitem="@layout/item_friends_list" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/newBoardFriendsView"
-                tools:listitem="@layout/item_friends_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical" />
-
-            <TextView
-                android:id="@+id/remindNoPeople"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Please go back and add some people."/>
-        </FrameLayout>
-
-        <View
-            android:id="@+id/divider"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_above="@+id/newBoardActionButtonsLayout"
-            android:background="@color/divider" />
-
-        <LinearLayout
-            android:id="@+id/newBoardActionButtonsLayout"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/remindNoPeople"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:gravity="end"
-            android:orientation="horizontal">
+            android:layout_gravity="center"
+            android:text="Please go back and add some people." />
+    </FrameLayout>
 
-            <Button
-                android:id="@+id/newBoardCancel"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:textColor="@color/colorSecondary" />
-
-            <Button
-                android:id="@+id/newBoardSubmit"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ok"
-                android:textColor="@color/colorSecondary" />
-        </LinearLayout>
-    </RelativeLayout>
-
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/snackBarContainer"
-        android:layout_gravity="bottom"
+    <View
+        android:id="@+id/divider"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.design.widget.CoordinatorLayout>
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/newBoardActionButtonsLayout"
+        android:background="@color/divider" />
 
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/newBoardActionButtonsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/newBoardCancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/colorSecondary" />
+
+        <Button
+            android:id="@+id/newBoardSubmit"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:textColor="@color/colorSecondary" />
+    </LinearLayout>
+</RelativeLayout>
+

@@ -56,9 +56,6 @@ public class NewBoardFragment extends DialogFragment {
     IMainView mMainView;
     MainPresenter mPresenter;
 
-    @Bind(R.id.snackBarContainer)
-    ViewGroup mSnackBarContainer;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -201,11 +198,11 @@ public class NewBoardFragment extends DialogFragment {
     }
 
     public void showAlert(String info) {
-        Snackbar.make(mSnackBarContainer, info, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), info, Snackbar.LENGTH_SHORT).show();
     }
 
     public void showAlert(int info) {
-        Snackbar.make(mSnackBarContainer, info, Snackbar.LENGTH_SHORT).show();
+        Snackbar.make(getView(), info, Snackbar.LENGTH_SHORT).show();
     }
 
 }

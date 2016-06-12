@@ -136,6 +136,12 @@ public class MainNavFrag extends Fragment {
         return root;
     }
 
+    @OnClick(R.id.addPeople)
+    public void addPeople() {
+        new AddPeopleFragment().show(getActivity().getSupportFragmentManager(), "fragment_add_people");
+        ((MainActivity) getActivity()).closeDrawers();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {

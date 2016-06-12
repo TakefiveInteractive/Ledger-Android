@@ -1,99 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:orientation="vertical">
+
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/newBoardNameWrapper"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white">
+        android:layout_height="wrap_content"
+        android:background="@color/colorSecondary"
+        android:elevation="@dimen/headerbar_elevation"
+        android:orientation="vertical"
+        android:padding="@dimen/noticable_padding">
 
-
-        <LinearLayout
-            android:id="@+id/newBoardNameWrapper"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorSecondary"
-            android:orientation="vertical"
-            android:elevation="@dimen/headerbar_elevation"
-            android:padding="@dimen/noticable_padding">
+            android:background="@android:color/transparent"
+            android:maxLength="52"
+            android:saveEnabled="false"
+            android:text="Add new people"
+            android:textColor="@color/textColorSecondary"
+            android:textSize="@dimen/large_text_size" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/transparent"
-                android:maxLength="52"
-                android:saveEnabled="false"
-                android:text="Add new people"
-                android:textColor="@color/textColorSecondary"
-                android:textSize="@dimen/large_text_size" />
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/newBoard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:drawableLeft="@drawable/ic_add_black_24dp"
-            android:drawablePadding="@dimen/navdrawer_action_text_margin"
-            android:padding="@dimen/navdrawer_action_layout_padding"
-            android:text="One more person"
-            android:textAlignment="textStart"
-            android:textAllCaps="false"
-            android:textColor="@android:color/black" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/divider" />
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/newBoardFriendsView"
-            tools:listitem="@layout/item_add_person"
-            android:layout_weight="1"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/divider" />
-
-        <LinearLayout
-            android:id="@+id/newBoardActionButtonsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/newBoardCancel"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancel"
-                android:textColor="@color/colorSecondary" />
-
-            <Button
-                android:id="@+id/newBoardSubmit"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/ok"
-                android:textColor="@color/colorSecondary" />
-        </LinearLayout>
     </LinearLayout>
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/snackBarContainer"
-        android:layout_gravity="bottom"
+    <Button
+        android:id="@+id/addPeople"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    </android.support.design.widget.CoordinatorLayout>
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:drawableLeft="@drawable/ic_add_black_24dp"
+        android:drawablePadding="@dimen/navdrawer_action_text_margin"
+        android:padding="@dimen/navdrawer_action_layout_padding"
+        android:text="One more person"
+        android:textAlignment="textStart"
+        android:textAllCaps="false"
+        android:textColor="@android:color/black" />
 
-</FrameLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_add_person" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/divider" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancel"
+            android:textColor="@color/colorSecondary" />
+
+        <Button
+            android:id="@+id/submit"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ok"
+            android:textColor="@color/colorSecondary" />
+    </LinearLayout>
+</LinearLayout>
