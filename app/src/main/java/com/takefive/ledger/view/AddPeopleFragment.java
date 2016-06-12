@@ -29,12 +29,14 @@ import com.takefive.ledger.view.utils.NiceTextEdit;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import java8.util.Objects;
 import java8.util.stream.StreamSupport;
 
 /**
@@ -79,6 +81,7 @@ public class AddPeopleFragment extends DialogFragment {
         }
 
         // TODO: call presenter here to add people to DB.
+        List<String> results = theAdapter.getResults();
     }
 
     @OnClick(R.id.cancel)
@@ -137,11 +140,11 @@ public class AddPeopleFragment extends DialogFragment {
 
         public boolean hasEmpty() {
             return StreamSupport.stream(mNameList
-                    /**
-                     ).filter(x -> x!=null
-                     ).map(x -> x.getText().toString()
-                     **/
-            ).anyMatch(String::isEmpty);
+            ).anyMatch(x -> x == null || x.isEmpty());
+        }
+
+        public List<String> getResults() {
+            return Collections.unmodifiableList(mNameList);
         }
 
         @Override
