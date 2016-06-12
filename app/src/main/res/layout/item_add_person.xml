@@ -5,7 +5,7 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <EditText
+    <com.takefive.ledger.view.utils.NiceTextEdit
         android:id="@+id/friendName"
         style="@style/MyFullscreenDialogTheme.EditText"
         android:layout_weight="1"

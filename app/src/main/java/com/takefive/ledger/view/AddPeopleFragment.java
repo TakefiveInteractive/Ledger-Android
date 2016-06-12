@@ -25,8 +25,11 @@ import com.takefive.ledger.R;
 import com.takefive.ledger.dagger.fb.BusinessFbLoginResult;
 import com.takefive.ledger.midData.ledger.NewBoardRequest;
 import com.takefive.ledger.presenter.MainPresenter;
+import com.takefive.ledger.view.utils.NiceTextEdit;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.Bind;
@@ -46,14 +49,12 @@ public class AddPeopleFragment extends DialogFragment {
     IMainView mMainView;
     MainPresenter mPresenter;
 
-    ArrayList<String> mData = new ArrayList<>();
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_add_people, container, false);
         ButterKnife.bind(this, root);
-        theAdapter = new TheAdapter(getContext(), mData);
+        theAdapter = new TheAdapter(getContext());
         getDialog().setCanceledOnTouchOutside(false);
 
         // find mainView and mainPresenter
@@ -69,10 +70,10 @@ public class AddPeopleFragment extends DialogFragment {
 
     @OnClick(R.id.submit)
     public void submit() {
-        if (mData.size() == 0)
+        if (theAdapter.size() == 0)
             this.dismiss();
 
-        if (StreamSupport.stream(mData).anyMatch(String::isEmpty)) {
+        if (theAdapter.hasEmpty()) {
             showAlert("Please delete empty blanks");
             return;
         }
@@ -87,8 +88,7 @@ public class AddPeopleFragment extends DialogFragment {
 
     @OnClick(R.id.addPeople)
     public void addPeople() {
-        mData.add("");
-        theAdapter.notifyDataSetChanged();
+        theAdapter.addOneRow();
     }
 
     @NonNull
@@ -110,6 +110,7 @@ public class AddPeopleFragment extends DialogFragment {
 
         Context mContext;
         List<String> mNameList;
+        HashMap<Integer, TextWatcher> mTextWatchers;
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -118,35 +119,64 @@ public class AddPeopleFragment extends DialogFragment {
             return new ViewHolder(v);
         }
 
-        public TheAdapter(Context context, List<String> infoList) {
+        public TheAdapter(Context context) {
             mContext = context;
-            mNameList = infoList;
+            mNameList = new ArrayList<>();
+            mTextWatchers = new HashMap<>();
+        }
+
+        public void addOneRow() {
+            // initialize to null. When onBindViewHolder finished, it will have been updated.
+            mNameList.add(null);
+            notifyDataSetChanged();
+        }
+
+        public int size() {
+            return mNameList.size();
+        }
+
+        public boolean hasEmpty() {
+            return StreamSupport.stream(mNameList
+                    /**
+                     ).filter(x -> x!=null
+                     ).map(x -> x.getText().toString()
+                     **/
+            ).anyMatch(String::isEmpty);
         }
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int position) {
-            holder.mName.setText(mNameList.get(position));
-            holder.mName.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (mNameList.get(position) != null)
+                holder.mName.setText(mNameList.get(position));
+            if (!mTextWatchers.containsKey(position))
+                mTextWatchers.put(position, new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                }
+                    }
 
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                }
+                    }
 
-                @Override
-                public void afterTextChanged(Editable s) {
-                    String name = s.toString();
-                    mNameList.set(position, name);
-                }
-            });
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        mNameList.set(position, s.toString());
+                        System.out.println(Arrays.toString(mNameList.toArray()));
+                    }
+                });
+            holder.mName.addTextChangedListener(mTextWatchers.get(position));
             holder.mRemoveItem.setOnClickListener(view -> {
                 mNameList.remove(position);
                 notifyDataSetChanged();
             });
+        }
+
+        @Override
+        public void onViewRecycled(ViewHolder holder) {
+            holder.mName.clearAllTextChangedListeners();
+            holder.mName.setText("");
         }
 
         @Override
@@ -156,7 +186,7 @@ public class AddPeopleFragment extends DialogFragment {
 
         public class ViewHolder extends RecyclerView.ViewHolder {
             public View mLayout;
-            public EditText mName;
+            public NiceTextEdit mName;
             public Button mRemoveItem;
 
             public ViewHolder(View layout) {
